@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIR = [STATIC_DIR,]
+
+
+AUTH_USER_MODEL = "users.User"
