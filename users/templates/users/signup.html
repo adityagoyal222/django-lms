@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}
+    LMS - Signup
+{% endblock title %}  
+
+
+{% block body_content %}
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <input type="submit" class="btn btn-success" value="Sign Up">
+        </form>
+    </div>
+{% endblock body_content %}
