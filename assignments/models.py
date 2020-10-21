@@ -9,7 +9,7 @@ class Assignment(models.Model):
     assignment_description = models.TextField()
     start_date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField()
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.assignment_name
@@ -17,7 +17,7 @@ class Assignment(models.Model):
     #     return reverse('', kwargs={'pk': self.pk})
 
 class SubmitAssignment(models.Model):
-    author = models.ForeignKey(User, related_name='assignment', on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200)
     description = models.TextField()
     assignment_file = models.FileField()
