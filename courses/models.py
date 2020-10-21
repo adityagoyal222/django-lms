@@ -10,3 +10,16 @@ class Course(models.Model):
 
     def __str__(self):
         return self.course_name
+
+    class Meta:
+        ordering = ['course_name']
+
+class Enrollment(models.Model):
+    course = models.ForeignKey(Course, related_name="enrollments",on_delete=models.SET_NULL)
+    student = models.ForeignKey(User, related_name="user_courses", on_delete=models.SET_NULL)
+
+    def __str__(self):
+        self.student.username
+
+    class Meta:
+        unique_together = ('course', 'student')
