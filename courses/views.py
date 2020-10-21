@@ -14,14 +14,15 @@ class CreateCourse(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request,*args, **kwargs):
         self.object = None
-        context_dict = {'user_type':self.request.user.user_type}
+        context_dict = self.get_context_data()
+        context_dict.update(user_type=self.request.user.user_type)
         return self.render_to_response(context_dict)
     
     def form_valid(self, form):
         form.instance.teacher = self.request.user
         return super(CreateCourse, self).form_valid(form)
     
-class SingleCourse(generic.DetailView):
+class CourseDetail(generic.DetailView):
     model = Course
 
 class ListCourse(generic.ListView):
