@@ -20,4 +20,5 @@ from django.conf.urls import url, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('^users/', include('users.urls', namespace='users')),
+    url('^assignments/', include('assignments.urls', namespace='assignments')),
 ]
