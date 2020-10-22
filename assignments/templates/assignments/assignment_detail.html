@@ -12,6 +12,10 @@
         {% if user.user_type == 2 %}
             <a href="{% url 'assignments:update' pk=assignment.pk %}" class="btn btn-warning btn-lg">Update</a>
             <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="btn btn-danger btn-lg">Delete</a>
+        {% else %}            
+            {% if assignment.course in course %}
+                <a href="{% url 'assignments:submit' %}" class="btn btn-success btn-lg">Submit Assignment</a>
+            {% endif %}
         {% endif %}
             
     </div>

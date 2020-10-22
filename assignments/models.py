@@ -24,7 +24,7 @@ class SubmitAssignment(models.Model):
     author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200, blank=False)
     description = models.TextField(blank=False)
-    assignment_file = models.FileField(blank=False)
+    assignment_file = models.FileField(blank=False, upload_to='assignments')
     submitted_date = models.DateTimeField(default=timezone.now)
     assignment_ques = models.ForeignKey(Assignment, related_name="question", on_delete=models.CASCADE, null=True)
     graded = models.BooleanField(default=False)
@@ -39,14 +39,14 @@ class SubmitAssignment(models.Model):
     def __str__(self):
         return self.topic
 
-    def upload(self):
+    def save(self, *args, **kwargs):
         self.submitted_date = timezone.now()
-        self.save()
+        super().save(*args, **kwargs)
 
-    def grade_assignment(self, grade):
-        self.grade = grade
-        self.graded = True
-        self.save()
+    # def grade_assignment(self, grade):
+    #     self.grade = grade
+    #     self.graded = True
+    #     self.save()
     
     # def get_absolute_url(self):
     #     return reverse('', kwargs={'pk': self.pk})

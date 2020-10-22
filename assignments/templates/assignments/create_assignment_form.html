@@ -10,8 +10,8 @@
     <form method="POST" action="{% url 'assignments:create' %}">
       {% csrf_token %} 
       {% bootstrap_form form %}
-      <input type="submit" value="Submit" class="btn btn-success btn-lg">
       {{ form.name.errors }}
+      <input type="submit" value="Submit" class="btn btn-success btn-lg">
     </form>
     
     
