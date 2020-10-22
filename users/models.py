@@ -11,4 +11,4 @@ class User(auth.models.AbstractUser):
     user_type = models.PositiveIntegerField(choices=USER_TYPE_CHOICES, default=1)
 
     def __str__(self):
-        return self.username
+        return self.first_name + ' ' + self.last_name
