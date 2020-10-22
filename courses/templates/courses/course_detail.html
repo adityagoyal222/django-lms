@@ -5,5 +5,12 @@
     <h1>{{course.course_name}}</h1>
     <h2>{{course.course_description}}</h2>
     <h4>{{course.teacher}}</h4>
+    {% if user.user_type == 1 %}
+        {%if user in course.students.all%}
+            <a href="{% url 'courses:unenroll' pk=course.pk %}" class="btn btn-danger btn-lg">Unenroll</a>
+        {% else %}
+            <a href="{% url 'courses:enroll' pk=course.pk %}" class="btn btn-success btn-lg">Enroll</a>
+        {% endif %}
+    {% endif %}
 {% endblock main_content %}
     
