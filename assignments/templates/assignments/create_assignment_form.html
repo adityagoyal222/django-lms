@@ -4,13 +4,13 @@
 {% block main_content %}
 
 <div class="container">
-  <h1>Create Assignment</h1>
+  <h1>Assignment</h1>
 
   {% if user.user_type == 2 %}
     <form method="POST" action="{% url 'assignments:create' %}">
       {% csrf_token %} 
       {% bootstrap_form form %}
-      <input type="submit" value="Create" class="btn btn-success btn-lg">
+      <input type="submit" value="Submit" class="btn btn-success btn-lg">
       {{ form.name.errors }}
     </form>
     
