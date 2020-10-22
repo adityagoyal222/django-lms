@@ -1,0 +1,26 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load bootstrap4 %} 
+
+{% block main_content %}
+
+<div class="container">
+  <h1>Create Assignment</h1>
+
+  {% if user.user_type == 2 %}
+    <form method="POST" action="{% url 'assignments:create' %}">
+      {% csrf_token %} 
+      {% bootstrap_form form %}
+      <input type="submit" value="Create" class="btn btn-success btn-lg">
+      {{ form.name.errors }}
+    </form>
+    
+    
+    {% else %}
+        <div class="jumbotron">
+            <h2>You cannot create an assignment</h2>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock main_content %}

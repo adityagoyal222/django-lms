@@ -10,14 +10,15 @@ class Assignment(models.Model):
     assignment_name = models.CharField(max_length=200, blank=False)
     assignment_description = models.TextField(blank=False)
     start_date = models.DateTimeField(default=timezone.now)
-    due_date = models.DateTimeField()
+    due_date = models.DateField(blank=True)
+    due_time = models.TimeField(default="00:00")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.assignment_name
 
-    # def def get_absolute_url(self):
-    #     return reverse('', kwargs={'pk': self.pk})
+    def get_absolute_url(self):
+        return reverse('assignments:detail', kwargs={'pk': self.pk})
 
 class SubmitAssignment(models.Model):
     author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
@@ -25,7 +26,7 @@ class SubmitAssignment(models.Model):
     description = models.TextField(blank=False)
     assignment_file = models.FileField(blank=False)
     submitted_date = models.DateTimeField(default=timezone.now)
-    assignment_ques = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    assignment_ques = models.ForeignKey(Assignment, related_name="question", on_delete=models.CASCADE, null=True)
     graded = models.BooleanField(default=False)
     grade = models.IntegerField(
         default=0,
@@ -47,5 +48,5 @@ class SubmitAssignment(models.Model):
         self.graded = True
         self.save()
     
-    # def def get_absolute_url(self):
+    # def get_absolute_url(self):
     #     return reverse('', kwargs={'pk': self.pk})
