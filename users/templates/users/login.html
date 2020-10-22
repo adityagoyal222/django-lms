@@ -7,6 +7,16 @@
     
 
 {% block body_content %}
+    
+    {% if user.is_authenticated %}
+        <div class="container">
+            <div class="jumbotron">
+                <h2>You are already logged in. Please logout to sign in as a different user.</h2>
+            </div>
+        </div>
+    
+    {% else %}
+
     <div class="container">
         <h1>Log In</h1>
         <form method="POST">
@@ -15,5 +25,8 @@
             <input type="submit" class="btn btn-primary" value="Login">
         </form>
     </div>
+
+    {% endif %}
+
 {% endblock body_content %}
     
