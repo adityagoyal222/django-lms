@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'courses',
     'assignments',
     'bootstrap4',
+    # 'mathfilters',
 ]
 
 MIDDLEWARE = [
