@@ -1,1 +1,9 @@
-hello
+{% extends 'courses/course_base.html' %}
+
+
+{% block main_content %}
+    <h1>{{course.course_name}}</h1>
+    <h2>{{course.course_description}}</h2>
+    <h4>{{course.teacher}}</h4>
+{% endblock main_content %}
+    
