@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^courses/', include('courses.urls', namespace="courses")),
     url(r'^assignments/', include('assignments.urls', namespace='assignments')),
+    url(r'^resources/', include('resources.urls', namespace="resources")),
 ]
