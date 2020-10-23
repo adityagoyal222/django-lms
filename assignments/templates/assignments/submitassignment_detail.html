@@ -1,5 +1,6 @@
 {% extends 'assignments/assignment_base.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 
 {% block main_content %}
@@ -12,13 +13,37 @@
             <h4>Submission: {{submissions.assignment_file.name}}</h4> 
             <a href="{{submissions.assignment_file.url}}" class="btn btn-lg btn-primary" download>Download</a>
             
+            {% if submissions.graded == False %}
+                <p>This assignment has not been graded yet.</p>
+            {% else %}
+                <p>This assignment has been graded.</p>
+                Grade: {{submissions.grade}}
+            {% endif %}
+                
+            
             
             {% if user.user_type == 1 %}
                 <div>
-                    <a href="{% url 'assignments:submit_delete' pk=submissions.pk %}" 
-                    class="btn btn-danger btn-lg">Delete</a>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <a href="{% url 'assignments:submit_delete' pk=submissions.pk %}" 
+                        class="btn btn-danger btn-lg">Delete</a>
+                    </form>
+                    
                 </div>
             {% else %}
+                
+                {% if submissions.assignment_ques.course.teacher.id == user.id %}
+                    {% if submissions.graded == False %}
+                        <div>
+                            <a href="{% url 'assignments:grade' pk=submissions.pk %}" 
+                            class="btn btn-success btn-lg">Grade</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                    
+                
+                    
                 
             {% endif %}
                 

@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^submit/$', views.SubmitAssignmentView.as_view(), name="submit"),
     url(r'^submission/detail/(?P<pk>[-\w]+)/$', views.SubmitAssignmentDetail.as_view(), name="submit_detail"),
     url(r'^submission/delete/(?P<pk>[-\w]+)/$', views.delete_view, name="submit_delete"),
+    url(r'^grade/(?P<pk>[-\w]+)/$', views.grade_assignment, name='grade')
 ]
 
 if settings.DEBUG:

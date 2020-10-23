@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
+from django.views.generic.edit import FormMixin
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -100,3 +101,16 @@ def delete_view(request, pk):
         obj.delete()
         return HttpResponseRedirect(reverse("courses:list"))
     return render(request, "assignments/submission_confirm_delete.html", context)
+
+@login_required
+def grade_assignment(request, pk):
+    submission = get_object_or_404(SubmitAssignment, pk=pk)
+    if request.method=="POST":
+        form=GradeAssignmentForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data.get('grade')
+            submission.grade_assignment(data)
+            return redirect('assignments:submit_detail', pk=pk)
+    else:
+        form = GradeAssignmentForm()
+    return render(request, 'assignments/grade_form.html', {'pk':pk, 'form':form, 'submissions':submission})
