@@ -13,19 +13,24 @@
             
         <div class="container">
             <h2>Submit Assignment</h2>
-            <form action="{% url 'assignments:submit' %}" method="POST">
+            <form action="{% url 'assignments:submit' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 {{ form.name.errors }}
-                <input type="submit" value="Submit" class="btn btn-warning btn-lg">
+                
+                {% if duedate.year >= time.year %}
+                    {% if duedate.month >= time.month %}
+                        {% if duedate.day >= time.day %}
+                            {% if duetime.hour >= time.hour %}
+                                {% if duetime.minute >= time.minute %}
+                                    <input type="submit" value="Submit" class="btn btn-warning btn-lg">
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}      
+                    {% endif %}
+                {% endif %}
             </form>
             <ul>
-            {% for document in documents %}
-                <li>
-                    <a href="{{ document.assignment_file.url }}">{{document.assignment_file.name}}</a>
-                    <small>({{ document.assignment_file.size|filesizeformat }}) - {{document.upload_date}}</small>
-                </li>
-            {% endfor %}
             </ul> 
         </div>
     {% endif %}

@@ -1,22 +1,22 @@
-{% extends 'assignments/assignment_base.html' %}
+{% extends 'resources/resource_base.html' %}
 
 
 {% block main_content %}
     {% if user.user_type == 2 %}
         <div class="container">
             <div class="jumbotron">
-                <h2>Are you sure you want to delete this assignment?</h2>
+                <h2>Are you sure you want to delete this resource?</h2>
                 <form method="post">
                     {% csrf_token %}
                     <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
-                    <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="btn btn-primary btn-large">Cancel</a>
+                    <a href="{% url 'courses:list' %}" class="btn btn-primary btn-large">Cancel</a>
                 </form>
             </div>
         </div>
     {% else %}
         <div class="container">
             <div class="jumbotron">
-                <h2>You are not allowed to delete an assignment.</h2>
+                <h2>You are not allowed to delete a resource.</h2>
             </div>
         </div>
     {% endif %}

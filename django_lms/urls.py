@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
+from assignments import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^courses/', include('courses.urls', namespace="courses")),
     url(r'^assignments/', include('assignments.urls', namespace='assignments')),
+    url(r'^resources/', include('resources.urls', namespace="resources")),
 ]
