@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from users.models import User
 from courses.models import Course, Enrollment
 from assignments.models import Assignment
+from resources.models import Resource
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -30,8 +31,10 @@ class CourseDetail(generic.DetailView):
 
     def get_context_data(self,**kwargs):
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
+        resources = Resource.objects.filter(course=self.kwargs['pk'])
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
+        context['resources'] = resources
         return context
 
 class ListCourse(generic.ListView):
