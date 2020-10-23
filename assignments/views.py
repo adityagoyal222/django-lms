@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 # from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
@@ -29,6 +30,11 @@ class AssignmentDetail(generic.DetailView):
         course_obj = Course.objects.filter(students=self.request.user.id)
         context = super(AssignmentDetail, self).get_context_data(**kwargs)
         context['course'] = course_obj
+        assignment = Assignment.objects.filter(pk=self.kwargs['pk'])
+        assignment_object = get_object_or_404(assignment)
+        context['duedate'] = assignment_object.due_date
+        context['duetime'] = assignment_object.due_time
+        context['time'] = timezone.now()
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
@@ -54,12 +60,14 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
     # fields = ('topic', 'description', 'assignment_file', 'assignment_ques')
     select_related = ('author', 'assignment_ques')
 
-    # def get_context_data(self, **kwargs):
-    #     assignments = SubmitAssignment.objects.filter(assignment_ques=self.request.session.get('assignment'))
-    #     context = super(SubmitAssignmentView, self).get_context_data(**kwargs)
-    #     context['assignment'] = assignments
-    #     print(context['assignment'])
-    #     return context
+    def get_context_data(self, **kwargs):
+        assignments = Assignment.objects.filter(pk=self.request.session.get('assignment'))
+        assignment_object = get_object_or_404(assignments)
+        context = super(SubmitAssignmentView, self).get_context_data(**kwargs)
+        context['duedate'] = assignment_object.due_date
+        context['duetime'] = assignment_object.due_time
+        context['time'] = timezone.now()
+        return context
 
     # def form_valid(self, form):
     #     self.object = form.upload(commit=False)

@@ -39,11 +39,6 @@ class SubmitAssignment(models.Model):
     def __str__(self):
         return self.topic
 
-    def upload(self, user):
-        self.author = user
-        self.submitted_date = timezone.now()
-        self.save()
-
     def grade_assignment(self, grade):
         self.grade = grade
         self.graded = True
