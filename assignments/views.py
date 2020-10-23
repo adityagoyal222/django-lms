@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.urls import reverse, reverse_lazy
@@ -55,14 +55,15 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
     select_related = ('author', 'assignment_ques')
 
     # def get_context_data(self, **kwargs):
-    #     course_obj = Course.objects.filter(students=self.request.user.id)
+    #     assignments = SubmitAssignment.objects.filter(assignment_ques=self.request.session.get('assignment'))
     #     context = super(SubmitAssignmentView, self).get_context_data(**kwargs)
-    #     context['course'] = course_obj
+    #     context['assignment'] = assignments
+    #     print(context['assignment'])
     #     return context
 
     # def form_valid(self, form):
     #     self.object = form.upload(commit=False)
-    #     self.object.user = self.request.user
+    #     self.object.author
     #     self.object.save()
     #     return super().form_valid(form)
 
@@ -70,5 +71,11 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['assignment_id'] = self.request.session.get('assignment')
         kwargs['user'] = self.request.user
-        print(kwargs)
         return kwargs
+    
+# @login_required
+# def assignment_upload(request, pk):
+#     assignment = get_object_or_404(SubmitAssignment, pk=pk)
+#     assignment.upload(user=request.user)
+#     return redirect('assignments:submit')
+

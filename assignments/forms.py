@@ -31,9 +31,12 @@ class CreateAssignmentForm(ModelForm):
 class SubmitAssignmentForm(ModelForm):
     class Meta:
         model = SubmitAssignment
-        fields = ('topic', 'description', 'assignment_file', 'assignment_ques')
+        fields = ('topic', 'description', 'assignment_file', 'assignment_ques', 'author')
         
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
         assignment = kwargs.pop('assignment_id')
         super().__init__(*args, **kwargs)
-        self.fields['assignment_ques'].queryset = self.fields['assignment_ques'].queryset.filter(pk=assignment)        
+        self.fields['assignment_ques'].queryset = self.fields['assignment_ques'].queryset.filter(pk=assignment)
+        self.fields['author'].queryset = self.fields['author'].queryset.filter(username=user.username)
+

@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^update/(?P<pk>[-\w]+)/$', views.UpdateAssignment.as_view(), name='update'),
     url(r'^delete/(?P<pk>[-\w]+)/$', views.DeleteAssignment.as_view(), name="delete"),
     url(r'^submit/$', views.SubmitAssignmentView.as_view(), name="submit"),
+    # url(r'^upload/(?P<pk>[-\w]+)/$', views.assignment_upload, name="upload"),
 ]
