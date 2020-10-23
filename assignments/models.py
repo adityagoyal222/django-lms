@@ -39,14 +39,15 @@ class SubmitAssignment(models.Model):
     def __str__(self):
         return self.topic
 
-    def save(self, *args, **kwargs):
+    def upload(self, user):
+        self.author = user
         self.submitted_date = timezone.now()
-        super().save(*args, **kwargs)
+        self.save()
 
-    # def grade_assignment(self, grade):
-    #     self.grade = grade
-    #     self.graded = True
-    #     self.save()
+    def grade_assignment(self, grade):
+        self.grade = grade
+        self.graded = True
+        self.save()
     
-    # def get_absolute_url(self):
-    #     return reverse('', kwargs={'pk': self.pk})
+    def get_absolute_url(self):
+        return reverse('assignments:detail', kwargs={'pk': self.pk})
