@@ -4,6 +4,8 @@ from courses.models import Course
 from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
+import os
+from django.conf import settings
 
 # Create your models here.
 class Assignment(models.Model):
@@ -44,9 +46,9 @@ class SubmitAssignment(models.Model):
         self.graded = True
         self.save()
 
-    # def delete(self, *args, **kwargs):
-    #     self.assignment_file.delete()
-    #     super().delete(*args, **kwargs)
+    def delete(self, *args, **kwargs):
+        os.remove(os.path.join(settings.MEDIA_ROOT, self.assignment_file.name))
+        super().delete(*args, **kwargs)
     
     def get_absolute_url(self):
-        return reverse('assignments:detail', kwargs={'pk': self.pk})
+        return reverse('assignments:submit_detail', kwargs={'pk': self.pk})

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.urls import reverse, reverse_lazy
@@ -20,7 +20,6 @@ from courses.models import Course
 class CreateAssignment(LoginRequiredMixin, generic.CreateView):
     form_class = CreateAssignmentForm
     template_name = 'assignments/create_assignment_form.html'
-    # success_url = reverse('assignments/list/')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -44,9 +43,8 @@ class DeleteAssignment(LoginRequiredMixin, generic.DeleteView):
 class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
     form_class = SubmitAssignmentForm
     template_name = 'assignments/submitassignment_form.html'
-    # model = SubmitAssignment
-    # fields = ('topic', 'description', 'assignment_file', 'assignment_ques')
     select_related = ('author', 'assignment_ques')
+    # success_url = reverse('assignments:submit_detail')
 
     def get_context_data(self, **kwargs):
         assignments = Assignment.objects.filter(pk=self.request.session.get('assignment'))
@@ -64,7 +62,7 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
         return kwargs
 
 class SubmitAssignmentDetail(LoginRequiredMixin, generic.DetailView):
-    model = Assignment
+    model = SubmitAssignment
     template_name = 'assignments/submitassignment_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -75,7 +73,7 @@ class SubmitAssignmentDetail(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class AssignmentDetail(generic.DetailView):
+class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
     model = Assignment
 
     def get_context_data(self, **kwargs):
@@ -92,3 +90,13 @@ class AssignmentDetail(generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
+
+
+@login_required
+def delete_view(request, pk):
+    obj = get_object_or_404(SubmitAssignment, pk=pk)
+    context = {'submission': obj}
+    if request.method == "POST":
+        obj.delete()
+        return HttpResponseRedirect(reverse("courses:list"))
+    return render(request, "assignments/submission_confirm_delete.html", context)

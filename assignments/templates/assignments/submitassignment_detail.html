@@ -14,7 +14,10 @@
             
             
             {% if user.user_type == 1 %}
-                
+                <div>
+                    <a href="{% url 'assignments:submit_delete' pk=submissions.pk %}" 
+                    class="btn btn-danger btn-lg">Delete</a>
+                </div>
             {% else %}
                 
             {% endif %}

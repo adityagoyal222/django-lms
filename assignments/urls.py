@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^delete/(?P<pk>[-\w]+)/$', views.DeleteAssignment.as_view(), name="delete"),
     url(r'^submit/$', views.SubmitAssignmentView.as_view(), name="submit"),
     url(r'^submission/detail/(?P<pk>[-\w]+)/$', views.SubmitAssignmentDetail.as_view(), name="submit_detail"),
+    url(r'^submission/delete/(?P<pk>[-\w]+)/$', views.delete_view, name="submit_delete"),
 ]
 
 if settings.DEBUG:
