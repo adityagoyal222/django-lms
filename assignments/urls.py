@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from assignments import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'assignments'
 urlpatterns = [
@@ -10,3 +12,7 @@ urlpatterns = [
     url(r'^submit/$', views.SubmitAssignmentView.as_view(), name="submit"),
     url(r'^submission/detail/(?P<pk>[-\w]+)/$', views.SubmitAssignmentDetail.as_view(), name="submit_detail"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

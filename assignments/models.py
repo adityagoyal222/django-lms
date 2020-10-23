@@ -43,6 +43,10 @@ class SubmitAssignment(models.Model):
         self.grade = grade
         self.graded = True
         self.save()
+
+    # def delete(self, *args, **kwargs):
+    #     self.assignment_file.delete()
+    #     super().delete(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('assignments:detail', kwargs={'pk': self.pk})

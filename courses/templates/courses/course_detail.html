@@ -13,10 +13,6 @@
   >Enroll</a
 >
 {% endif %} 
-{% else %}
-<a
-  href="{% url 'courses:unenroll' pk=course.pk %}"
-  class="btn btn-danger btn-lg">Unenroll</a>
 {% endif %}
 <h3>Assignments</h3>
 <!-- {% include 'assignments/assignment_list.html' %} -->

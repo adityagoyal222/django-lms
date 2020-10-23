@@ -1,4 +1,5 @@
 {% extends 'assignments/assignment_base.html' %}
+{% load static %}
 
 
 {% block main_content %}
@@ -8,13 +9,21 @@
             <h2>{{submissions.description}}</h2>
             <h3>Submitted by: {{submissions.author}}</h3>
             <h4>Submitted On: {{submissions.submitted_date}}</h4>
+            <h4>Submission: {{submissions.assignment_file.name}}</h4> 
+            <a href="{{submissions.assignment_file.url}}" class="btn btn-lg btn-primary" download>Download</a>
+            
+            
+            {% if user.user_type == 1 %}
+                
+            {% else %}
+                
+            {% endif %}
+                
         {% else %}
             <div class="jumbotron">
                 <h2>You cannot view this assignment.</h2>
             </div>
         {% endif %}
-            
-        
     </div>
 {% endblock main_content %}
     
