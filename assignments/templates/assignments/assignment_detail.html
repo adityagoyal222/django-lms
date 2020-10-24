@@ -1,18 +1,24 @@
 {% extends 'assignments/assignment_base.html' %}
 {% load bootstrap4 %}
 
+{% block title_name %}
+    LMS - {{assignment.assignment_name}}
+{% endblock title_name %}
+    
+
 {% block main_content %}
     <div class="container">
         <h1>{{assignment.assignment_name}}</h1>
-        <h2>{{assignment.assignment_description}}</h2>
-        <h3>Course: {{assignment.course}}</h3>
-        <h4>Start Date: {{assignment.start_date}}</h4>
-        <h4>Due Date: {{assignment.due_date}} {{assignment.due_time}}</h4>
+        <h4>Course: {{assignment.course}}</h4>
+        <h6>Start Date: {{assignment.start_date}}</h6>
+        <h6>Due Date: {{assignment.due_date}} {{assignment.due_time}}</h6>
         
+        <p>Description: {{assignment.assignment_description}}</p>
         {% if user.user_type == 2 %}
             <a href="{% url 'assignments:update' pk=assignment.pk %}" class="btn btn-warning btn-lg">Update</a>
             <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="btn btn-danger btn-lg">Delete</a>
 
+            <div class="submissions">
             <h3>Submissions</h3>
             
             {% for submissions in submitted %}
@@ -26,7 +32,10 @@
                     </p>
                     <small>Start Date: {{submissions.submitted_date}}</small><br>
                 </a>
+            {% empty %}
+                <h6>No Submissions</h6>
             {% endfor %}
+            </div>
                 
 
         {% else %}            
@@ -42,7 +51,7 @@
                         {% endif %}      
                     {% endif %}
                 {% endif %}
-                <div>
+                <div class="submissions">
                 <h3>My Submissions:</h3>
                 
                 {% for submissions in submitted %}
@@ -58,6 +67,8 @@
                             <small>Start Date: {{submissions.submitted_date}}</small><br>
                         </a>
                     {% endif %}
+                {% empty %}
+                    <h6>No Submissions</h6>
                 {% endfor %}
                 </div>
             {% endif %}

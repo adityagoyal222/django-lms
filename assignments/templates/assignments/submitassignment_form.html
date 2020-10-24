@@ -1,6 +1,10 @@
 {% extends 'assignments/assignment_base.html' %}
 {% load bootstrap4 %}
 
+{% block title_name %}
+    LMS - Submit Assignment
+{% endblock title_name %}
+    
 {% block main_content %}
     
     {% if user.user_type == 2 %}

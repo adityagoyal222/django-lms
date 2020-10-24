@@ -1,4 +1,10 @@
-{% extends 'courses/course_base.html' %} {% block main_content %}
+{% extends 'courses/course_base.html' %} 
+
+{% block title_name %}
+  LMS - Courses
+{% endblock title_name %}
+  
+{% block main_content %}
 <div class="container">
   <div>
     <h1>All Courses</h1>
@@ -6,9 +12,9 @@
     {% if user.user_type == 2 %}
     <a
       href="{% url 'courses:create' %}"
-      class="btn btn-md btn-fill btn-warning"
+      class="btn btn-lg btn-fill btn-success button-stretch"
     >
-      <i class="fa fa-plus-circle" aria-hidden="true">Create New Course</i>
+      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
     </a>
     {% endif %}
   </div>
