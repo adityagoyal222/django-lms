@@ -79,3 +79,15 @@ i {
 .course-item a{
   font-size: 18px;
 }
+
+.button-stretch{
+  margin: 3% 0% 1% 0%;
+}
+
+.card-deck, .assignments, .submissions, .grade {
+  margin:3% 0% 3% 0%
+}
+
+.resources {
+  margin-bottom: 1%;
+}
