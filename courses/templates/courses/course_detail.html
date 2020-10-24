@@ -1,0 +1,85 @@
+{% extends 'courses/course_base.html' %} 
+
+{% block title_name %}
+  LMS - {{course.course_name}}
+{% endblock title_name %}
+  
+{% block main_content %}
+<h1>{{course.course_name}}</h1>
+<h4>Teacher: {{course.teacher}}</h4>
+<p>Description: {{course.course_description}}</p>
+
+{% if user.user_type == 1 %} {%if user in course.students.all%}
+<a
+  href="{% url 'courses:unenroll' pk=course.pk %}"
+  class="btn btn-danger btn-lg"
+  >Unenroll</a
+>
+{% else %}
+<a href="{% url 'courses:enroll' pk=course.pk %}" class="btn btn-success btn-lg"
+  >Enroll</a
+>
+{% endif %} 
+{% endif %}
+
+{% if course.teacher.id == user.id or user in course.students.all%}
+  {% if user.user_type == 2 %}
+    <a
+      href="{% url 'assignments:create' %}"
+      class="btn btn-lg btn-fill btn-warning button-stretch"
+    >
+      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
+    </a>
+    <a
+      href="{% url 'resources:create' %}"
+      class="btn btn-lg btn-fill btn-info button-stretch"
+    >
+      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
+    </a>
+  {% endif %}
+    
+  <div class="assignments">
+    <h3>Assignments</h3>
+    <ul class="list-group">
+      {% for assignment in assignments %}
+      <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{assignment.assignment_name}}</h5>
+        </div>
+        <p class="mb-1">
+          {{assignment.assignment_description}}
+        </p>
+        <small>Start Date: {{assignment.start_date}}</small><br>
+        <small>Due Date: {{assignment.due_date}} {{assignment.due_time}}</small>
+      </a>
+      {% empty %}
+      <h6>No Assignments</h6>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="resources">
+    <h3>Resources</h3>
+    <!-- {% include 'assignments/assignment_list.html' %} -->
+    <ul class="list-group">
+      {% for resource in resources %}
+      <div  class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{resource.resource_name}}</h5>
+        </div>
+        <p class="mb-1">
+          Submission: {{resource.resource_file.name}}
+          <a href="{{resource.resource_file.url}}" class="btn btn-sm btn-primary" download>Download</a>
+        </p>
+        
+        {% if user.id == course.teacher.id %}
+          <small><a href="{% url 'resources:delete' pk=resource.pk %}" class="btn btn-sm btn-danger">Delete</a></small>
+        {% endif %}
+      </div>
+      {% empty %}
+        <h6>No Resources</h6>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+  
+{% endblock main_content %}

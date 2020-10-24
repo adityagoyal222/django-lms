@@ -1,0 +1,25 @@
+{% extends 'courses/course_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+    LMS - Create Course
+{% endblock title_name %}
+    
+
+{% block main_content %}
+    <h1>Create new Course</h1>
+    
+    {% if user_type == 2 %}
+        <form action="{% url 'courses:create' %}" method="POST">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <input type="submit" value="Create" class="btn btn-success btn-lg">
+        </form>
+    {% else %}
+        <div class="jumbotron">
+            <h2>Oops! You need to be Teacher to access this page.</h2>
+        </div>
+    {% endif %}
+        
+{% endblock main_content %}
+    

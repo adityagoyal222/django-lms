@@ -1,0 +1,30 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+    LMS - Grade
+{% endblock title_name %}
+    
+
+{% block main_content %}
+    
+    {% if user.user_type == 2 and submissions.assignment_ques.course.teacher.id == user.id %}
+        <div class="container">
+            <form method="POST">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div>
+                    <input type="submit" value="Grade" class="btn btn-success btn-lg">
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="jumbotron">
+                <h2>You cannot grade this assignment.</h2>
+            </div>
+        </div>
+    {% endif %}
+        
+{% endblock main_content %}
+    

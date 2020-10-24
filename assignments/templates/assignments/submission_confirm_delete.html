@@ -1,0 +1,29 @@
+{% extends 'assignments/assignment_base.html' %}
+
+{% block title_name %}
+    LMS - Confirmation
+{% endblock title_name %}
+    
+
+{% block main_content %}
+    {% if user.user_type == 1 and submission.author.id == user.id %}
+        <div class="container">
+            <div class="jumbotron">
+                <h2>Are you sure you want to delete this submission?</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
+                    <a href="{% url 'assignments:submit_detail' pk=submission.pk %}" class="btn btn-primary btn-large">Cancel</a>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="jumbotron">
+                <h2>You are not allowed to delete the submission</h2>
+            </div>
+        </div>
+    {% endif %}
+        
+{% endblock main_content %}
+    
