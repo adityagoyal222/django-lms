@@ -27,11 +27,11 @@
             <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}
-                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list" aria-hidden="true">Your Courses</i></h5></span>
+                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user in course.students.all %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>s
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>
                     {% endif %}
                         
                 {% endfor %}
@@ -54,6 +54,7 @@
             <a href="home"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
             <a href="{% url 'users:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
             <a href="{% url 'users:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
         {% endif %}
         </div>
             

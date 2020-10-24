@@ -24,7 +24,7 @@
                 
             
             
-            {% if user.user_type == 1 %}
+            {% if user.user_type == 1 and submissions.graded == False %}
                 <div>
                     <form method="POST">
                         {% csrf_token %}
