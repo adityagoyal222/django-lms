@@ -7,6 +7,5 @@ class UserProfile(LoginRequiredMixin, generic.ListView):
     model = Course
     template_name = 'user_profile.html'
 
-# def index(request):
-#     context = {'courses': Course.objects.all()}
-#     return render(request, 'index.html', context)
+def index(request):
+    return render(request, 'index.html')

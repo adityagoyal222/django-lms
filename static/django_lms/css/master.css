@@ -44,7 +44,7 @@ p, a {
 
 .content {
   margin-top: 2em;
-  margin-left: 20%;
+  margin-left: 22%;
   margin-bottom: 2em;
   margin-right: 2em;
 }
@@ -90,4 +90,12 @@ i {
 
 .resources {
   margin-bottom: 1%;
+}
+
+.index-image {
+  height: 100%;
+}
+
+.index-button {
+  margin-top: 2em;
 }

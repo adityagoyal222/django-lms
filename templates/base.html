@@ -23,7 +23,7 @@
         
         {% if user.is_authenticated %}
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
-            <a href="home"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
             <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}

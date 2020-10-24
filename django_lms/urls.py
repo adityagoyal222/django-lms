@@ -20,7 +20,7 @@ from assignments import views
 from django_lms import views as project_views
 
 urlpatterns = [
-    # url('', project_views.index, name='home'),
+    url(r'^$', project_views.index, name="home"),
     path('admin/', admin.site.urls),
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^courses/', include('courses.urls', namespace="courses")),
