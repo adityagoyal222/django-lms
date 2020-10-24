@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 
+{% block title %}
+    LMS - Profile
+{% endblock title %}
+    
+
 {% block body_content %}
     <div class="container">
         {% if user.is_authenticated %}

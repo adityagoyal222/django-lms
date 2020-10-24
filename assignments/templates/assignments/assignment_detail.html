@@ -1,6 +1,11 @@
 {% extends 'assignments/assignment_base.html' %}
 {% load bootstrap4 %}
 
+{% block title_name %}
+    LMS - {{assignment.assignment_name}}
+{% endblock title_name %}
+    
+
 {% block main_content %}
     <div class="container">
         <h1>{{assignment.assignment_name}}</h1>
