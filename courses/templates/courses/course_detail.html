@@ -17,6 +17,21 @@
 {% endif %}
 
 {% if course.teacher.id == user.id or user in course.students.all%}
+  {% if user.user_type == 2 %}
+    <a
+      href="{% url 'assignments:create' %}"
+      class="btn btn-lg btn-fill btn-warning button-stretch"
+    >
+      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
+    </a>
+    <a
+      href="{% url 'resources:create' %}"
+      class="btn btn-lg btn-fill btn-info button-stretch"
+    >
+      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
+    </a>
+  {% endif %}
+    
   <div class="assignments">
     <h3>Assignments</h3>
     <ul class="list-group">
@@ -31,6 +46,8 @@
         <small>Start Date: {{assignment.start_date}}</small><br>
         <small>Due Date: {{assignment.due_date}} {{assignment.due_time}}</small>
       </a>
+      {% empty %}
+      <h6>No Assignments</h6>
       {% endfor %}
     </ul>
   </div>
@@ -51,8 +68,9 @@
         {% if user.id == course.teacher.id %}
           <small><a href="{% url 'resources:delete' pk=resource.pk %}" class="btn btn-sm btn-danger">Delete</a></small>
         {% endif %}
-          
       </div>
+      {% empty %}
+        <h6>No Resources</h6>
       {% endfor %}
     </ul>
   </div>

@@ -1,6 +1,6 @@
 .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 15%; /* Set the width of the sidebar */
+  width: 20%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
@@ -20,7 +20,7 @@ p, a {
 .sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
-  font-size: 25px;
+  font-size: 20px;
   color: #999999;
   display: block;
 }
@@ -44,7 +44,7 @@ p, a {
 
 .content {
   margin-top: 2em;
-  margin-left: 10%;
+  margin-left: 20%;
   margin-bottom: 2em;
   margin-right: 2em;
 }

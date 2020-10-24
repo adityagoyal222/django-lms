@@ -24,6 +24,7 @@
         {% if user.is_authenticated %}
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
             <a href="home"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list" aria-hidden="true">Your Courses</i></h5></span>
@@ -35,6 +36,9 @@
                         
                 {% endfor %}
             {% else %}
+                <a href="{% url 'courses:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
+                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
+                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     

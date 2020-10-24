@@ -4,18 +4,22 @@
 {% block body_content %}
     <div class="container">
         {% if user.is_authenticated %}
-            Username: {{user.username}}
-            First Name: {{user.first_name}}
-            Last Name: {{user.last_name}}
-            Email: {{user.email}}
-            Type: 
+            <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+            <h1>Username: {{user.username}}</h1>
+            <h4>First Name: {{user.first_name}}</h4>
+            <h4>Last Name: {{user.last_name}}</h4>
+            
+            <h4>Type: 
             {% if user.user_type == 1 %}
                 Student
             {% else %}
                 Teacher                
             {% endif %}
-                
+            </h4>
+            <h5>Email: {{user.email}}</h5>
+            
             {% if user.user_type == 2 %}
+                <div class="card-deck">
                 {% for course in course_list %}
                     
                     {% if course.teacher.id == user.id %}
@@ -33,12 +37,15 @@
                             </div>
                         </div>
                     {% endif %}
+                
                 {% empty %}
                     <div class="jumbotron">
                         You have not created any courses yet.
                     </div>
                 {% endfor %}
+                </div>
             {% elif user.user_type == 1 %}
+            <div class="card-deck">
                 {% for course in course_list %}
                     
                     {% if user in course.students.all %}
@@ -56,11 +63,13 @@
                             </div>
                         </div>
                     {% endif %}
+               
                 {% empty %}
                     <div class="jumbotron">
                         You have not enrolled in any courses yet.
                     </div>
                 {% endfor %}
+            </div>
             {% endif %}
         {% else %}
             <div class="jumbotron">

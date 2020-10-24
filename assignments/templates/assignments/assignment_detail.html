@@ -27,6 +27,8 @@
                     </p>
                     <small>Start Date: {{submissions.submitted_date}}</small><br>
                 </a>
+            {% empty %}
+                <h6>No Submissions</h6>
             {% endfor %}
             </div>
                 
