@@ -46,7 +46,12 @@ INSTALLED_APPS = [
     'assignments',
     'bootstrap4',
     'resources',
+    'graphene_django',
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'django_lms.schema.schema'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
