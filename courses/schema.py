@@ -41,6 +41,7 @@ class CreateCourse(graphene.Mutation):
     def mutate(root, info, input=None):
         ok = True
         students = []
+        
         teacher = []
         for student_input in input.students:
             student = User.objects.get(pk=student_input.id)

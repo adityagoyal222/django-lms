@@ -48,8 +48,7 @@ class AssignmentInput(graphene.InputObjectType):
     assignment_name = graphene.String()
     assignment_description = graphene.String()
     start_date = graphene.DateTime()
-    due_date = graphene.Date()
-    due_time = graphene.Time()
+    due_date = graphene.DateTime()
     course = graphene.Field(course_schema.CourseInput)
 
 class SubmissionInput(graphene.InputObjectType):
@@ -78,7 +77,6 @@ class CreateAssignment(graphene.Mutation):
             assignment_description=input.assignment_description,
             start_date=input.start_date,
             due_date=input.due_date,
-            due_time=input.due_time,
             course=input.course,
         )
         assignment_instance.save()
@@ -102,7 +100,6 @@ class UpdateAssignment(graphene.Mutation):
             assignment_instance.assignment_description = input.assignment_description
             assignment_instance.start_date = input.start_date
             assignment_instance.due_date = input.due_date
-            assignment_instance.due_time = input.due_time
             assignment_instance.course = input.course
             assignment_instance.save()
             return UpdateAssignment(ok=ok, assignment=assignment_instance)

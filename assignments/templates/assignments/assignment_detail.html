@@ -11,7 +11,7 @@
         <h1>{{assignment.assignment_name}}</h1>
         <h4>Course: {{assignment.course}}</h4>
         <h6>Start Date: {{assignment.start_date}}</h6>
-        <h6>Due Date: {{assignment.due_date}} {{assignment.due_time}}</h6>
+        <h6>Due Date: {{assignment.due_date}}</h6>
         
         <p>Description: {{assignment.assignment_description}}</p>
         {% if user.user_type == 2 %}
@@ -40,16 +40,8 @@
 
         {% else %}            
             {% if assignment.course in course %}
-                {% if duedate.year >= time.year %}
-                    {% if duedate.month >= time.month %}
-                        {% if duedate.day >= time.day %}
-                            {% if duetime.hour >= time.hour %}
-                                {% if duetime.minute >= time.minute %}
-                                    <a href="{% url 'assignments:submit' %}" class="btn btn-success btn-lg">Submit Assignment</a>
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}      
-                    {% endif %}
+                {% if duedate >= time %}
+                    <a href="{% url 'assignments:submit' %}" class="btn btn-success btn-lg">Submit Assignment</a>
                 {% endif %}
                 <div class="submissions">
                 <h3>My Submissions:</h3>

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateInput, TimeInput, Form
+from django.forms import ModelForm, DateInput, TimeInput, Form, DateTimeInput
 from django import forms
 from django.shortcuts import get_object_or_404
 from assignments.models import SubmitAssignment, Assignment
@@ -16,10 +16,9 @@ class CreateAssignmentForm(ModelForm):
     class Meta:
         model = Assignment
         fields = ('assignment_name', 'assignment_description',
-                  'due_date', 'due_time', 'course')
-        widgets = {
-            'due_date': DateInput(format=('%d/%m/%Y'), attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
-            'due_time': TimeInput(format=('%H:%M'),),
+                  'due_date', 'course')
+        labels = {
+            'due_date': 'Due Date (yyyy-mm-dd HH:MM)'
         }
 
     def __init__(self, *args, **kwargs):

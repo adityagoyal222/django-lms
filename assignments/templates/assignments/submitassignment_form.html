@@ -22,16 +22,8 @@
                 {% bootstrap_form form %}
                 {{ form.name.errors }}
                 
-                {% if duedate.year >= time.year %}
-                    {% if duedate.month >= time.month %}
-                        {% if duedate.day >= time.day %}
-                            {% if duetime.hour >= time.hour %}
-                                {% if duetime.minute >= time.minute %}
-                                    <input type="submit" value="Submit" class="btn btn-warning btn-lg">
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}      
-                    {% endif %}
+                {% if duedate >= time %}
+                    <input type="submit" value="Submit" class="btn btn-warning btn-lg">
                 {% endif %}
             </form>
             <ul>

@@ -1,5 +1,5 @@
 {% extends 'assignments/assignment_base.html' %}
-{% load bootstrap4 %} 
+{% load bootstrap4 %}
 
 {% block title_name %}
   LMS - Create Resource
@@ -13,7 +13,10 @@
   {% if user.user_type == 2 %}
     <form method="POST" action="{% url 'assignments:create' %}">
       {% csrf_token %} 
-      {% bootstrap_form form %}
+      {% bootstrap_field form.assignment_name %}
+      {% bootstrap_field form.assignment_description %}
+      {% bootstrap_field form.due_date %}
+      {% bootstrap_field form.course %}
       {{ form.name.errors }}
       <input type="submit" value="Submit" class="btn btn-success btn-lg">
     </form>
@@ -26,5 +29,4 @@
     {% endif %}
 
 </div>
-
 {% endblock main_content %}

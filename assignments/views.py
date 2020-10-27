@@ -52,7 +52,6 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
         assignment_object = get_object_or_404(assignments)
         context = super(SubmitAssignmentView, self).get_context_data(**kwargs)
         context['duedate'] = assignment_object.due_date
-        context['duetime'] = assignment_object.due_time
         context['time'] = timezone.now()
         return context
 
@@ -84,7 +83,6 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         assignment = Assignment.objects.filter(pk=self.kwargs['pk'])
         assignment_object = get_object_or_404(assignment)
         context['duedate'] = assignment_object.due_date
-        context['duetime'] = assignment_object.due_time
         context['time'] = timezone.now()
         submitassignment = SubmitAssignment.objects.filter(assignment_ques=self.kwargs['pk'])
         context['submitted'] = submitassignment

@@ -12,8 +12,7 @@ class Assignment(models.Model):
     assignment_name = models.CharField(max_length=200, blank=False)
     assignment_description = models.TextField(blank=False)
     start_date = models.DateTimeField(default=timezone.now)
-    due_date = models.DateField(blank=True)
-    due_time = models.TimeField(default="00:00")
+    due_date = models.DateTimeField(blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
