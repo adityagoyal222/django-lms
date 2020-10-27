@@ -72,12 +72,13 @@ class CreateAssignment(graphene.Mutation):
     @staticmethod
     def mutate(root, info, input=None):
         ok = True
+        course = Course.objects.get(pk=input.course.id)
         assignment_instance = Assignment(
             assignment_name=input.assignment_name,
             assignment_description=input.assignment_description,
             start_date=input.start_date,
             due_date=input.due_date,
-            course=input.course,
+            course=course,
         )
         assignment_instance.save()
         return CreateAssignment(ok=ok, assignment=assignment_instance)
@@ -93,6 +94,7 @@ class UpdateAssignment(graphene.Mutation):
     @staticmethod
     def mutate(root, info, id, input=None):
         ok = False
+        course = Course.objects.get(pk=input.course.id)
         assignment_instance = Assignment.objects.get(pk=id)
         if assignment_instance:
             ok = True
@@ -100,7 +102,7 @@ class UpdateAssignment(graphene.Mutation):
             assignment_instance.assignment_description = input.assignment_description
             assignment_instance.start_date = input.start_date
             assignment_instance.due_date = input.due_date
-            assignment_instance.course = input.course
+            assignment_instance.course = course
             assignment_instance.save()
             return UpdateAssignment(ok=ok, assignment=assignment_instance)
         return UpdateAssignment(ok=ok, assignment=None)
@@ -115,13 +117,15 @@ class CreateSubmission(graphene.Mutation):
     @staticmethod
     def mutate(root, info, input=None):
         ok = True
+        author = User.objects.get(pk=input.author.id)
+        assignment_ques = Assignment.objects.get(pk=input.assignment_ques.id)
         submission_instance = SubmitAssignment(
-            author=input.author,
+            author=author,
             topic=input.topic,
             description=input.description,
             assignment_file=input.assignment_file,
             submitted_date=input.submitted_date,
-            assignment_ques=input.assignment_ques,
+            assignment_ques=assignment_ques,
             graded=input.graded,
             grade=input.grade,
         )
@@ -139,15 +143,17 @@ class UpdateSubmission(graphene.Mutation):
     @staticmethod
     def mutate(root, info, id, input=None):
         ok = False
+        author = User.objects.get(pk=input.author.id)
+        assignment_ques = Assignment.objects.get(pk=input.assignment_ques.id)
         submission_instance = SubmitAssignment.objects.get(pk=id)
         if submission_instance:
             ok = True
-            submission_instance.author=input.author,
+            submission_instance.author=author,
             submission_instance.topic=input.topic,
             submission_instance.description=input.description,
             submission_instance.assignment_file=input.assignment_file
             submission_instance.submitted_date=input.submitted_date
-            submission_instance.assignment_ques=input.assignment_ques
+            submission_instance.assignment_ques=assignment_ques
             submission_instance.graded=input.graded
             submission_instance.grade=input.grade
             submission_instance.save()

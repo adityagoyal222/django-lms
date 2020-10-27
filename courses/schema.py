@@ -27,7 +27,7 @@ class CourseInput(graphene.InputObjectType):
     id = graphene.ID()
     course_name = graphene.String()
     course_description = graphene.String()
-    teacher = graphene.List(user_schema.UserInput)
+    teacher = graphene.Field(user_schema.UserInput)
     students = graphene.List(user_schema.UserInput)
 
 class CreateCourse(graphene.Mutation):
@@ -41,24 +41,18 @@ class CreateCourse(graphene.Mutation):
     def mutate(root, info, input=None):
         ok = True
         students = []
-        
-        teacher = []
+        teacher = User.objects.get(pk=input.teacher.id)
         for student_input in input.students:
             student = User.objects.get(pk=student_input.id)
             if student is None:
                 return CreateCourse(ok=False, course=None)
             students.append(student)
-        # for teacher_input in input.teacher:
-        #     teacher = User.objects.get(pk=teacher_input.id)
-        #     if teacher is None:
-        #         return CreateCourse(ok=False, course=None)
-        #     teacher.append(teacher)
         course_instance = Course(
             course_name = input.course_name,
             course_description = input.course_description,
+            teacher = teacher
         )
         course_instance.save()
-        course_instance.teacher.det(teacher)
         course_instance.students.set(students)
         return CreateCourse(ok=ok, course=course_instance)
     
@@ -74,6 +68,7 @@ class UpdateCourse(graphene.Mutation):
     def mutate(root, info, id, input=None):
         ok = False
         course_instance = Course.objects.get(pk=id)
+        teacher = User.objects.get(pk=input.teacher.id)
         if course_instance:
             ok = True
             students = []
@@ -84,7 +79,7 @@ class UpdateCourse(graphene.Mutation):
                 students.append(student)
             course_instance.course_name = input.course_name
             course_instance.course_description = input.course_description
-            course_instance.teacher = input.teacher
+            course_instance.teacher = teacher
             course_instance.save()
             course_instance.students.set(students)
             return UpdateCourse(ok=ok, course=course_instance)

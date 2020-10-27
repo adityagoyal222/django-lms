@@ -44,10 +44,11 @@ class CreateResource(graphene.Mutation):
     @staticmethod
     def mutate(root, info, input=None):
         ok = True
+        course = Course.objects.get(pk=input.course.id)
         resource_instance = Resource(
             resource_name=input.resource_name,
             resource_file=input.resource_file,
-            course=input.course,
+            course=course,
         )
         resource_instance.save()
         return CreateResource(ok=ok, resource=resource_instance)
@@ -64,12 +65,13 @@ class UpdateResource(graphene.Mutation):
     @staticmethod
     def mutate(root, info, id, input=None):
         ok = False
+        course = Course.objects.get(pk=input.course.id)
         resource_instance = Resource.objects.get(pk=id)
         if resource_instance:
             ok = True
             resource_instance.resource_name = input.resource_name
             resource_instance.resource_file = input.resource_file
-            resource_instance.course = input.course
+            resource_instance.course = course
             resource_instance.save()
             return UpdateResource(ok=ok, resource=resource_instance)
         return UpdateResource(ok=ok, resource=None)
