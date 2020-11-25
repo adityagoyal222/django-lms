@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'resources',
     'graphene_django',
     'crispy_forms',
+    'django_forms_bootstrap',
 ]
 
 GRAPHENE = {

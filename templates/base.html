@@ -51,7 +51,7 @@
             <a href="{% url 'users:logout' %}" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
             <a class="sidemenu side-element">Guest</a>
-            <a href="home"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
             <a href="{% url 'users:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
             <a href="{% url 'users:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
             <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
