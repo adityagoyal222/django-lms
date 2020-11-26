@@ -33,20 +33,3 @@ nosetests.xml
 coverage.xml 
 *.cover 
 .hypothesis/ 
-
-
-# Installer logs 
-pip-log.txt 
-pip-delete-this-directory.txt 
-
-# Python # 
-*.py[cod] 
-*$py.class 
-
-# Django #
-*.log
-*.pot
-*.pyc
-__pycache__
-db.sqlite3
-media
