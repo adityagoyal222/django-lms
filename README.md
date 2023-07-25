@@ -11,6 +11,7 @@ The project started as a challenge to improve and test my knowledge of Django. T
 * HTML
 * CSS
 * Bootstrap
+* Tailwind
 
 # Features
 This platform is fairly simple yet provides most of the necessary features required in a Learning Management System. It uses Django's MTV architecture.
