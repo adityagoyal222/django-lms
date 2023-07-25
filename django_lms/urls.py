@@ -31,5 +31,6 @@ urlpatterns = [
     re_path(r'^resources/', include('resources.urls', namespace="resources")),
     re_path(r'^user_profile/(?P<pk>[-\w]+)/$',
         project_views.UserProfile.as_view(), name="profile"),
-    re_path('graphql/', FileUploadGraphQLView.as_view(graphiql=True))
+    re_path('graphql/', FileUploadGraphQLView.as_view(graphiql=True)),
+    path("__reload__/", include("django_browser_reload.urls"))
 ]
