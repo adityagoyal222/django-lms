@@ -1,9 +1,10 @@
-from django.conf.urls import url
+# from django.conf.urls import url
+from django.urls import re_path, include
 from resources import views
 
 app_name = "resources"
 
 urlpatterns = [
-    url(r'^create/$', views.CreateResource.as_view(), name="create"),
-    url(r'^delete/(?P<pk>[-\w]+)/$', views.delete_view, name='delete')
+    re_path(r'^create/$', views.CreateResource.as_view(), name="create"),
+    re_path(r'^delete/(?P<pk>[-\w]+)/$', views.delete_view, name='delete')
 ]
