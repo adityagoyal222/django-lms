@@ -50,11 +50,14 @@ The installation process involves cloning this repository, installing mysql-serv
         'HOST': 'localhost',
         'PORT': '3306',
     }
-    
+
 9. Run the command `python manage.py makemigrations` then `python manage.py migrate` to create the tables in the database.
-10. Then install tailwind for django using this process:
-        * python -m pip install django-tailwind[reload]
-        * python manage.py tailwind install - ensures tailwind dependencies are installed
+10. Then install tailwind for django using this commands: 
+```python
+python -m pip install django-tailwind[reload]
+python manage.py tailwind install #ensures tailwind dependencies are installed
+
+```
 
 11. finally to run the project use the command `python manage.py tailwind start` in one terminal then open another terminal in the same directory and ensure you are in the virtual environment by typing `source virtualenv/bin/activate`. then the command : `python manage.py runserver` to run the website.
 12. Open your browser and type `localhost:8000` in the address bar to view the website.
