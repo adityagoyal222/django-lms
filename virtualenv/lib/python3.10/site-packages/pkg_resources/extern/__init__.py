@@ -69,8 +69,5 @@ class VendorImporter:
             sys.meta_path.append(self)
 
 
-names = (
-    'packaging', 'pyparsing', 'appdirs', 'jaraco', 'importlib_resources',
-    'more_itertools',
-)
+names = 'packaging', 'pyparsing', 'appdirs'
 VendorImporter(__name__, names).install()

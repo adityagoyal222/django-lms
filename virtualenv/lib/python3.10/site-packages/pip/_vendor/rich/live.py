@@ -118,15 +118,7 @@ class Live(JupyterMixin, RenderHook):
             self._enable_redirect_io()
             self.console.push_render_hook(self)
             if refresh:
-                try:
-                    self.refresh()
-                except Exception:
-                    # If refresh fails, we want to stop the redirection of sys.stderr,
-                    # so the error stacktrace is properly displayed in the terminal.
-                    # (or, if the code that calls Rich captures the exception and wants to display something,
-                    # let this be displayed in the terminal).
-                    self.stop()
-                    raise
+                self.refresh()
             if self.auto_refresh:
                 self._refresh_thread = _RefreshThread(self, self.refresh_per_second)
                 self._refresh_thread.start()

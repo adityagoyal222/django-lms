@@ -11,6 +11,7 @@ import codecs
 import datetime
 from email import message_from_file
 import hashlib
+import imp
 import json
 import logging
 import os
@@ -60,18 +61,10 @@ else:
         parts = ['cp', VER_SUFFIX]
         if sysconfig.get_config_var('Py_DEBUG'):
             parts.append('d')
-        if IMP_PREFIX == 'cp':
-            vi = sys.version_info[:2]
-            if vi < (3, 8):
-                wpm = sysconfig.get_config_var('WITH_PYMALLOC')
-                if wpm is None:
-                    wpm = True
-                if wpm:
-                    parts.append('m')
-                if vi < (3, 3):
-                    us = sysconfig.get_config_var('Py_UNICODE_SIZE')
-                    if us == 4 or (us is None and sys.maxunicode == 0x10FFFF):
-                        parts.append('u')
+        if sysconfig.get_config_var('WITH_PYMALLOC'):
+            parts.append('m')
+        if sysconfig.get_config_var('Py_UNICODE_SIZE') == 4:
+            parts.append('u')
         return ''.join(parts)
     ABI = _derive_abi()
     del _derive_abi
@@ -102,29 +95,6 @@ if os.sep == '/':
 else:
     to_posix = lambda o: o.replace(os.sep, '/')
 
-if sys.version_info[0] < 3:
-    import imp
-else:
-    imp = None
-    import importlib.machinery
-    import importlib.util
-
-def _get_suffixes():
-    if imp:
-        return [s[0] for s in imp.get_suffixes()]
-    else:
-        return importlib.machinery.EXTENSION_SUFFIXES
-
-def _load_dynamic(name, path):
-    # https://docs.python.org/3/library/importlib.html#importing-a-source-file-directly
-    if imp:
-        return imp.load_dynamic(name, path)
-    else:
-        spec = importlib.util.spec_from_file_location(name, path)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[name] = module
-        spec.loader.exec_module(module)
-        return module
 
 class Mounter(object):
     def __init__(self):
@@ -154,7 +124,7 @@ class Mounter(object):
         else:
             if fullname not in self.libs:
                 raise ImportError('unable to find extension for %s' % fullname)
-            result = _load_dynamic(fullname, self.libs[fullname])
+            result = imp.load_dynamic(fullname, self.libs[fullname])
             result.__loader__ = self
             parts = fullname.rsplit('.', 1)
             if len(parts) > 1:
@@ -331,9 +301,10 @@ class Wheel(object):
         result = base64.urlsafe_b64encode(result).rstrip(b'=').decode('ascii')
         return hash_kind, result
 
-    def write_record(self, records, record_path, archive_record_path):
+    def write_record(self, records, record_path, base):
         records = list(records) # make a copy, as mutated
-        records.append((archive_record_path, '', ''))
+        p = to_posix(os.path.relpath(record_path, base))
+        records.append((p, '', ''))
         with CSVWriter(record_path) as writer:
             for row in records:
                 writer.writerow(row)
@@ -350,8 +321,8 @@ class Wheel(object):
             records.append((ap, digest, size))
 
         p = os.path.join(distinfo, 'RECORD')
+        self.write_record(records, p, libdir)
         ap = to_posix(os.path.join(info_dir, 'RECORD'))
-        self.write_record(records, p, ap)
         archive_paths.append((ap, p))
 
     def build_zip(self, pathname, archive_paths):
@@ -994,7 +965,7 @@ def compatible_tags():
         versions.append(''.join([major, str(minor)]))
 
     abis = []
-    for suffix in _get_suffixes():
+    for suffix, _, _ in imp.get_suffixes():
         if suffix.startswith('.abi'):
             abis.append(suffix.split('.', 2)[1])
     abis.sort()

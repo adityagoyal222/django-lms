@@ -4,7 +4,7 @@
 
     Formatter for LaTeX fancyvrb output.
 
-    :copyright: Copyright 2006-2022 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2021 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -159,8 +159,6 @@ class LatexFormatter(Formatter):
             \PY{k}{pass}
         \end{Verbatim}
 
-    Wrapping can be disabled using the `nowrap` option.
-
     The special command used here (``\PY``) and all the other macros it needs
     are output by the `get_style_defs` method.
 
@@ -172,11 +170,6 @@ class LatexFormatter(Formatter):
     ``Verbatim`` environments.
 
     Additional options accepted:
-
-    `nowrap`
-        If set to ``True``, don't wrap the tokens at all, not even inside a
-        ``\begin{Verbatim}`` environment. This disables most other options
-        (default: ``False``).
 
     `style`
         The style to use, can be a string or a Style subclass (default:
@@ -255,7 +248,6 @@ class LatexFormatter(Formatter):
 
     def __init__(self, **options):
         Formatter.__init__(self, **options)
-        self.nowrap = get_bool_opt(options, 'nowrap', False)
         self.docclass = options.get('docclass', 'article')
         self.preamble = options.get('preamble', '')
         self.linenos = get_bool_opt(options, 'linenos', False)
@@ -342,19 +334,18 @@ class LatexFormatter(Formatter):
             realoutfile = outfile
             outfile = StringIO()
 
-        if not self.nowrap:
-            outfile.write('\\begin{' + self.envname + '}[commandchars=\\\\\\{\\}')
-            if self.linenos:
-                start, step = self.linenostart, self.linenostep
-                outfile.write(',numbers=left' +
-                              (start and ',firstnumber=%d' % start or '') +
-                              (step and ',stepnumber=%d' % step or ''))
-            if self.mathescape or self.texcomments or self.escapeinside:
-                outfile.write(',codes={\\catcode`\\$=3\\catcode`\\^=7'
-                              '\\catcode`\\_=8\\relax}')
-            if self.verboptions:
-                outfile.write(',' + self.verboptions)
-            outfile.write(']\n')
+        outfile.write('\\begin{' + self.envname + '}[commandchars=\\\\\\{\\}')
+        if self.linenos:
+            start, step = self.linenostart, self.linenostep
+            outfile.write(',numbers=left' +
+                          (start and ',firstnumber=%d' % start or '') +
+                          (step and ',stepnumber=%d' % step or ''))
+        if self.mathescape or self.texcomments or self.escapeinside:
+            outfile.write(',codes={\\catcode`\\$=3\\catcode`\\^=7'
+                          '\\catcode`\\_=8\\relax}')
+        if self.verboptions:
+            outfile.write(',' + self.verboptions)
+        outfile.write(']\n')
 
         for ttype, value in tokensource:
             if ttype in Token.Comment:
@@ -417,8 +408,7 @@ class LatexFormatter(Formatter):
             else:
                 outfile.write(value)
 
-        if not self.nowrap:
-            outfile.write('\\end{' + self.envname + '}\n')
+        outfile.write('\\end{' + self.envname + '}\n')
 
         if self.full:
             encoding = self.encoding or 'utf8'
