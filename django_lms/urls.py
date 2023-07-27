@@ -29,6 +29,7 @@ urlpatterns = [
     re_path(r'^courses/', include('courses.urls', namespace="courses")),
     re_path(r'^assignments/', include('assignments.urls', namespace='assignments')),
     re_path(r'^resources/', include('resources.urls', namespace="resources")),
+    re_path(r'^editor/', include('editor.urls', namespace="editor")),
     re_path(r'^user_profile/(?P<pk>[-\w]+)/$',
         project_views.UserProfile.as_view(), name="profile"),
     re_path('graphql/', FileUploadGraphQLView.as_view(graphiql=True)),
