@@ -5,7 +5,7 @@
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #093568; /* Black */
+  background-color: #; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
 }
@@ -21,7 +21,7 @@ p, a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 20px;
-  color: #999999;
+  color: #;
   display: block;
 }
 
