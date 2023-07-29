@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
+    
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -103,8 +104,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_lms',
+<<<<<<< HEAD
         'USER': 'root',
-        'PASSWORD': 'lms123',
+=======
+        'USER': 'toor',
+>>>>>>> 1141162c2ce3e80da3855ad2dce4505a18ca05bb
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
     }

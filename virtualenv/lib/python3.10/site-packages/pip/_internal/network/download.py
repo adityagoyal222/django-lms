@@ -1,6 +1,6 @@
 """Download files with progress indicators.
 """
-import email.message
+import cgi
 import logging
 import mimetypes
 import os
@@ -81,13 +81,12 @@ def parse_content_disposition(content_disposition: str, default_filename: str) -
     Parse the "filename" value from a Content-Disposition header, and
     return the default filename if the result is empty.
     """
-    m = email.message.Message()
-    m["content-type"] = content_disposition
-    filename = m.get_param("filename")
+    _type, params = cgi.parse_header(content_disposition)
+    filename = params.get("filename")
     if filename:
         # We need to sanitize the filename to prevent directory traversal
         # in case the filename contains ".." path parts.
-        filename = sanitize_content_filename(str(filename))
+        filename = sanitize_content_filename(filename)
     return filename or default_filename
 
 

@@ -1,0 +1,17 @@
+{% extends "bootstrap/form.html" %}
+
+{% load i18n %}
+
+{% block page_header %}
+    <h1>{% blocktrans with model_verbose_name|lower as object_name %}Edit {{ object_name }}{% endblocktrans %}</h1>
+{% endblock %}
+
+{% block actions %}
+<div class="row">
+    <div class="span8">
+        {{ block.super }}
+    </div>
+    <div class="span4">
+        <a href="{{ delete_url }}" class="btn">{% trans "Delete" %}</a>
+    </div>
+{% endblock %}

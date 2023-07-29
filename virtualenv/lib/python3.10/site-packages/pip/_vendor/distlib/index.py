@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 try:
     from threading import Thread
-except ImportError:  # pragma: no cover
+except ImportError:
     from dummy_threading import Thread
 
 from . import DistlibException
@@ -104,7 +104,7 @@ class PackageIndex(object):
         pm.add_password(self.realm, netloc, self.username, self.password)
         self.password_handler = HTTPBasicAuthHandler(pm)
 
-    def register(self, metadata):  # pragma: no cover
+    def register(self, metadata):
         """
         Register a distribution on PyPI, using the provided metadata.
 
@@ -142,7 +142,8 @@ class PackageIndex(object):
             logger.debug('%s: %s' % (name, s))
         stream.close()
 
-    def get_sign_command(self, filename, signer, sign_password, keystore=None):  # pragma: no cover
+    def get_sign_command(self, filename, signer, sign_password,
+                         keystore=None):
         """
         Return a suitable command for signing a file.
 
@@ -205,7 +206,7 @@ class PackageIndex(object):
         t2.join()
         return p.returncode, stdout, stderr
 
-    def sign_file(self, filename, signer, sign_password, keystore=None):  # pragma: no cover
+    def sign_file(self, filename, signer, sign_password, keystore=None):
         """
         Sign a file.
 
@@ -285,7 +286,7 @@ class PackageIndex(object):
         request = self.encode_request(d.items(), files)
         return self.send_request(request)
 
-    def upload_documentation(self, metadata, doc_dir):  # pragma: no cover
+    def upload_documentation(self, metadata, doc_dir):
         """
         Upload documentation to the index.
 
@@ -498,7 +499,7 @@ class PackageIndex(object):
         }
         return Request(self.url, body, headers)
 
-    def search(self, terms, operator=None):  # pragma: no cover
+    def search(self, terms, operator=None):
         if isinstance(terms, string_types):
             terms = {'name': terms}
         rpc_proxy = ServerProxy(self.url, timeout=3.0)
