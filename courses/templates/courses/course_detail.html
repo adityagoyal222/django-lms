@@ -6,18 +6,18 @@
 {% endblock title_name %}
 
 {% block main_content %}
-<h1>{{course.course_name}}</h1>
+<h1 class="font-sans font-semibold text-4xl">{{course.course_name}}</h1>
 <h4>Teacher: {{course.teacher}}</h4>
 <p>Description: {{course.course_description}}</p>
 
 {% if user.user_type == 1 %} {%if user in course.students.all%}
 <a
   href="{% url 'courses:unenroll' pk=course.pk %}"
-  class="btn btn-danger btn-lg"
+  class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline"
   >Unenroll</a
 >
 {% else %}
-<a href="{% url 'courses:enroll' pk=course.pk %}" class="btn btn-success btn-lg"
+<a href="{% url 'courses:enroll' pk=course.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold "
   >Enroll</a
 >
 {% endif %} 
@@ -27,13 +27,13 @@
   {% if user.user_type == 2 %}
     <a
       href="{% url 'assignments:create' %}"
-      class="btn btn-lg btn-fill btn-warning button-stretch"
+      class="bg-yellow-500 rounded-md font-semibold text-black hover:text-white hover:bg-black p-2 m-2 shadow-lg text-2xl"
     >
       <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
     </a>
     <a
       href="{% url 'resources:create' %}"
-      class="btn btn-lg btn-fill btn-info button-stretch"
+      class="bg-blue-900 rounded-md font-semibold text-white hover:text-black hover:shadow-xl hover:bg-gray-400 p-2 m-2 shadow-lg text-2xl"
     >
       <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
     </a>
