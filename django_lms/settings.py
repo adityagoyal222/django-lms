@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'assignments',
     'bootstrap4',
     'resources',
+    'editor',
     'graphene_django',
     'crispy_forms',
     'django_forms_bootstrap',
