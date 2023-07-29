@@ -1,5 +1,5 @@
 import io
-from typing import IO, TYPE_CHECKING, Any, List
+from typing import List, Any, IO, TYPE_CHECKING
 
 from .ansi import AnsiDecoder
 from .text import Text
@@ -48,7 +48,7 @@ class FileProxy(io.TextIOBase):
         return len(text)
 
     def flush(self) -> None:
-        output = "".join(self.__buffer)
-        if output:
-            self.__console.print(output)
-        del self.__buffer[:]
+        buffer = self.__buffer
+        if buffer:
+            self.__console.print("".join(buffer))
+            del buffer[:]

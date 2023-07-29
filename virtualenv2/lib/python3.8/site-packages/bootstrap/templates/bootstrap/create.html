@@ -1,0 +1,7 @@
+{% extends "bootstrap/form.html" %}
+
+{% load i18n %}
+
+{% block page_header %}
+    <h1>{% blocktrans with model_verbose_name|lower as object_name %}Add {{ object_name }}{% endblocktrans %}</h1>
+{% endblock %}
