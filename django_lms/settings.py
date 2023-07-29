@@ -46,12 +46,14 @@ INSTALLED_APPS = [
     'assignments',
     'bootstrap4',
     'resources',
+    'editor',
     'graphene_django',
     'crispy_forms',
     'django_forms_bootstrap',
     'tailwind',
     'theme',
     'django_browser_reload',
+    
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [

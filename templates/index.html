@@ -20,14 +20,14 @@
 </head>
 {% comment %} <body class="bg-gradient-to-r from-cyan-500 to-blue-900 "> {% endcomment %}
 <body class="bg-gray-200 ">
-    <div class="bg-transparent shadow-sm h-[70px] w-full p-2 flex flex-row relative">
+    <div class="bg-transparent shadow-sm h-[70px] w-full p-2 flex flex-row mx-auto items-center justify-center">
         <div class="items-start p-1 m-2">
-            <img src="{% static 'abya2.png' %}"/>
+            <img src="{% static 'django_lms/images/abya2.jpg' %}" class="w-[50px] h-[50px]"/>
         </div>
-        <div class="mx-auto my-auto">
+        <div class="mx-auto my-auto items-center">
             <h1 class="text-2xl font-bold font-serif">ABYA</h1>
         </div>
-        <div class="my-auto">
+        <div class="my-auto items-end">
             <a href="{% url 'home' %}" class="bg-transparent hover:bg-blue-700 p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Home</a>
             <a href="{% url 'users:login' %}" class="bg-transparent hover:bg-blue-700 hover:shadow-lg p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Login</a>
             <a href="{% url 'users:signup' %}" class="bg-transparent hover:bg-blue-700 hover:shadow-lg p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Register</a>
