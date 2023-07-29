@@ -9,20 +9,20 @@
 {% block body_content %}
     
     {% if user.is_authenticated %}
-        <div class="container">
-            <div class="jumbotron">
-                <h2>You are already logged in. Please logout to sign in as a different user.</h2>
+        <div class="bg-yellow-200 p-2 rounded-2xl">
+            <div class="text-red-700 font-serif w-auto font-extrabold text-md items-center justify-center mx-auto flex">
+                <h2 class="font-serif text-xl w-auto">You are already logged in. Please logout to sign in as a different user!!</h2>
             </div>
         </div>
     
     {% else %}
 
-    <div class="container">
-        <h1>Log In</h1>
+    <div  class="container shadow-lg p-5 rounded-xl font-serif">
+        <h1 class="mx-auto font-serif font-extrabold items-center justify-center flex text-2xl uppercase mb-5">Log In</h1>
         <form method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="btn btn-primary" value="Login">
+            <input type="submit" class="bg-blue-900 rounded-md font-semibold text-yellow-300 hover:text-yellow-600 hover:bg-blue-700 p-2 m-2 shadow-lg" value="Login">
         </form>
     </div>
 

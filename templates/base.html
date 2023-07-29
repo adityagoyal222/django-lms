@@ -1,8 +1,11 @@
 {% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css%}
     <title>
         
         {% block title %}
@@ -17,44 +20,44 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
 <body>
-    <div class="sidenav">
+    <div class="sidenav bg-gradient-to-r from-blue-900 to-gray-300">
         <div class="side-items">
         <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
         
         {% if user.is_authenticated %}
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
-            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+            <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-black font-extrabold" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-black font-extrabold" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}
-                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
+                <span class="sidemenu" ><h5 id="side-head"  class="text-black font-extrabold"><i class="fa fa-list courses-icon text-black font-extrabold" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user in course.students.all %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold">{{course}}</a></span>
                     {% endif %}
                         
                 {% endfor %}
             {% else %}
-                <a href="{% url 'courses:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
-                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
-                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
+                <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
+                <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user.id == course.teacher.id %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
                     {% endif %}
                         
                 {% endfor %}                 
             {% endif %}
-            <a href="{% url 'users:logout' %}" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+            <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
-            <a class="sidemenu side-element">Guest</a>
-            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'users:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
-            <a href="{% url 'users:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
-            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+            <a class="sidemenu side-element text-black">Guest</a>
+            <a href="{% url 'home' %}" class="text-black font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'users:login' %}" class="text-black font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
+            <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+            <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
         {% endif %}
         </div>
             
