@@ -7,19 +7,19 @@
     
 
 {% block main_content %}
-    <div class="container">
-        <h1>{{assignment.assignment_name}}</h1>
-        <h4>Course: {{assignment.course}}</h4>
-        <h6>Start Date: {{assignment.start_date}}</h6>
-        <h6>Due Date: {{assignment.due_date}}</h6>
+    <div class="h-auto m-2 p-5 shadow-lg rounded-lg">
+        <h1  class="font-sans font-semibold text-4xl">{{assignment.assignment_name}}</h1>
+        <h4 class="font-serif font-semibold">Course: {{assignment.course}}</h4>
+        <h6 class="font-extralight">Start Date: {{assignment.start_date}}</h6>
+        <h6 class="font-extralight">Due Date: {{assignment.due_date}}</h6>
         
-        <p>Description: {{assignment.assignment_description}}</p>
+        <p class="font-extralight">Description: {{assignment.assignment_description}}</p>
         {% if user.user_type == 2 %}
-            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="btn btn-warning btn-lg">Update</a>
-            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="btn btn-danger btn-lg">Delete</a>
+            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md hover:no-underline text-md font-extrabold ">Update</a>
+            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a>
 
             <div class="submissions">
-            <h3>Submissions</h3>
+            <h3  class="font-sans font-semibold text-4xl">Submissions</h3>
             
             {% for submissions in submitted %}
                 <a href="{% url 'assignments:submit_detail' pk=submissions.pk %}" class="list-group-item list-group-item-action">
@@ -41,7 +41,7 @@
         {% else %}            
             {% if assignment.course in course %}
                 {% if duedate >= time %}
-                    <a href="{% url 'assignments:submit' %}" class="btn btn-success btn-lg">Submit Assignment</a>
+                    <a href="{% url 'assignments:submit' %}" class="bg-green-500 m-3 text-white hover:bg-green-800 p-2 rounded-md hover:no-underline text-md font-extrabold ">Submit Assignment</a>
                 {% endif %}
                 <div class="submissions">
                 <h3>My Submissions:</h3>
