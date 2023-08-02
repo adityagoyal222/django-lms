@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 
 {% block title %}
     LMS - Login
@@ -17,12 +18,24 @@
     
     {% else %}
 
-    <div  class="container shadow-lg p-5 rounded-xl font-serif">
+    <div  class="container shadow-lg p-5 rounded-xl font-serif bg-gray-100">
         <h1 class="mx-auto font-serif font-extrabold items-center justify-center flex text-2xl uppercase mb-5">Log In</h1>
         <form method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="bg-blue-900 rounded-md font-semibold text-yellow-300 hover:text-yellow-600 hover:bg-blue-700 p-2 m-2 shadow-lg" value="Login">
+            <div class="flex flex-row justify-between">
+                <div class="items-start">
+                    <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login">
+                </div>
+                <div class="items-center flex my-auto justify-between space-x-2 m-2 bg-transparent shadow-md rounded-md font-semibold text-black hover:shadow-lg p-2 m-2">
+                    <img src={%static 'django_lms/images/google.png'%} class="w-5 my-auto mr-1"/>
+                    <input type="submit" class="" value="Sign in With Google">
+                </div>
+                <div class="items-end flex my-auto justify-between space-x-2 bg-transparent rounded-md font-semibold text-black hover:black hover:shadow-lg p-2 m-2 shadow-md">
+                    <img src={%static 'django_lms/images/github.svg'%} class="w-5 my-auto mr-1"/>
+                    <input type="submit" class="" value="Sign in With Github">
+                </div>
+            </div>
         </form>
     </div>
 
