@@ -137,9 +137,9 @@
         .then(data => {
             // Handle the response data and create a new paragraph element for the chatbot response
             const botMessage = document.createElement('p');
-            botMessage.classList.add('system-message', 'rounded-2xl', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-ebd', 'junstify-end');
+            botMessage.classList.add('user-message', 'rounded-2xl', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
             botMessage.textContent = data.response;
-
+        
             chatbotBody.appendChild(botMessage);
             // Scroll to the bottom to show the latest messages
             chatbotBody.scrollTop = chatbotBody.scrollHeight;

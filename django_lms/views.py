@@ -18,7 +18,7 @@ def index(request):
 
 # @csrf_exempt 
 def send_chatbot_response(request):
-    api_key = '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'
+    api_key = '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'
     openai.api_key = api_key
     if request.method == 'POST':
         sender = request.POST.get("chattext")
