@@ -23,7 +23,7 @@
 <body>
     <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
         <img src={%static 'django_lms/images/close3.svg'%} onclick="toggleChatbot()" class="w-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
-        <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold">Chatbot</h2>
+        <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full m-2  p-2 rounded-lg">ABYA Chatbot</h2>
        <div class=" m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
         {% for message in response %}
         {% if message.role == "system" %}
