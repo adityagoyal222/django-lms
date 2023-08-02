@@ -33,3 +33,10 @@ nosetests.xml
 coverage.xml 
 *.cover 
 .hypothesis/ 
+
+*.pyc
+*/*/*/__pycache__/
+
+*/*/__pycache__/
+
+*/__pycache__/

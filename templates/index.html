@@ -17,19 +17,55 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
+    <style>
+        body {
+            /* Use the background image provided */
+            background-image: url("{% static 'django_lms/images/landing3.jpg' %}");
+            /* Set background size and position */
+            background-size: cover;
+            background-position: center;
+            /* Add some padding to the top to prevent content overlap */
+            padding-top: 20px;
+            /* Apply a dark overlay on the background image */
+            background-color: rgba(0, 0, 0, 0.6); /* You can adjust the opacity (0 to 1) to control the darkness */
+        }
+    </style>
 </head>
-<body>
-    <div class="bg-light index-image">
-        <div class="container py-5">
-            <div class="row align-items-center py-5">
-            <div class="col-lg-6">
-                <h1 class="display-4">Learning Management System</h1>
-                <p class="lead text-muted mb-0">Your one-stop solution to online learning.</p>
-                <p><a href="{% url 'courses:list' %}" class="btn btn-primary btn-lg index-button">View All Courses</button></a>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
+{% comment %} <body class="bg-gradient-to-r from-cyan-500 to-blue-900 "> {% endcomment %}
+<body class="bg-gray-200 text-white ">
+    {% comment %} <img class="bg-cover bg-no-repeat items-center absolute" src="{% static 'django_lms/images/landing.jpg'%}"/> {% endcomment %}
+    <div class="bg-black bg-opacity-70 shadow-sm h-[70px, auto] w-full p-2 flex flex-row relative">
+        <div class="items-start p-1 m-1 w-[80px] h-[80px]">
+            <img src="{% static 'django_lms/images/abya2.jpg' %}"/>
+        </div>
+        <div class="mx-auto my-auto">
+            <h1 class="text-3xl font-bold font-serif">ABYA</h1>
+        </div>
+        <div class="my-auto text-white hover:text-yellow-400">
+            <a href="{% url 'home' %}" class="text-white hover:text-yellow-400 hover:no-underline font-bold py-2 px-4">Home</a>
+            <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400  hover:shadow-lg hover:no-underline font-bold py-2 px-4">Login</a>
+            <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:shadow-lg hover:no-underline font-bold py-2 px-4">Register</a>
+        </div>
+    </div>
+    <div class="w-[75%] h-[400px auto] mx-auto flex items-center justify-center rounded-xl bg-black text-yellow-400 bg-opacity-20 m-5">
+        {% comment %} <div>
+            <h1 class="text-4xl font-bold text-white font-serif">Welcome to ABYA</h1>
+            <p class="text-xl font-serif">Innovation. Creativity. Teamwork.</p>
+        </div> {% endcomment %}
+        <div class="index-image">
+            <div class="mx-auto items-center flex justify-center w-[60%] py-5">
+                <div class="flex flex-row my-auto space-x-4">
+                <div class="items-start justify-start my-auto">
+                    <h1 class="display-4 ">Learning Management System</h1>
+                    <p class="text-gray-900 ">Innovation. Creativity. Teamwork.</p>
+                    <p class="bg-gray-100 bg-opacity-60 hover:bg-opacity-80  rounded-md shadow-sm p-2 mt-2 hover:shadow-2xl w-auto"><a href="{% url 'courses:list' %}" class="mx-auto items-center justify-center flex text-xl font-serif font-semibold decoration-none hover:no-underline text-black ">View All Courses</a></p>
+                </div>
+                <div class="items-end justify-end my-auto"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
+                </div>
             </div>
         </div>
     </div>
+
+
 </body>
 </html>

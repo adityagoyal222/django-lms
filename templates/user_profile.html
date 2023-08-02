@@ -1,5 +1,6 @@
-{% load static tailwind_tags %}
 {% extends 'base.html' %}
+{% load static tailwind_tags %}
+
 
 
 {% block title %}
@@ -8,28 +9,29 @@
     
 
 {% block body_content %}
-    <div class="container">
+    <div class="container font-serif bg-transparent">
         {% if user.is_authenticated %}
             <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
-            <h1>Username: {{user.username}}</h1>
-            <h4>First Name: {{user.first_name}}</h4>
-            <h4>Last Name: {{user.last_name}}</h4>
+            <h1 class="text-3xl font-semibold">Username: {{user.username}}</h1>
+            <h4 class="text-xl">First Name: {{user.first_name}}</h4>
+            <h4 class="text-xl">Last Name: {{user.last_name}}</h4>
             
-            <h4>Type: 
+            <h4 class="text-xl">Type: 
             {% if user.user_type == 1 %}
                 Student
             {% else %}
                 Teacher                
             {% endif %}
             </h4>
-            <h5>Email: {{user.email}}</h5>
-            
+            <h5 class="text-xl">Email: {{user.email}}</h5>
+        
             {% if user.user_type == 2 %}
+            {% comment %} <h3 class="font-sans text-2xl mt-5">Created Courses</h3> {% endcomment %}
                 <div class="card-deck">
                 {% for course in course_list %}
                     
                     {% if course.teacher.id == user.id %}
-                        <div class="card" style="width: 18rem">
+                        <div class="bg-black bg-opacity-10 m-2 shadow-md rounded-md hover:shadow-2xl" style="width: 20rem">
                             <div class="card-body">
                             <h5 class="card-title">{{course.course_name}}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
@@ -37,8 +39,8 @@
                                 {{course.course_description}}
                             </p>
                             <a href="{% url 'courses:detail' pk=course.pk %}" 
-                            class="btn btn-primary card-link">More Info</a>
-                            <p>{{course.students.count}}
+                            class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold hover:no-underline">More Info</a>
+                            <p class="m-2">{{course.students.count}}
                                     member{{course.students.count|pluralize}}</p>
                             </div>
                         </div>
@@ -51,20 +53,21 @@
                 {% endfor %}
                 </div>
             {% elif user.user_type == 1 %}
+            <h3 class="font-sans text-2xl mt-5">Enrolled Courses</h3>
             <div class="card-deck">
                 {% for course in course_list %}
                     
                     {% if user in course.students.all %}
-                        <div class="card" style="width: 18rem">
+                        <div class=" bg-black bg-opacity-10 m-2 shadow-md rounded-md" style="width: 18rem">
                             <div class="card-body">
                             <h5 class="card-title">{{course.course_name}}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
                             <p class="card-text">
                                 {{course.course_description}}
                             </p>
-                            <a href="{% url 'courses:detail' pk=course.pk %}" class="btn btn-primary card-link">More Info</a>
-                            <a href="{% url 'courses:unenroll' pk=course.pk %}" class="btn btn-danger card-link">Unenroll</a>
-                            <p>{{course.students.count}}
+                            <a href="{% url 'courses:detail' pk=course.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold hover:no-underline">More Info</a>
+                            <a href="{% url 'courses:unenroll' pk=course.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
+                            <p class="m-2">{{course.students.count}}
                                     member{{course.students.count|pluralize}}</p>
                             </div>
                         </div>

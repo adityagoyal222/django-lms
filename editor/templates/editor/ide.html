@@ -1,0 +1,55 @@
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python IDE</title>
+  <!-- Link to Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Custom CSS for IDE -->
+  <style>
+    /* Add any additional custom styles here */
+  </style>
+  {% tailwind_css %}
+</head>
+<body class="bg-gray-100">
+  <div class="flex flex-col h-screen">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white px-4 py-2">
+      <div class="container mx-auto">
+        <h1 class="text-xl font-bold">Python IDE</h1>
+      </div>
+    </nav>
+
+    <!-- Editor and Output Section -->
+    <div class="flex flex-grow">
+      <!-- Code Editor -->
+      <div class="w-1/2 p-4">
+        <textarea id="codeEditor" name="input" class="bg-white p-2 w-full h-full border border-gray-300 rounded">
+            
+        </textarea>
+        <button type="submit" class="bg-gray-800 m-2 p-2 rounded-lg text-white font-semibold">Run Code</button>
+      </div>
+
+      <!-- Output Panel -->
+      <div class="w-1/2 p-4 bg-gray-200">
+        <h2 class="text-lg font-bold mb-2">Output:</h2>
+        <div id="output" class="bg-white p-2 h-32 border border-gray-300 rounded">
+            <!-- Output will be displayed here -->
+            {% for i in output %}
+            {{ i }}
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    {% comment %} <footer class="bg-gray-800 text-white px-4 py-2">
+      <div class="container mx-auto">
+        <p>&copy; 2023 Your Company</p>
+      </div>
+    </footer> {% endcomment %}
+  </div>
+</body>
+</html>

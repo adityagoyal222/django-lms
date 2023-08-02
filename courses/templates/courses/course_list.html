@@ -20,24 +20,24 @@
   </div>
     <div class="card-deck">
       {% for course_item in object_list %}
-      <div>
-      <div class="card" style="width: 18rem">
-        <div class="card-body">
-          <h5 class="card-title">{{course_item.course_name}}</h5>
+      <div class="">
+      <div class="card bg-gradient-to-r from-blue-200 to-gray-300 shadow-lg h-[300px] m-2" style="width: 18rem">
+        <div class="card-body  hover:shadow-2xl">
+          <h5 class="card-title font-serif font-extrabold">{{course_item.course_name}}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
           <p class="card-text">
             {{course_item.course_description}}
           </p>
-          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="btn btn-primary card-link">More Info</a>
+          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
           {% if user.user_type == 1 %}
             {%if user in course_item.students.all%}
-                <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="btn btn-danger card-link">Unenroll</a>
+                <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold card-link">Unenroll</a>
             {% else %}
-                <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="btn btn-success card-link">Enroll</a>
+                <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold card-link">Enroll</a>
             {% endif %}
           {% endif %}
 
-          <p>{{course_item.students.count}}
+          <p class="text-lg m-2">{{course_item.students.count}}
                 member{{course_item.students.count|pluralize}}</p>
           
               
