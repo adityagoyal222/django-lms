@@ -21,20 +21,29 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
 <body>
-    <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 bg-gray-100 rounded-md scroll-auto">
+    {% if user.is_authenticated %}
+    {% if user.user_type == 1%}
+    <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 bg-gray-100 rounded-md scroll-auto hidden">
         {% comment %} <button id="toggle-btn" onclick="toggleChatbot()" class="">Toggle Chatbot</button> {% endcomment %}
         <img src={%static 'django_lms/images/close.svg'%} onclick="toggleChatbot()" class="w-10 left-0 mx-auto hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
         <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold">Chatbot</h2>
        <div class=" m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
-            {% comment %} chat-body {% endcomment %}
-            {{chatbot_response}}
-       </div>  
+        {% for message in response %}
+        {% if message.role == "system" %}
+            <p class="system-message">{{ message.content }}</p>
+        {% else %}
+            <p class="user-message">{{ message.content }}</p>
+        {% endif %}
+    {% endfor %}
+       </div>   
         <form method="post" class="flex flex-row w-full">
             {% csrf_token %}
             <input id='chattext' name="chattext" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
             <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/>
         </form>
     </div>
+    {% endif %}
+    {% endif %}
     <div class="sidenav bg-gradient-to-r from-blue-900 to-gray-500">
         
         <div class="side-items">
@@ -75,7 +84,10 @@
             <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
             <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
         {% endif %}
-        <img src={%static 'django_lms/images/open_arrow.svg'%} alt="Open Sidebar" onclick="toggleChatbot()" class="w-10 left-0 mx-auto hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+        <div class="flex m-2" onclick="toggleChatbot()">
+            <img src={%static 'django_lms/images/chat.svg'%} alt="Open Sidebar" alt="Chatbot"  class="w-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+            <p class="text-black font-semibold my-auto hover:text-white hover:cursor-pointer text-xl">Chatbot</p>
+        </div>
         </div>
                
     </div>
@@ -95,32 +107,47 @@
         const chatbotSidenav = document.getElementById('chatbot-sidenav');
         chatbotSidenav.classList.toggle('hidden');
     }
+
     function sendText() {
         const chattext = document.getElementById('chattext').value;
         if (chattext.trim() === '') {
             return; // Don't send empty messages
         }
 
-        const chatbotBody = document.getElementById('chatbot-body');
-
-        // Create a new paragraph element for the message
-        const chatbotText = document.createElement('p');
-        chatbotText.classList.add('bg-gray-600', 'text-white', 'p-2', 'rounded-xl', 'w-[80%]');
-        chatbotText.textContent = chattext; // Set the content of the paragraph
-
-        chatbotBody.appendChild(chatbotText); // Append the paragraph to the chat body
-
         // Clear the input field after sending the message
         document.getElementById('chattext').value = '';
 
-        //response
-        const chatbotResponse = document.createElement('p');
-        chatbotResponse.classList.add('bg-gray-50', 'shadow-lg', 'text-black', 'p-2','right-0', 'items-end', 'flex', 'justify-end','mx-auto', 'rounded-xl', 'w-[80%]');
-        chatbotResponse.textContent = 'It is a course that explains the devOps beginner concepts and prepares your for more advanced developer concepts.'; // Set the content of the paragraph
-        setTimeout(() => {
-            chatbotBody.appendChild(chatbotResponse); // Append the paragraph to the chat body
-        }, 1000);
+        // Create a new paragraph element for the user message
+        const chatbotBody = document.getElementById('chatbot-body');
+        const userMessage = document.createElement('p');
+        userMessage.classList.add('user-message', 'bg-gray-600', 'text-white', 'p-2', 'rounded-2xl', 'w-[80%]');
+        userMessage.textContent = chattext;
 
+        chatbotBody.appendChild(userMessage);
+
+        // Make an HTTP POST request to your Django view to get the chatbot response
+        fetch("{% url 'chattext' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            body: new URLSearchParams({ 'chattext': chattext })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data and create a new paragraph element for the chatbot response
+            const botMessage = document.createElement('p');
+            botMessage.classList.add('system-message', 'rounded-2xl', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-ebd', 'junstify-end');
+            botMessage.textContent = data.response;
+
+            chatbotBody.appendChild(botMessage);
+            // Scroll to the bottom to show the latest messages
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 </script>
 </html>
