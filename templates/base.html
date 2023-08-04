@@ -27,16 +27,17 @@
        <div class=" m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
         {% for message in response %}
         {% if message.role == "system" %}
-            <p class="system-message">{{ message.content }}</p>
+            <p class="system-message bg-gray-600 text-white rounded-2xl m-1 p-2 w-[80%] left-0">{{ message.content }}</p>
         {% else %}
-            <p class="user-message">{{ message.content }}</p>
+        <p class="user-message bg-white text-black rounded-2xl w-[80%] right-0 shadow-ld m-1 items-end flex justify-end p-2 ml-auto">{{ message.content }}</p>
         {% endif %}
     {% endfor %}
        </div>   
-        <form method="post" class="flex flex-row w-full">
+        <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
             {% csrf_token %}
             <input id='chattext' name="chattext" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
-            <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/>
+            {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
+            <button type="submit" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[20%] hover:bg-gray-300">Send</button>
         </form>
     </div>
     <div class="sidenav bg-gradient-to-r from-blue-900 to-gray-500">
@@ -108,6 +109,7 @@
     }
 
     function sendText() {
+        // Get the chat text from the input field
         const chattext = document.getElementById('chattext').value;
         if (chattext.trim() === '') {
             return; // Don't send empty messages
@@ -116,31 +118,28 @@
         // Clear the input field after sending the message
         document.getElementById('chattext').value = '';
 
-        // Create a new paragraph element for the user message
-        const chatbotBody = document.getElementById('chatbot-body');
-        const userMessage = document.createElement('p');
-        userMessage.classList.add('user-message', 'bg-gray-600', 'text-white', 'p-2', 'rounded-2xl', 'w-[80%]');
-        userMessage.textContent = chattext;
-
-        chatbotBody.appendChild(userMessage);
+        // Get the session ID from your Django backend and store it in a variable
+        const sessionId = "{{ request.session.session_key }}";
 
         // Make an HTTP POST request to your Django view to get the chatbot response
-        fetch("{% url 'chattext' %}", {
+        fetch("{% url 'chattext'%}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': "{{ csrf_token }}",
+                'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
             },
-            body: new URLSearchParams({ 'chattext': chattext })
+            body: new URLSearchParams({ 'chattext': chattext }) 
         })
         .then(response => response.json())
         .then(data => {
             // Handle the response data and create a new paragraph element for the chatbot response
             const botMessage = document.createElement('p');
-            botMessage.classList.add('user-message', 'rounded-2xl', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
+            botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
             botMessage.textContent = data.response;
-        
+            const chatbotBody = document.getElementById('chatbot-body');
             chatbotBody.appendChild(botMessage);
+
             // Scroll to the bottom to show the latest messages
             chatbotBody.scrollTop = chatbotBody.scrollHeight;
         })

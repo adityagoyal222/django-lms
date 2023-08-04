@@ -33,3 +33,7 @@ nosetests.xml
 coverage.xml 
 *.cover 
 .hypothesis/ 
+
+
+.env
+node_modules
