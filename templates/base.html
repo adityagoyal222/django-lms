@@ -29,7 +29,7 @@
         {% if message.role == "system" %}
             <p class="system-message bg-gray-600 text-white rounded-2xl m-1 p-2 w-[80%] left-0">{{ message.content }}</p>
         {% else %}
-        <p class="user-message bg-white text-black rounded-2xl w-[80%] right-0 shadow-ld m-1 items-end flex justify-end p-2 ml-auto">{{ message.content }}</p>
+        <p class="user-message bg-white text-black rounded-2xl w-[80%] right-0 shadow-ld m-1 items-end flex justify-end p-2 ml-auto" >{{ message.content }}</p>
         {% endif %}
     {% endfor %}
        </div>   

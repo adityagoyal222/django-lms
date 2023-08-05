@@ -58,8 +58,8 @@ def send_chatbot_response(request):
 
         messages.append({"role": "system", "content": bot_reply})
          # Save the updated chat history back to the session
-        session["chat_history"] = messages
-        session.save()
+        # session["chat_history"] = messages
+        # session.save()
 
         context = {
             'response': messages
