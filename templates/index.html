@@ -1,8 +1,11 @@
+{% load static tailwind_tags %}
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
+
     <title>
         
         {% block title %}
@@ -15,18 +18,50 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
-<body>
-    <div class="bg-light index-image">
-        <div class="container py-5">
-            <div class="row align-items-center py-5">
-            <div class="col-lg-6">
-                <h1 class="display-4">Learning Management System</h1>
-                <p class="lead text-muted mb-0">Your one-stop solution to online learning.</p>
-                <p><a href="{% url 'courses:list' %}" class="btn btn-primary btn-lg index-button">View All Courses</button></a>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
+{% comment %} <body class="bg-gradient-to-r from-cyan-500 to-blue-900 "> {% endcomment %}
+<body class="bg-gray-200 ">
+    <div class="bg-transparent shadow-sm h-[70px] w-full p-2 flex flex-row mx-auto items-center justify-center">
+        <div class="items-start p-1 m-2">
+            <img src="{% static 'django_lms/images/abya2.jpg' %}" class="w-[50px] h-[50px]"/>
+        </div>
+        <div class="mx-auto my-auto items-center">
+            <h1 class="text-2xl font-bold font-serif">ABYA</h1>
+        </div>
+        <div class="my-auto items-end">
+            <a href="{% url 'home' %}" class="bg-transparent hover:bg-blue-700 p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Home</a>
+            <a href="{% url 'users:login' %}" class="bg-transparent hover:bg-blue-700 hover:shadow-lg p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Login</a>
+            <a href="{% url 'users:signup' %}" class="bg-transparent hover:bg-blue-700 hover:shadow-lg p-2 text-black hover:no-underline font-bold py-2 px-4 rounded">Register</a>
+        </div>
+    </div>
+    <div class="w-[75%] h-[300px auto] mx-auto flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-900 to-gray-300 m-5">
+        {% comment %} <div>
+            <h1 class="text-4xl font-bold text-white font-serif">Welcome to ABYA</h1>
+            <p class="text-xl font-serif">Innovation. Creativity. Teamwork.</p>
+        </div> {% endcomment %}
+        <div class="index-image">
+            <div class="mx-auto items-center flex justify-center w-[60%] py-5">
+                <div class="flex flex-row my-auto space-x-4">
+                <div class="items-start justify-start my-auto">
+                    <h1 class="display-4 text-white">Learning Management System</h1>
+                    <p class="text-gray-900 ">Innovation. Creativity. Teamwork.</p>
+                    <p class="bg-blue-950 bg-opacity-60 hover:bg-opacity-80  rounded-md shadow-sm p-2 mt-2 hover:shadow-2xl w-auto"><a href="{% url 'courses:list' %}" class="mx-auto items-center justify-center flex text-xl font-serif font-semibold decoration-none hover:no-underline text-white ">View All Courses</a></p>
+                </div>
+                <div class="items-end justify-end my-auto"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
+                </div>
             </div>
         </div>
     </div>
+    {% comment %} <div class="index-image">
+        <div class="mx-auto items-center flex justify-center w-[60%] py-5">
+            <div class="flex flex-row my-auto space-x-4">
+            <div class="items-start justify-start my-auto">
+                <h1 class="display-4">Learning Management System</h1>
+                <p class="text-gray-700 ">Innovation. Creativity. Teamwork.</p>
+                <p class="bg-blue-950 bg-opacity-60 hover:bg-opacity-80  rounded-md shadow-sm p-2 mt-2 hover:shadow-2xl w-auto"><a href="{% url 'courses:list' %}" class="mx-auto items-center justify-center flex text-xl font-serif font-semibold decoration-none hover:no-underline text-white ">View All Courses</a></p>
+            </div>
+            <div class="items-end justify-end my-auto"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
+            </div>
+        </div>
+    </div> {% endcomment %}
 </body>
 </html>

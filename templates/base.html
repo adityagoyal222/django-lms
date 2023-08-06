@@ -1,8 +1,10 @@
+{% load static tailwind_tags %}
 {% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% tailwind_css %}
     <title>
         
         {% block title %}
@@ -17,7 +19,7 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
 <body>
-    <div class="sidenav">
+    <div class="sidenav bg-gradient-to-r from-blue-900 to-gray-500">
         <div class="side-items">
         <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
         

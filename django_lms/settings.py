@@ -46,11 +46,19 @@ INSTALLED_APPS = [
     'assignments',
     'bootstrap4',
     'resources',
+    'editor',
     'graphene_django',
     'crispy_forms',
     'django_forms_bootstrap',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
+    
 ]
-
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 GRAPHENE = {
     'SCHEMA': 'django_lms.schema.schema'
 }
@@ -63,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'django_lms.urls'
