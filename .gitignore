@@ -35,3 +35,6 @@ coverage.xml
 .hypothesis/ 
 
 *.pyc
+ __pycache__ 
+.env
+node_modules

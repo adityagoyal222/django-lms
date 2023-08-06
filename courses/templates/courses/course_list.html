@@ -7,12 +7,12 @@
 {% block main_content %}
 <div class="container">
   <div>
-    <h1>All Courses</h1>
+    <h1 class="font-semibold font-sans m-2">All Courses</h1>
 
     {% if user.user_type == 2 %}
     <a
       href="{% url 'courses:create' %}"
-      class="btn btn-lg btn-fill btn-success button-stretch"
+      class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold "
     >
       <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
     </a>
