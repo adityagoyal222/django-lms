@@ -41,7 +41,9 @@ def jdoodle_api_ide(request):
     result = jdoodle_api_call(program)
     
     context = {
-        'output': result
+        'output': result,
+        'form': LanguageForm(initial={'language': language}),
+        'script': input_code
     }
     
     return render(request, 'editor/ide.html', context)
