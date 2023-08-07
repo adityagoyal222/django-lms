@@ -1,11 +1,11 @@
 from django import forms
 
 LANGUAGES_CHOICES = [
-    ('python', 'Python'),
+    ('python3', 'Python3'),
     ('java', 'Java'),
     ('c', 'C'),
-    ('cpp', 'c++'),
-    ('js', 'JavaScript(Node.js)'),
+    ('cpp14', 'c++'),
+    ('nodejs', 'JavaScript(Node.js)'),
     ('php', 'PHP'),
     ('perl', 'Perl'),
     ('kotlin', 'Kotlin'),

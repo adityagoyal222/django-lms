@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
+    'rest_framework',
     
 ]
 TAILWIND_APP_NAME = 'theme'
@@ -104,8 +105,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_lms',
-        'USER': 'toor',
-        'PASSWORD': 'password',
+        'USER': 'root',
+        'PASSWORD': 'lms123',
         'HOST': 'localhost',
         'PORT': '3306',
     }
