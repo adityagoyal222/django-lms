@@ -8,48 +8,58 @@
   <!-- Link to Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <!-- Custom CSS for IDE -->
-  <style>
-    /* Add any additional custom styles here */
-  </style>
   {% tailwind_css %}
 </head>
 <body class="bg-gray-100">
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-gray-800 text-white px-4 py-2">
+    <nav class="bg-gray-800 text-white p-4">
       <div class="container mx-auto">
-        <h1 class="text-xl font-bold">Python IDE</h1>
+        <h1 class="text-2xl font-bold">Python IDE</h1>
       </div>
     </nav>
 
     <!-- Editor and Output Section -->
-    <div class="flex flex-grow">
+    <div class="flex-grow flex">
       <!-- Code Editor -->
       <div class="w-1/2 p-4">
-        <textarea id="codeEditor" name="input" class="bg-white p-2 w-full h-full border border-gray-300 rounded">
-            
-        </textarea>
-        <button type="submit" class="bg-gray-800 m-2 p-2 rounded-lg text-white font-semibold">Run Code</button>
+        <form method="post" class="mt-4">
+          {% csrf_token %}
+        <textarea id="codeEditor" name="input" placeholder="Your code goes here.." class="bg-white p-4 w-full h-64 border border-gray-300 rounded shadow-md">
+          {% if code in script %}
+            {{ code }}
+          {% endif %}
+        </textarea> 
+          <div class="grid grid-cols-3 gap-2">
+            {% for language, label in form.fields.language.choices %}
+              <label class="flex items-center space-x-2">
+                <input type="radio" name="{{ form.language.name }}" value="{{ language }}" class="form-radio text-indigo-600">
+                <span class="text-gray-700">{{ label }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          <button type="submit" class="mt-4 px-4 py-2 bg-gray-800 text-white rounded font-semibold hover:bg-gray-600">Run Code</button>
+        </form>
       </div>
 
       <!-- Output Panel -->
       <div class="w-1/2 p-4 bg-gray-200">
         <h2 class="text-lg font-bold mb-2">Output:</h2>
-        <div id="output" class="bg-white p-2 h-32 border border-gray-300 rounded">
-            <!-- Output will be displayed here -->
-            {% for i in output %}
+        <div id="output" class="bg-white p-4 h-32 border border-gray-300 rounded shadow-md overflow-auto">
+          <!-- Output will be displayed here -->
+          {% for i in output %}
             {{ i }}
-            {% endfor %}
+          {% endfor %}
         </div>
       </div>
     </div>
 
     <!-- Footer -->
-    {% comment %} <footer class="bg-gray-800 text-white px-4 py-2">
+    <footer class="bg-gray-800 text-white p-4 mt-auto">
       <div class="container mx-auto">
-        <p>&copy; 2023 Your Company</p>
+        <p>&copy; 2023 abya</p>
       </div>
-    </footer> {% endcomment %}
+    </footer>
   </div>
 </body>
 </html>
