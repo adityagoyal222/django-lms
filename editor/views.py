@@ -4,6 +4,7 @@ from django.shortcuts import render
 from .scripts import codex_api, jdoodle_api_call
 from django.http import JsonResponse
 from django.shortcuts import render
+from . forms import LanguageForm
 
 # def ide(request):
     
@@ -19,21 +20,28 @@ from django.shortcuts import render
 #     return render(request, 'editor/ide.html', context)
 
 
+
 def jdoodle_api_ide(request):
-    input_code = ''  # Initialize input_code with a default value
+    input_code = ''
+    language = 'python3'  # Default language if the form is not submitted
     if request.method == "POST":
-        input_code = request.POST.get('input', '')
+        form = LanguageForm(request.POST)
+        if form.is_valid():
+            input_code = request.POST.get('input', '')
+            language = form.cleaned_data['language']
 
     program = {
         "script": input_code,
-        "language": "python3",
+        "language": language,  # Use the selected language or default
         "versionIndex": "4",
         "clientId": "337a83aa8cc0186032dc2189c403e950",
         "clientSecret": "a94de9c2bb09ce02dd34b688a22a635e5f2d07c942b757c8915e6287c0cc2240",
     }
+    
     result = jdoodle_api_call(program)
+    
     context = {
         'output': result
     }
-    print(result)
+    
     return render(request, 'editor/ide.html', context)

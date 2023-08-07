@@ -29,7 +29,11 @@
         <textarea id="codeEditor" name="input" class="bg-white p-2 w-full h-full border border-gray-300 rounded">
             
         </textarea>
-        <button type="submit" class="bg-gray-800 m-2 p-2 rounded-lg text-white font-semibold">Run Code</button>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="bg-gray-800 m-2 p-2 rounded-lg text-white font-semibold">Run Code</button>
+      </form>
       </div>
 
       <!-- Output Panel -->
