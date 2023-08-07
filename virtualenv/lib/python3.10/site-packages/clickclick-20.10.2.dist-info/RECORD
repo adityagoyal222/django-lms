@@ -1,0 +1,11 @@
+clickclick-20.10.2.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+clickclick-20.10.2.dist-info/LICENSE,sha256=4I1KCv8XurswJ2gKTU0D8P4T6co1vr8Uea8OyEQC92s,549
+clickclick-20.10.2.dist-info/METADATA,sha256=8K28r2PFG-puSHnR9bTNI5WB9Ylr2Jcf-iAXBh2LdLg,7555
+clickclick-20.10.2.dist-info/RECORD,,
+clickclick-20.10.2.dist-info/WHEEL,sha256=kGT74LWyRUZrL4VgLh6_g12IeVl_9u9ZVhadrgXZUEY,110
+clickclick-20.10.2.dist-info/entry_points.txt,sha256=eqGnTHtEVMYwfXVk1Z9MhC8O2N8wuqAbr0lisLmrkxs,20
+clickclick-20.10.2.dist-info/top_level.txt,sha256=ob_fYKc4y6paDElL1thPqqceNKmbavBy0_ywTZHIUb4,11
+clickclick/__init__.py,sha256=8i4LC8PBOQxIJF93nIXorXUzKnSfsw0vqgXsIiKr0a4,66
+clickclick/__pycache__/__init__.cpython-310.pyc,,
+clickclick/__pycache__/console.cpython-310.pyc,,
+clickclick/console.py,sha256=46UjNF35ctNFD9W9AqqEo2T5kVN6bR06XJsWn09Euo4,10383

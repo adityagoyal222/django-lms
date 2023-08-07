@@ -30,6 +30,7 @@ def jdoodle_api_ide(request):
             input_code = request.POST.get('input', '')
             language = form.cleaned_data['language']
 
+        input_code = request.POST.get('input', '')
     program = {
         "script": input_code,
         "language": language,  # Use the selected language or default
