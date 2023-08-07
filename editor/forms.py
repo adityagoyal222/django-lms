@@ -15,6 +15,5 @@ LANGUAGES_CHOICES = [
 
 class LanguageForm(forms.Form):
     language = forms.ChoiceField(
-        choices=LANGUAGES_CHOICES,
-        widget=forms.RadioSelect,
+        choices=LANGUAGES_CHOICES
     )

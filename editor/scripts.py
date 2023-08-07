@@ -36,13 +36,13 @@ def jdoodle_api_call(program):
     output = json_response.get("output", "")
     return output
 
-# if __name__ == "__main__":
-#     program = {
-#         "script": "print('Hello World')",
-#         "language": "python3",
-#         "versionIndex": "4",
-#         "clientId": "337a83aa8cc0186032dc2189c403e950",
-#         "clientSecret": "a94de9c2bb09ce02dd34b688a22a635e5f2d07c942b757c8915e6287c0cc2240",
-#     }
-#     result = jdoodle_api_call(program)
-#     print("Output:", result)
+if __name__ == "__main__":
+    program = {
+        "script": "print('Hello World')",
+        "language": "python3",
+        "versionIndex": "4",
+        "clientId": "337a83aa8cc0186032dc2189c403e950",
+        "clientSecret": "a94de9c2bb09ce02dd34b688a22a635e5f2d07c942b757c8915e6287c0cc2240",
+    }
+    result = jdoodle_api_call(program)
+    print("Output:", result)

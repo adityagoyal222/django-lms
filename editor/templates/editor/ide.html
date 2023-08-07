@@ -19,22 +19,18 @@
       </div>
     </nav>
 
+    
     <!-- Editor and Output Section -->
     <div class="flex-grow flex">
-      <!-- Code Editor -->
-      
-      <div class="w-1/2 p-4">
-        <textarea id="codeEditor" name="input" placeholder="Your code goes right here..." class="bg-white p-2 w-full h-3/4 border border-gray-300 rounded shadow-md">
-          {% if code in script %}
-            {{ code }}
-          {% endif %}
-        <form action="" method="POST">
-          {% csrf_token %}
-        <textarea id="codeEditor" name="input" class="bg-white p-2 w-full h-full border border-gray-300 rounded">
-            
-        </textarea>
         <form method="post" class="mt-4">
           {% csrf_token %}
+          <!-- Code Editor -->
+        <div class="w-1/2 p-4">
+          <textarea id="codeEditor" name="input" placeholder="Your code goes right here..." class="bg-white p-2 w-full h-3/4 border border-gray-300 rounded shadow-md">
+            {% if code in script %}
+              {{ code }}
+            {% endif %}
+          </textarea>
           <div class="grid grid-cols-3 gap-2">
             {% for language, label in form.fields.language.choices %}
               <label class="flex items-center space-x-2">
