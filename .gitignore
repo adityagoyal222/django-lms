@@ -34,9 +34,7 @@ coverage.xml
 *.cover 
 .hypothesis/ 
 
-*.pyc
-*/*/*/__pycache__/
 
-*/*/__pycache__/
-
-*/__pycache__/
+.env
+node_modules
+__pycache__/
