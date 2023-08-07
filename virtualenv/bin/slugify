@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/juniorortiz/Desktop/Python Projects/django-lms/virtualenv/bin/python3" "$0" "$@"
-' '''
+#!/home/machar/lms_project/django-lms/virtualenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

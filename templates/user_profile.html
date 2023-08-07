@@ -24,8 +24,9 @@
             {% endif %}
             </h4>
             <h5 class="text-xl">Email: {{user.email}}</h5>
-            
+        
             {% if user.user_type == 2 %}
+            {% comment %} <h3 class="font-sans text-2xl mt-5">Created Courses</h3> {% endcomment %}
                 <div class="card-deck">
                 {% for course in course_list %}
                     
@@ -52,6 +53,7 @@
                 {% endfor %}
                 </div>
             {% elif user.user_type == 1 %}
+            <h3 class="font-sans text-2xl mt-5">Enrolled Courses</h3>
             <div class="card-deck">
                 {% for course in course_list %}
                     
