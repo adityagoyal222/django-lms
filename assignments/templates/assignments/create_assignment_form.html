@@ -8,17 +8,17 @@
 {% block main_content %}
 
 <div class="container">
-  <h1>Assignment</h1>
+  <h1 class="font-sans font-semibold text-3xl m-2">Assignment</h1>
 
   {% if user.user_type == 2 %}
-    <form method="POST" action="{% url 'assignments:create' %}">
+    <form method="POST" action="{% url 'assignments:create' %}" class="shadow-lg p-4 rounded-xl font-sans font-semibold m-2">
       {% csrf_token %} 
       {% bootstrap_field form.assignment_name %}
       {% bootstrap_field form.assignment_description %}
       {% bootstrap_field form.due_date %}
       {% bootstrap_field form.course %}
       {{ form.name.errors }}
-      <input type="submit" value="Submit" class="btn btn-success btn-lg">
+      <input type="submit" value="Submit" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md font-extrabold">
     </form>
     
     

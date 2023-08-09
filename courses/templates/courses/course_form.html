@@ -7,13 +7,13 @@
     
 
 {% block main_content %}
-    <h1>Create new Course</h1>
+    <h1 class="font-sans font-extrabold text-3xl m-2">Create new Course</h1>
     
     {% if user_type == 2 %}
-        <form action="{% url 'courses:create' %}" method="POST">
+        <form action="{% url 'courses:create' %}" method="POST" class="p-3 rounded-lg shadow-lg">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" value="Create" class="btn btn-success btn-lg">
+            <input type="submit" value="Create" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold"/>
         </form>
     {% else %}
         <div class="jumbotron">

@@ -1,5 +1,7 @@
 {% load static tailwind_tags %}
 {% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,49 +20,81 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
-<body>
+<body class="w-full">
+    <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
+        <img src="{% static 'django_lms/images/close3.svg' %}" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
+        {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
+        <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
+        <div class="m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
+            <!-- Previous chat messages -->
+            {% for message in response %}
+                {% if message.role == "system" %}
+                    <p class="system-message bg-gray-700 shadow-sm text-white w-[80%] mr-auto items-start justify-start flex left-0 p-2 rounded-2xl">{{ message.content }}</p>
+                {% else %}
+                    <p class="user-message bg-white shadow-lg text-black w-[80%] ml-auto items-end justify-end flex right-0 p-2 rounded-2xl">{{ message.content }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+         
+        <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
+            {% csrf_token %}
+            <input id='chattext' name="chattext" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
+            {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
+            <button type="submit" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[20%] hover:bg-gray-300">Send</button>
+        </form>
+    </div>
     <div class="sidenav bg-gradient-to-r from-blue-900 to-gray-500">
+        
         <div class="side-items">
         <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
         
         {% if user.is_authenticated %}
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
-            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+            <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-black font-extrabold" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-black font-extrabold" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}
-                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
+                <span class="sidemenu" ><h5 id="side-head"  class="text-black font-extrabold"><i class="fa fa-list courses-icon text-black font-extrabold" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user in course.students.all %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold">{{course}}</a></span>
                     {% endif %}
                         
                 {% endfor %}
             {% else %}
-                <a href="{% url 'courses:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
-                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
-                <a href="{% url 'assignments:create' %}"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
+                <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
+                <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user.id == course.teacher.id %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" >{{course}}</a></span>
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
                     {% endif %}
                         
                 {% endfor %}                 
             {% endif %}
-            <a href="{% url 'users:logout' %}" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+            <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
-            <a class="sidemenu side-element">Guest</a>
-            <a href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'users:login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
-            <a href="{% url 'users:signup' %}"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
-            <a href="{% url 'courses:list' %}"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+            <a class="sidemenu side-element text-black">Guest</a>
+            <a href="{% url 'home' %}" class="text-black font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'users:login' %}" class="text-black font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
+            <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+            <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+        {% endif %}
+        {% if user.is_authenticated %}
+        {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
+        <div class="flex m-2" onclick="toggleChatbot()">
+            <img src={%static 'django_lms/images/chat.svg'%} alt="Open Sidebar" alt="Chatbot"  class="w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+            <p class="text-black font-semibold my-auto hover:text-white hover:cursor-pointer text-xl">Chatbot</p>
+        </div>
+        {% comment %} {% endif %} {% endcomment %}
         {% endif %}
         </div>
-            
+               
     </div>
+ 
 
     
         
@@ -71,4 +105,50 @@
     </div> 
 
 </body>
+<script>
+    function toggleChatbot() {
+        const chatbotSidenav = document.getElementById('chatbot-sidenav');
+        chatbotSidenav.classList.toggle('hidden');
+    }
+
+    {% comment %} function sendText() {
+        // Get the chat text from the input field
+        const chattext = document.getElementById('chattext').value;
+        if (chattext.trim() === '') {
+            return; // Don't send empty messages
+        }
+
+        // Clear the input field after sending the message
+        document.getElementById('chattext').value = '';
+
+        // Get the session ID from your Django backend and store it in a variable
+        const sessionId = "{{ request.session.session_key }}";
+
+        // Make an HTTP POST request to your Django view to get the chatbot response
+        fetch("{% url 'chattext'%}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': "{{ csrf_token }}",
+                'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
+            },
+            body: new URLSearchParams({ 'chattext': chattext }) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data and create a new paragraph element for the chatbot response
+            const botMessage = document.createElement('p');
+            botMessage.classList.add('user-message', 'bg-gray-900', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
+            botMessage.textContent = data.response;
+            const chatbotBody = document.getElementById('chatbot-body');
+            chatbotBody.appendChild(botMessage);
+
+            // Scroll to the bottom to show the latest messages
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    } {% endcomment %}
+</script>
 </html>

@@ -7,12 +7,12 @@
 
 
 {% block body_content %}
-    <div class="container">
-        <h1>Sign Up</h1>
+    <div class="container shadow-lg p-5 rounded-xl font-serif">
+        <h1 class="mx-auto font-serif font-extrabold items-center justify-center flex text-2xl uppercase">Sign Up</h1>
         <form method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="btn btn-success" value="Sign Up">
+            <input type="submit" class="bg-gray-100 rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Sign Up">
         </form>
     </div>
 {% endblock body_content %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 
 {% block title %}
     LMS - Login
@@ -9,20 +10,33 @@
 {% block body_content %}
     
     {% if user.is_authenticated %}
-        <div class="container">
-            <div class="jumbotron">
-                <h2>You are already logged in. Please logout to sign in as a different user.</h2>
+        <div class="bg-yellow-200 p-2 rounded-2xl">
+            <div class="text-red-700 font-serif w-auto font-extrabold text-md items-center justify-center mx-auto flex">
+                <h2 class="font-serif text-xl w-auto">You are already logged in. Please logout to sign in as a different user!!</h2>
             </div>
         </div>
     
     {% else %}
 
-    <div class="container">
-        <h1>Log In</h1>
+    <div  class="container shadow-lg p-5 rounded-xl font-serif">
+        <h1 class="mx-auto font-serif font-extrabold items-center justify-center flex text-2xl uppercase mb-5">Log In</h1>
         <form method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="btn btn-primary" value="Login">
+            {% comment %} <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login"> {% endcomment %}
+            <div class="flex flex-row ">
+                <div class="items-start">
+                    <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login">
+                </div>
+                <div class="items-center flex my-auto justify-between space-x-2 m-2 bg-transparent shadow-md rounded-md font-semibold text-black hover:shadow-lg p-2 ">
+                    <img src={%static 'django_lms/images/google.png'%} class="w-5 my-auto mr-1"/>
+                    <input type="submit" class="" value="Sign in With Google">
+                </div>
+                <div class="items-end flex my-auto justify-between space-x-2 bg-transparent rounded-md font-semibold text-black hover:black hover:shadow-lg p-2 m-2 shadow-md">
+                    <img src={%static 'django_lms/images/github.svg'%} class="w-5 my-auto mr-1"/>
+                    <input type="submit" class="" value="Sign in With Github">
+                </div>
+            </div>
         </form>
     </div>
 
