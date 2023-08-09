@@ -20,7 +20,10 @@
 
             <div class="submissions">
             <h3  class="font-sans font-semibold text-4xl">Submissions</h3>
+<<<<<<< HEAD
             
+=======
+>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
             {% for submissions in submitted %}
                 <a href="{% url 'assignments:submit_detail' pk=submissions.pk %}" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
@@ -41,6 +44,10 @@
         {% else %}            
             {% if assignment.course in course %}
                 {% if duedate >= time %}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
                     <a href="{% url 'assignments:submit' %}" class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Submit Assignment</a>
                 {% endif %}
                 <div class="submissions">

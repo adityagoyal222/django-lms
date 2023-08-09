@@ -1,6 +1,7 @@
 # from django.conf.urls import url
-from django.urls import re_path
+from django.urls import re_path, path
 from courses import views
+
 
 app_name = "courses"
 
@@ -10,4 +11,5 @@ urlpatterns = [
     re_path(r'^all/', views.ListCourse.as_view(), name="list"),
     re_path(r'^enroll/(?P<pk>[-\w]+)/$', views.EnrollCourse.as_view(), name='enroll'),
     re_path(r'^unenroll/(?P<pk>[-\w]+)/$', views.UnenrollCourse.as_view(), name='unenroll'),
+    
 ]

@@ -31,7 +31,7 @@ This platform is fairly simple yet provides most of the necessary features requi
 
 # Installation process
 The installation process involves cloning this repository, installing mysql-server, running this website and installing tailwind whic is used for styling.
-1. Fork this repository then clone it to your local machine.
+1. Clone this repo to your local machine.
 2. Install mysql-server and create a database named 'django_lms'. For those using linux, you can follow this [tutorial](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04) to install mysql-server.
 3. Note the password you have assigned to the root user you will need it later.
 4. Open the project in your favorite code editor 
@@ -60,5 +60,5 @@ python manage.py tailwind install #ensures tailwind dependencies are installed
 
 ```
 
-11. finally to run the project use the command `python manage.py tailwind start` in one terminal then open another terminal in the same directory and ensure you are in the virtual environment by typing `source virtualenv/bin/activate`. then the command : `python manage.py runserver` to run the website.
+11. Finally to run the project use the command `python manage.py tailwind start` in one terminal then open another terminal in the same directory and ensure you are in the virtual environment by typing `source virtualenv/bin/activate`. then the command : `python manage.py runserver` to run the website.
 12. Open your browser and type `localhost:8000` in the address bar to view the website.

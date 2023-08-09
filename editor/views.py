@@ -47,4 +47,8 @@ def jdoodle_api_ide(request):
         'script': input_code
     }
     
+<<<<<<< HEAD
     return render(request, 'editor/ide.html', context)
+=======
+    return render(request, 'editor/ide.html', context)
+>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666

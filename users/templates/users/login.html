@@ -23,12 +23,20 @@
         <form method="POST">
             {% csrf_token %}
             {% bootstrap_form form %}
+<<<<<<< HEAD
             {% comment %} <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login"> {% endcomment %}
             <div class="flex flex-row ">
                 <div class="items-start">
                     <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login">
                 </div>
                 <div class="items-center flex my-auto justify-between space-x-2 m-2 bg-transparent shadow-md rounded-md font-semibold text-black hover:shadow-lg p-2 ">
+=======
+            <div class="flex flex-row justify-between">
+                <div class="items-start">
+                    <input type="submit" class="bg-transparent rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Login">
+                </div>
+                <div class="items-center flex my-auto justify-between space-x-2 m-2 bg-transparent shadow-md rounded-md font-semibold text-black hover:shadow-lg p-2 m-2">
+>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
                     <img src={%static 'django_lms/images/google.png'%} class="w-5 my-auto mr-1"/>
                     <input type="submit" class="" value="Sign in With Google">
                 </div>

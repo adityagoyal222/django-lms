@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.urls import re_path
 from django_lms import views as views_project
 from assignments import views
+from django_lms import views as views_project
 from django_lms import views as project_views
 from graphene_django.views import GraphQLView
 from graphene_file_upload.django import FileUploadGraphQLView
@@ -21,4 +22,8 @@ urlpatterns = [
     re_path('graphql/', FileUploadGraphQLView.as_view(graphiql=True)),
     path("__reload__/", include("django_browser_reload.urls")),
     path('send-chatbot-response/', views_project.send_chatbot_response, name='chattext'),
+<<<<<<< HEAD
+=======
+    # path('api-auth/', include('rest_framework.urls')),
+>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
 ]
