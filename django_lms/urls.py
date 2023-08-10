@@ -22,8 +22,6 @@ urlpatterns = [
     re_path('graphql/', FileUploadGraphQLView.as_view(graphiql=True)),
     path("__reload__/", include("django_browser_reload.urls")),
     path('send-chatbot-response/', views_project.send_chatbot_response, name='chattext'),
-<<<<<<< HEAD
-=======
     # path('api-auth/', include('rest_framework.urls')),
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
+
 ]
