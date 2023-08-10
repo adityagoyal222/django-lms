@@ -20,7 +20,6 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
-<<<<<<< HEAD
 <body class="w-full">
     <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
         <img src="{% static 'django_lms/images/close3.svg' %}" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
@@ -37,21 +36,6 @@
             {% endfor %}
         </div>
          
-=======
-<body>
-    <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
-        <img src={%static 'django_lms/images/close3.svg'%} onclick="toggleChatbot()" class="w-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
-        <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full m-2  p-2 rounded-lg">ABYA Chatbot</h2>
-       <div class=" m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
-        {% for message in response %}
-        {% if message.role == "system" %}
-            <p class="system-message bg-gray-600 text-white rounded-2xl m-1 p-2 w-[80%] left-0">{{ message.content }}</p>
-        {% else %}
-        <p class="user-message bg-white text-black rounded-2xl w-[80%] right-0 shadow-ld m-1 items-end flex justify-end p-2 ml-auto" >{{ message.content }}</p>
-        {% endif %}
-    {% endfor %}
-       </div>   
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
         <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
             {% csrf_token %}
             <input id='chattext' name="chattext" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
@@ -127,11 +111,7 @@
         chatbotSidenav.classList.toggle('hidden');
     }
 
-<<<<<<< HEAD
     {% comment %} function sendText() {
-=======
-    function sendText() {
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
         // Get the chat text from the input field
         const chattext = document.getElementById('chattext').value;
         if (chattext.trim() === '') {
@@ -173,10 +153,6 @@
         .catch(error => {
             console.error('Error:', error);
         });
-<<<<<<< HEAD
     } {% endcomment %}
-=======
-    }
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
 </script>
 </html>
