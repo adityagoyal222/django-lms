@@ -29,11 +29,8 @@ def send_chatbot_response(request):
 
     if request.method == 'POST':
         sender = request.POST.get("chattext")
-<<<<<<< HEAD
         # print(sender)
-=======
-        print(sender)
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
+
 
         session_id = request.META.get('HTTP_X_SESSION_ID', None)
 
@@ -58,11 +55,7 @@ def send_chatbot_response(request):
 
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages)
         bot_reply = response['choices'][0]['message']['content']
-<<<<<<< HEAD
         # print(bot_reply)
-=======
-        print(bot_reply)
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
 
         messages.append({"role": "system", "content": bot_reply})
          # Save the updated chat history back to the session
