@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .scripts import codex_api, jdoodle_api_call
 from django.http import JsonResponse
 from django.shortcuts import render
-from . forms import LanguageForm
+from . forms import LanguageForm, languages
 
 # def ide(request):
     
@@ -31,10 +31,11 @@ def jdoodle_api_ide(request):
             language = form.cleaned_data['language']
 
         input_code = request.POST.get('input', '')
+        version_index = languages[language]
     program = {
         "script": input_code,
         "language": language,  # Use the selected language or default
-        "versionIndex": "4",
+        "versionIndex": version_index,
         "clientId": "337a83aa8cc0186032dc2189c403e950",
         "clientSecret": "a94de9c2bb09ce02dd34b688a22a635e5f2d07c942b757c8915e6287c0cc2240",
     }

@@ -39,5 +39,6 @@ coverage.xml
 node_modules
 __pycache__/
 __pycache__
+*/__pycache__/*
 *.pyc
 "*.pyc"
