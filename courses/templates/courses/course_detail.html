@@ -9,10 +9,6 @@
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
 <h4 class="text-xl m-2">Teacher: {{course.teacher}}</h4>
 <p class="text-xl m-2">Description: {{course.course_description}}</p>
-<<<<<<< HEAD
-=======
-
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
 
 {% if user.user_type == 1 %} {%if user in course.students.all%}
 <a
@@ -63,12 +59,8 @@
     </ul>
   </div>
   <div class="resources">
-<<<<<<< HEAD
     <h3 class="font-sans font-2xl font-semibold m-2">Resources</h3>
-=======
 
-    <h3 class="font-sans font-semibold text-3xl">Resources</h3>
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
     <!-- {% include 'assignments/assignment_list.html' %} -->
     <ul class="list-group">
       {% for resource in resources %}
@@ -86,15 +78,8 @@
         {% endif %}
       </div>
       {% empty %}
-<<<<<<< HEAD
-        <h6 class="font-extralight font-serif text-gray-400">No Resources</h6>
-=======
-
-
-
         <h6 class="font-extralight font-serif text-gray-400">No Resources</h6>
 
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
       {% endfor %}
     </ul>
   </div>
