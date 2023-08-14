@@ -24,6 +24,7 @@ from . forms import LanguageForm, languages
 def jdoodle_api_ide(request):
     input_code = ''
     language = 'python3'  # Default language if the form is not submitted
+    version_index = 4  # Default version index if the form is not submitted
     if request.method == "POST":
         form = LanguageForm(request.POST)
         if form.is_valid():
