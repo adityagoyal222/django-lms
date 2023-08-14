@@ -1,18 +1,8 @@
-<<<<<<<< HEAD:virtualenv/bin/tqdm
-#!/bin/sh
-'''exec' "/home/juniorortiz/Desktop/Python Projects/django-lms/virtualenv/bin/python3" "$0" "$@"
-' '''
-# -*- coding: utf-8 -*-
-import re
-import sys
-from tqdm.cli import main
-========
 #!/home/machar/lms_project/django-lms/virtualenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
 from flask.cli import main
->>>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666:virtualenv/bin/flask
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
     sys.exit(main())
