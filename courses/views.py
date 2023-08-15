@@ -108,7 +108,8 @@ class UnenrollCourse(LoginRequiredMixin, generic.RedirectView):
             messages.success(self.request, 'You have unenrolled from the course.')
         return super().get(self.request, *args, **kwargs)
     
-class UpdateChapterView(LoginRequiredMixin, generic.CreateView):
+class UpdateChapterView(LoginRequiredMixin, generic.UpdateView):
+    model = Chapter
     form = UpdateChapterForm
     template_name = 'courses/update_chapter.html'
     success_url = '/all/'
@@ -119,11 +120,14 @@ class UpdateChapterView(LoginRequiredMixin, generic.CreateView):
         return kwargs
     
     def form_valid(self, form):
-        user_object = get_object_or_404(User, username=self.request.user.username)
-        form.instance.teacher = user_object
-        return super().form_valid(form)
-    
-class UpdateLessonView(LoginRequiredMixin, generic.CreateView):
+        if form.instance.course.teacher == self.request.user:
+            return super().form_valid(form)
+        else:
+            form.add_error(None, "You don't have permission to edit this chapter.")
+            return self.form_invalid(form)
+        
+class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
+    model = Lesson
     form = UpdateLessonForm
     template_name = "courses/update_lesson.html"
     success_url = '/all/'
@@ -134,6 +138,8 @@ class UpdateLessonView(LoginRequiredMixin, generic.CreateView):
         return kwargs
     
     def form_valid(self, form):
-        user_object = get_object_or_404(User, username= self.request.user.username)
-        form.instance.teacher = user_object
-        return super().form_valid(form)
+        if form.instance.chapter.course.teacher == self.request.user:
+            return super().form_valid(form)
+        else:
+            form.add_error(None, "You don't have permission to edit this lesson.")
+            return self.form_invalid(form)
