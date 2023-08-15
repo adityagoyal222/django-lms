@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://w3id.org/blockcerts/schema/1.2/issuer-id-1.2.json",
+  "type": "object",
+  "properties": {
+    "issuerKeys": {
+      "type": "array",
+      "description": "list of issuer keys, listed in descending date order (most recent first). V1.2 change: renamed from issuer_key, added optional invalidated field.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 formatted date time the key was activated."
+          },
+          "key": {
+            "type": "string",
+            "description": "Bitcoin address (compressed public key, usually 24 characters) that the issuer uses to issue the certificates."
+          },
+          "invalidated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Optional ISO-8601 formatted date time the key was invalidated."
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "key"
+        ]
+      }
+    },
+    "revocationKeys": {
+      "type": "array",
+      "description": "list of revocation keys, listed in descending date order (most recent first). V1.2 changes: renamed from revocation_key, added optional invalidated field.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 formatted date time the key was activated."
+          },
+          "key": {
+            "type": "string",
+            "description": "Bitcoin address (compressed public key, usually 24 characters) that the issuer uses to revoke the certificates."
+          },
+          "invalidated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Optional ISO-8601 formatted date time the key was invalidated."
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "key"
+        ]
+      }
+    },
+    "id": {
+      "description": "The URL of the issuer's website or homepage",
+      "type": "string",
+      "format": "uri"
+    },
+    "name": {
+      "description": "Human-readable name of the issuing entity",
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact address for the individual or organization."
+    },
+    "url": {
+      "description": "The URL where the issuer's certificates can be found",
+      "type": "string",
+      "format": "uri"
+    },
+    "introductionURL":  {
+      "description": "The URL hosting the issuer's introduction endpoint",
+      "type": "string",
+      "format": "uri"
+    },
+    "image": {
+      "type": "string",
+      "pattern": "data:image/png;base64,",
+      "description": "Data URI; a base-64 encoded png image of the issuer's image. https://en.wikipedia.org/wiki/Data_URI_scheme"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "issuerKeys",
+    "revocationKeys",
+    "id",
+    "name",
+    "email",
+    "url",
+    "introductionURL",
+    "image"
+  ]
+}

@@ -7,12 +7,12 @@
 {% block main_content %}
 <div class="container">
   <div>
-    <h1>All Courses</h1>
+    <h1 class="font-semibold font-sans m-2">All Courses</h1>
 
     {% if user.user_type == 2 %}
     <a
       href="{% url 'courses:create' %}"
-      class="btn btn-lg btn-fill btn-success button-stretch"
+      class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold "
     >
       <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
     </a>
@@ -29,6 +29,10 @@
             {{course_item.course_description}}
           </p>
           <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
+          {% if user.user_type == 2 %}
+          
+          {% endif %}
+  
           {% if user.user_type == 1 %}
             {%if user in course_item.students.all%}
                 <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold card-link">Unenroll</a>

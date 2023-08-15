@@ -29,4 +29,3 @@ def delete_view(request, pk):
     return render(request, "resources/resource_confirm_delete.html", context)
 
 
-

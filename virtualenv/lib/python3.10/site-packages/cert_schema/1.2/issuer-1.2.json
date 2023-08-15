@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Blockchain Certificates Issuer Schema, Version 1.2",
+  "id": "https://w3id.org/blockcerts/schema/1.2/issuer-1.2.json",
+  "description": "Extends the Open Badges Issuer Schema for certificates on the blockchain",
+  "type": "object",
+  "definitions": {
+    "JsonLdContext": {
+      "description": "A link to a valid JSON-LD context file, that maps term names to contexts. Blockchain Certificate contexts may also define JSON-schema to validate Blockchain Certificates against. In a Blockchain Certificate Object, this will almost always be a string:uri to a single context file, but might rarely be an array of links or context objects instead. This schema also allows direct mapping of terms to IRIs by using an object as an option within an array.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "array"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "JsonLdType": {
+      "description": "A type or an array of types that the Blockchain Certificate object represents. The first or only item should be 'Issuer', and any others should each be an IRI (usually a URL) corresponding to a definition of the type itself. In almost all cases, there will be only one type: 'Issuer'",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "BCBadgeImage": {
+      "description": "An image representative of the entity. This overrides BadgeImage from OBI because oneOf, compared to anyOf, was failing validation",
+      "anyOf": [
+        {
+          "$ref": "https://openbadgespec.org/v1/schema/issuer.json#/definitions/ImageDataUrl"
+        },
+        {
+          "type": "string",
+          "format": "uri"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "@context": {
+      "$ref": "#/definitions/JsonLdContext"
+    },
+    "type": {
+      "$ref": "#/definitions/JsonLdType"
+    },
+    "id": {
+      "type": "string",
+      "format": "uri",
+      "description": "Link to a JSON that details the issuer's issuing and recovation keys. Default is https://[domain]/issuer/[org_abbr]-issuer.json. Included for (near) backward compatibility with open badges specification 1.1"
+    },
+    "image": {
+      "$ref": "#/definitions/BCBadgeImage"
+    },
+    "name": {
+      "description": "Human-readable name of the issuing entity",
+      "type": "string"
+    },
+    "url": {
+      "description": "The URL of the issuer's website or homepage",
+      "type": "string",
+      "format": "uri"
+    },
+    "description": {
+      "type": "string",
+      "description": "A text description of the issuing organization"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Contact address for the individual or organization."
+    },
+    "revocationList": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": [
+    "name",
+    "url",
+    "id"
+  ],
+  "additionalProperties": true
+}
