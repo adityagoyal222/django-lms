@@ -12,7 +12,7 @@ from courses.models import Course, Enrollment, Lesson, Chapter
 from assignments.models import Assignment
 from resources.models import Resource
 
-from .forms import CreateChapterForm, CreateLessonForm
+from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -107,3 +107,33 @@ class UnenrollCourse(LoginRequiredMixin, generic.RedirectView):
             enrollment.delete()
             messages.success(self.request, 'You have unenrolled from the course.')
         return super().get(self.request, *args, **kwargs)
+    
+class UpdateChapterView(LoginRequiredMixin, generic.CreateView):
+    form = UpdateChapterForm
+    template_name = 'courses/update_chapter.html'
+    success_url = '/all/'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username=self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
+    
+class UpdateLessonView(LoginRequiredMixin, generic.CreateView):
+    form = UpdateLessonForm
+    template_name = "courses/update_lesson.html"
+    success_url = '/all/'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username= self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
