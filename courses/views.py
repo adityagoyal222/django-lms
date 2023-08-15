@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.shortcuts import render
 import datetime
 from django.contrib.auth.mixins import (LoginRequiredMixin,
@@ -7,9 +8,11 @@ from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from courses.models import Course, Enrollment
+from courses.models import Course, Enrollment, Lesson, Chapter
 from assignments.models import Assignment
 from resources.models import Resource
+
+from .forms import CreateChapterForm, CreateLessonForm
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -25,6 +28,36 @@ class CreateCourse(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         form.instance.teacher = self.request.user
         return super(CreateCourse, self).form_valid(form)
+    
+class CreateChapterView(LoginRequiredMixin, generic.CreateView):
+    form_class = CreateChapterForm
+    template_name = 'courses/create_chapter.html'
+    success_url = '/all/'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username=self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
+
+class CreateLessonView(LoginRequiredMixin, generic.CreateView):
+    form_class = CreateLessonForm
+    template_name = 'courses/create_lesson.html'
+    success_url = '/all/'
+    
+    def get_from_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username=self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
     
 class CourseDetail(generic.DetailView):
     model = Course

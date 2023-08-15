@@ -11,5 +11,7 @@ urlpatterns = [
     re_path(r'^all/', views.ListCourse.as_view(), name="list"),
     re_path(r'^enroll/(?P<pk>[-\w]+)/$', views.EnrollCourse.as_view(), name='enroll'),
     re_path(r'^unenroll/(?P<pk>[-\w]+)/$', views.UnenrollCourse.as_view(), name='unenroll'),
+    path('create_chapter/', views.CreateChapterView.as_view(), name='create_chapter'),
+    path('create_lesson/', views.CreateLessonView.as_view(), name='create_lesson'),
     
 ]
