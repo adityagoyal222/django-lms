@@ -12,7 +12,7 @@ from courses.models import Course, Enrollment, Lesson, Chapter
 from assignments.models import Assignment
 from resources.models import Resource
 
-from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm
+from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -107,6 +107,20 @@ class UnenrollCourse(LoginRequiredMixin, generic.RedirectView):
             enrollment.delete()
             messages.success(self.request, 'You have unenrolled from the course.')
         return super().get(self.request, *args, **kwargs)
+
+class UpdateCourseView(LoginRequiredMixin, generic.UpdateView):
+    model = Course
+    form_class = UpdateCourseForm
+    template_name = 'courses/update_course.html'
+    success_url = '/all/'  
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')  # Get the value of the 'pk' parameter from kwargs
+        return get_object_or_404(Course, pk=pk)  # Retrieve the lesson object using the 'pk'
+
+
+
+
     
 class UpdateChapterView(LoginRequiredMixin, generic.UpdateView):
     model = Chapter
@@ -118,6 +132,10 @@ class UpdateChapterView(LoginRequiredMixin, generic.UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')  # Get the value of the 'pk' parameter from kwargs
+        return get_object_or_404(Chapter, pk=pk)  # Retrieve the lesson object using the 'pk'
     
     def form_valid(self, form):
         if form.instance.course.teacher == self.request.user:
@@ -132,6 +150,10 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
     template_name = "courses/update_lesson.html"
     success_url = '/all/'
     
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')  # Get the value of the 'pk' parameter from kwargs
+        return get_object_or_404(Lesson, pk=pk)  # Retrieve the lesson object using the 'pk'
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user

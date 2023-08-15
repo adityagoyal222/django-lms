@@ -25,6 +25,7 @@
 
 {% if course.teacher.id == user.id or user in course.students.all%}
   {% if user.user_type == 2 %}
+    
     <a
       href="{% url 'assignments:create' %}"
       class="bg-yellow-500 rounded-md font-semibold text-black hover:text-white hover:bg-black p-2 m-2 shadow-lg text-2xl"

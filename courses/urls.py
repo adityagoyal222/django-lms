@@ -13,5 +13,8 @@ urlpatterns = [
     re_path(r'^unenroll/(?P<pk>[-\w]+)/$', views.UnenrollCourse.as_view(), name='unenroll'),
     path('create_chapter/', views.CreateChapterView.as_view(), name='create_chapter'),
     path('create_lesson/', views.CreateLessonView.as_view(), name='create_lesson'),
+    path('update_chapter/<int:pk>/', views.UpdateChapterView.as_view(), name='update_chapter'),
+    path('update_lesson/<int:pk>/', views.UpdateLessonView.as_view(), name='update_lesson'),
+    path('update_course/<int:pk>/', views.UpdateCourseView.as_view(), name='update_course'),
     
 ]

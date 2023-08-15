@@ -30,7 +30,7 @@
           </p>
           <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
           {% if user.user_type == 2 %}
-          <a href="" class="bg-gray-900 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link"> Edit Course</a>
+          
           {% endif %}
   
           {% if user.user_type == 1 %}
