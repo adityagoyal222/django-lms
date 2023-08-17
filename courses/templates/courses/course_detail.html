@@ -1,5 +1,6 @@
 {% extends 'courses/course_base.html' %} 
-
+{% load bootstrap4 %}
+{% load courses_extras %}
 
 {% block title_name %}
   LMS - {{course.course_name}}
@@ -9,6 +10,20 @@
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
 <h4 class="text-xl m-2">Teacher: {{course.teacher}}</h4>
 <p class="text-xl m-2">Description: {{course.course_description}}</p>
+
+
+{% for chapter, lessons in chapters_with_lessons.items %}
+    <div class="chapter">
+        <h3>{{ chapter.chapter_name }}</h3>
+        <div class="container">
+            {% for lesson in lessons %}
+                <p>{{ lesson.lesson_name }}</p>
+                <p>{{ lesson.lesson_content|convert_markdown|safe}}</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
 
 {% if user.user_type == 1 %} {%if user in course.students.all%}
 <a

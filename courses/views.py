@@ -63,11 +63,25 @@ class CourseDetail(generic.DetailView):
     model = Course
 
     def get_context_data(self,**kwargs):
+        course = Course.objects.get(pk=self.kwargs['pk'])
+        
+           # Get chapters related to the course
+        chapters = Chapter.objects.filter(course=course)
+        
+        # Create a dictionary to store chapters and their related lessons
+        chapters_with_lessons = {}
+        
+        for chapter in chapters:
+            # Get lessons related to the chapter
+            lessons = Lesson.objects.filter(chapter=chapter)
+            chapters_with_lessons[chapter] = lessons
+            
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
+        context['chapters_with_lessons'] = chapters_with_lessons
         return context
 
 class ListCourse(generic.ListView):
