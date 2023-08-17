@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'rest_framework',
-    
+    'markdown',
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
