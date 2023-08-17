@@ -13,15 +13,21 @@
 
 
 {% for chapter, lessons in chapters_with_lessons.items %}
-    <div class="chapter">
-        <h3>{{ chapter.chapter_name }}</h3>
-        <div class="container">
-            {% for lesson in lessons %}
-                <p>{{ lesson.lesson_name }}</p>
-                <p>{{ lesson.lesson_content|convert_markdown|safe}}</p>
-            {% endfor %}
+<div class="bg-gray-100 p-4 m-2 rounded-lg">
+    <button class="text-2xl font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+        {{ chapter.chapter_name }}
+    </button>
+    <div id="{{ chapter.id }}" class="mt-2 hidden">
+        {% for lesson in lessons %}
+        <div class="bg-white p-3 rounded-lg shadow-md mb-2">
+            <p class="text-xl">{{ lesson.lesson_name }}</p>
+            <div class="mt-2 text-gray-700">
+                {{ lesson.lesson_content|convert_markdown|safe }}
+            </div>
         </div>
+        {% endfor %}
     </div>
+</div>
 {% endfor %}
 
 
@@ -100,5 +106,12 @@
     </ul>
   </div>
 {% endif %}
+
+<script>
+  function toggleChapter(id) {
+      const chapter = document.getElementById(id);
+      chapter.classList.toggle('hidden');
+  }
+</script>
   
 {% endblock main_content %}
