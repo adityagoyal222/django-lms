@@ -1,3 +1,5 @@
+from typing import Any, Dict
+from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
@@ -13,8 +15,8 @@ from django.conf import settings
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from assignments.models import Assignment, SubmitAssignment
-from assignments.forms import GradeAssignmentForm, CreateAssignmentForm, SubmitAssignmentForm
+from assignments.models import Assignment, SubmitAssignment, Quiz, Question, Choice, QuizSubmission
+from assignments.forms import GradeAssignmentForm, CreateAssignmentForm, SubmitAssignmentForm, QuizForm, QuestionForm, ChoiceForm, ChoiceFormSet, SubmitQuizForm
 from courses.models import Course
 
 # Create your views here.    
@@ -26,6 +28,60 @@ class CreateAssignment(LoginRequiredMixin, generic.CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+    
+class CreateQuizView(LoginRequiredMixin, generic.CreateView):
+    form_class = QuizForm
+    template_name = 'assignments/create_quiz.html'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user']= self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username=self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
+    
+    
+class CreateQuestionView(LoginRequiredMixin, generic.CreateView):
+    model = Question
+    template_name = 'assignments/create_question.html'
+    form_class = QuestionForm
+    
+    def get_form_kwargs(self) :
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.quiz = Quiz.objects.get(id=self.kwargs['quiz_id'])
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('create_question', kwargs={'quiz_id': self.kwargs['quiz_id']})
+
+    
+
+
+# def create_question(request, quiz_id):
+#     quiz = Quiz.objects.get(id=quiz_id)
+#     if request.method == 'POST':
+#         question_form = QuestionForm(request.POST)
+#         choice_formset = ChoiceFormSet(request.POST)
+#         if question_form.is_valid() and choice_formset.is_valid():
+#             question = question_form.save(commit=False)
+#             question.quiz = quiz
+#             question.save()
+#             choice_formset.instance = question
+#             choice_formset.save()
+#             return redirect('create_question', quiz_id=quiz_id)
+#     else:
+#         question_form = QuestionForm()
+#         choice_formset = ChoiceFormSet()
+#     return render(request, 'assignments/create_question.html', {'question_form': question_form, 'choice_formset': choice_formset})
+    
+    
 
 class UpdateAssignment(LoginRequiredMixin, generic.UpdateView):
     model = Assignment
@@ -60,6 +116,51 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
         kwargs['assignment_id'] = self.request.session.get('assignment')
         kwargs['user'] = self.request.user
         return kwargs
+    
+class SubmitQuizView(LoginRequiredMixin, generic.CreateView):
+    form_class = SubmitQuizForm
+    template_name = 'assignments/submitquiz_form.html'
+    select_related = ('student', 'quiz')
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['quiz'] = Quiz.objects.get(id=self.kwargs['quiz_id'])
+        return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['quiz'] = Quiz.objects.get(id=self.kwargs['quiz_id'])
+        return context
+    
+    def form_valid(self, form):
+        quiz = Quiz.objects.get(id=self.kwargs['quiz_id'])
+        self.object = form.save(commit=False)
+        self.object.quiz = quiz
+        self.object.student = self.request.user
+        
+        score = 0
+        for question in quiz.question_set.all():
+            selected_choices = form.cleaned_data[f'question_{question.id}']
+            correct_choices = question.choice_set.filter(is_correct=True)
+            if set(selected_choices) == set(correct_choices):
+                score += 1
+        self.object.score = score
+        self.object.save()
+        
+        return redirect('quiz_results', submission_id=self.object.id)
+    
+class QuizResultsView(LoginRequiredMixin, generic.TemplateView):
+    model = QuizSubmission
+    form_class = None  # i'm not using a form for this view
+    template_name = 'assignments/quiz_results.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        submission_id = self.kwargs['submission_id']
+        submission = get_object_or_404(QuizSubmission, id=submission_id)
+        context['submission'] = submission
+        return context
 
 class SubmitAssignmentDetail(LoginRequiredMixin, generic.DetailView):
     model = SubmitAssignment
@@ -89,6 +190,7 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
+
 
 
 @login_required

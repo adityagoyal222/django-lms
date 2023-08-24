@@ -12,6 +12,7 @@
 <p class="text-xl m-2">Description: {{course.course_description}}</p>
 
 
+{% if user.is_authenticated %}
 {% for chapter, lessons in chapters_with_lessons.items %}
 <div class="bg-gray-100 p-4 m-2 rounded-lg">
     <button class="text-2xl font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
@@ -29,6 +30,9 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+    <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
+{% endif %}
 
 
 {% if user.user_type == 1 %} {%if user in course.students.all%}

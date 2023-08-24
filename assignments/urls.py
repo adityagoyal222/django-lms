@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 from assignments import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -12,7 +12,11 @@ urlpatterns = [
     re_path(r'^submit/$', views.SubmitAssignmentView.as_view(), name="submit"),
     re_path(r'^submission/detail/(?P<pk>[-\w]+)/$', views.SubmitAssignmentDetail.as_view(), name="submit_detail"),
     re_path(r'^submission/delete/(?P<pk>[-\w]+)/$', views.delete_view, name="submit_delete"),
-    re_path(r'^grade/(?P<pk>[-\w]+)/$', views.grade_assignment, name='grade')
+    re_path(r'^grade/(?P<pk>[-\w]+)/$', views.grade_assignment, name='grade'),
+    path('create_quiz/', views.CreateQuizView.as_view(), name='create_quiz'),
+    path('create_question/', views.CreateQuestionView.as_view(), name='create_question'),
+    path('quiz/<int:quiz_id>/submit/', views.SubmitQuizView.as_view(), name='submit_quiz'),
+    path('quiz/results/<int:submission_id>/', views.QuizResultsView.as_view(), name='quiz_results'),
 ]
 
 if settings.DEBUG:
