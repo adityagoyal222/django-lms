@@ -55,7 +55,19 @@ class SubmitQuizForm(ModelForm):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['quiz_title', 'quiz_description']
+        fields = ['course','quiz_title', 'quiz_description']
+        labels = {
+            'course': 'Course Name',
+            'quiz_title': 'Quiz Title',
+            'quiz_description': 'Quiz Description'
+        }
+        
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        user_object = User.objects.filter(username=user.username)
+        new_user_object = get_object_or_404(user_object)
+        self.fields['course'].queryset = self.fields['course'].queryset.filter(teacher=new_user_object.id)
 
 class QuestionForm(forms.ModelForm):
     class Meta:

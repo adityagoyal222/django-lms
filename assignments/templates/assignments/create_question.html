@@ -1,0 +1,31 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+  LMS - Create-Questions
+{% endblock title_name %}
+  
+{% block main_content %}
+
+<div class="container">
+  <h1 class="font-sans font-semibold text-3xl m-2">Set Questions</h1>
+
+  {% if user.user_type == 2 %}
+    <form method="POST" action="{% url 'assignments:create_question' %}" class="shadow-lg p-4 rounded-xl font-sans font-semibold m-2">
+      {% csrf_token %} 
+      {% bootstrap_field form.quiz_title %}
+      {% bootstrap_field form.question_text %}
+
+      {{ form.name.errors }}
+      <input type="submit" value="Submit" class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline">
+    </form>
+    
+    
+    {% else %}
+        <div class="jumbotron">
+            <h2>You cannot set questions</h2>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock main_content %}

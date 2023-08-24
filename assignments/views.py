@@ -1,3 +1,5 @@
+from typing import Any, Dict
+from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
@@ -27,32 +29,57 @@ class CreateAssignment(LoginRequiredMixin, generic.CreateView):
         kwargs['user'] = self.request.user
         return kwargs
     
-def create_quiz(request):
-    if request.method == 'POST':
-        quiz_form = QuizForm(request.POST)
-        if quiz_form.is_valid():
-            quiz = quiz_form.save()
-            return redirect('create_question', quiz_id=quiz.id)
-    else:
-        quiz_form = QuizForm()
-    return render(request, 'assignments/create_quiz.html', {'quiz_form': quiz_form})
+class CreateQuizView(LoginRequiredMixin, generic.CreateView):
+    form_class = QuizForm
+    template_name = 'assignments/create_quiz.html'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user']= self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        user_object = get_object_or_404(User, username=self.request.user.username)
+        form.instance.teacher = user_object
+        return super().form_valid(form)
+    
+    
+class CreateQuestionView(LoginRequiredMixin, generic.CreateView):
+    model = Question
+    template_name = 'assignments/create_question.html'
+    form_class = QuestionForm
+    
+    def get_form_kwargs(self) :
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        form.instance.quiz = Quiz.objects.get(id=self.kwargs['quiz_id'])
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('create_question', kwargs={'quiz_id': self.kwargs['quiz_id']})
 
-def create_question(request, quiz_id):
-    quiz = Quiz.objects.get(id=quiz_id)
-    if request.method == 'POST':
-        question_form = QuestionForm(request.POST)
-        choice_formset = ChoiceFormSet(request.POST)
-        if question_form.is_valid() and choice_formset.is_valid():
-            question = question_form.save(commit=False)
-            question.quiz = quiz
-            question.save()
-            choice_formset.instance = question
-            choice_formset.save()
-            return redirect('create_question', quiz_id=quiz_id)
-    else:
-        question_form = QuestionForm()
-        choice_formset = ChoiceFormSet()
-    return render(request, 'assignments/create_question.html', {'question_form': question_form, 'choice_formset': choice_formset})
+    
+
+
+# def create_question(request, quiz_id):
+#     quiz = Quiz.objects.get(id=quiz_id)
+#     if request.method == 'POST':
+#         question_form = QuestionForm(request.POST)
+#         choice_formset = ChoiceFormSet(request.POST)
+#         if question_form.is_valid() and choice_formset.is_valid():
+#             question = question_form.save(commit=False)
+#             question.quiz = quiz
+#             question.save()
+#             choice_formset.instance = question
+#             choice_formset.save()
+#             return redirect('create_question', quiz_id=quiz_id)
+#     else:
+#         question_form = QuestionForm()
+#         choice_formset = ChoiceFormSet()
+#     return render(request, 'assignments/create_question.html', {'question_form': question_form, 'choice_formset': choice_formset})
     
     
 
