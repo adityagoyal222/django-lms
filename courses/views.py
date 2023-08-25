@@ -78,10 +78,23 @@ class CourseDetail(generic.DetailView):
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
+
+
+        # Get the total number of lessons for the course
+        total_lessons = Lesson.objects.filter(chapter__course=course).count()
+        
+        # Get the total number of completed lessons for the user in that course
+        # if self.request.user.is_authenticated:
+        #     completed_lessons = self.request.user.completed_lessons.filter(chapter__course=course).count()
+        # else:
+        #     completed_lessons = 0
+        
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
         context['chapters_with_lessons'] = chapters_with_lessons
+        context['total_lessons'] = total_lessons
+        # context['completed_lessons'] = completed_lessons
         return context
 
 class ListCourse(generic.ListView):

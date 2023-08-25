@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'rest_framework',
-    'markdown',
+    'markdownx',
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -105,8 +105,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_lms',
-        'USER': 'root',
-        'PASSWORD': 'lms123',
+        'USER': 'toor',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
     }

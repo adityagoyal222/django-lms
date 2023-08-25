@@ -8,21 +8,35 @@
 
 {% block main_content %}
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
-<h4 class="text-xl m-2">Teacher: {{course.teacher}}</h4>
-<p class="text-xl m-2">Description: {{course.course_description}}</p>
+<!-- Progress Bar -->
+<div class="progress">
+  <div class="progress-bar" id="progressBar" style="width: 0;"></div>
+</div>
+<!-- Display the total number of lessons -->
+<p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
+<!-- Display the total number of completed lessons for the user -->
+{% comment %} <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p> {% endcomment %}
+<h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4>
+<p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
 
 
 {% for chapter, lessons in chapters_with_lessons.items %}
 <div class="bg-gray-100 p-4 m-2 rounded-lg">
-    <button class="text-2xl font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+    <button class="text-xl font-sans font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
     </button>
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
-        <div class="bg-white p-3 rounded-lg shadow-md mb-2">
-            <p class="text-xl">{{ lesson.lesson_name }}</p>
+        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+          <!-- Radio Button -->
+          <input type="radio" name="lesson{{ forloop.counter }}" class="lessonRadio" {% if lesson.is_read %}checked{% endif %}>
+            <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-gray-700">
                 {{ lesson.lesson_content|convert_markdown|safe }}
+                <button class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+                  onclick="markAsRead({{ forloop.counter0 }})">
+                  Mark as Read
+                </button>
             </div>
         </div>
         {% endfor %}
@@ -112,6 +126,34 @@
       const chapter = document.getElementById(id);
       chapter.classList.toggle('hidden');
   }
+  // Initialize the progress based on the number of lessons
+ const totalLessons = {{ total_lessons }};
+ const progressBar = document.getElementById('progressBar');
+ const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+ let completedLessons = 0; 
+ 
+ function updateProgress() {
+   const percentage = (completedLessons / totalLessons) * 100;
+   progressBar.style.width = `${percentage}%`;
+ }
+
+ function markAsRead(lessonIndex) {
+  // Enable the radio button for the clicked lesson
+  lessonRadioButtons[lessonIndex].disabled = true;
+  
+  // Update completedLessons and progress bar
+  completedLessons++;
+  updateProgress();
+}
+ 
+ // Attach the markAsRead function to all radio buttons
+ lessonRadioButtons.forEach((lessonRadio, index) => {
+   lessonRadio.addEventListener('change', () => {
+     if (lessonRadio.checked) {
+       markAsRead(index);
+     }
+   });
+ }); 
 </script>
   
 {% endblock main_content %}
