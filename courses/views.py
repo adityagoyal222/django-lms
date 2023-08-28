@@ -9,7 +9,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
 from courses.models import Course, Enrollment, Lesson, Chapter
-from assignments.models import Assignment
+from assignments.models import Assignment, Quiz
 from resources.models import Resource
 
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm

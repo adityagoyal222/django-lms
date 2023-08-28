@@ -15,6 +15,7 @@ class CreateChapterForm(ModelForm):
         user_object = User.objects.filter(username = user.username)
         new_user_object = get_object_or_404(user_object)
         self.fields['course'].queryset = self.fields['course'].queryset.filter(teacher = new_user_object.id)
+        # self.fields['chapter_quiz'].queryset = self.fields['chapter_quiz'].queryset.filter(course__teacher = new_user_object.id)
 
 class CreateLessonForm(ModelForm):
     class Meta:

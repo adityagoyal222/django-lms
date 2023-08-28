@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from courses.models import Course
+from courses.models import Course, Chapter
 from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -24,7 +24,8 @@ from django.db import models
 
 class Quiz(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    quiz_title = models.CharField(max_length=200)
+    chapter = models.ForeignKey(Chapter, related_name="chapter_quizzes", on_delete=models.CASCADE)
+    quiz_title = models.CharField(max_length=200, unique=True)
     quiz_description = models.TextField()
 
     def __str__(self):

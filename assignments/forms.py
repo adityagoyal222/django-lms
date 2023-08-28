@@ -55,7 +55,7 @@ class SubmitQuizForm(ModelForm):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['course','quiz_title', 'quiz_description']
+        fields = ['course','chapter','quiz_title', 'quiz_description']
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
@@ -63,6 +63,18 @@ class QuizForm(forms.ModelForm):
         user_object = User.objects.filter(username=user.username)
         new_user_object = get_object_or_404(user_object)
         self.fields['course'].queryset = self.fields['course'].queryset.filter(teacher=new_user_object.id)
+        self.fields['chapter'].queryset = self.fields['chapter'].queryset.filter(course__teacher=new_user_object.id)
+        
+class BaseQuizAnswerFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.fields['text'].widget.attrs.update({'class': 'form-check-input'})
+            form.fields['text'].queryset = Choice.objects.filter(
+                question=form.instance.question
+            )
+QuizAnswerFormSet = modelformset_factory(Choice, fields=('question', 'text'), widgets={'text': forms.RadioSelect}, extra=0, formset=BaseQuizAnswerFormSet)
+
 
 class QuestionForm(forms.ModelForm):
     class Meta:
