@@ -14,7 +14,8 @@ urlpatterns = [
     re_path(r'^submission/delete/(?P<pk>[-\w]+)/$', views.delete_view, name="submit_delete"),
     re_path(r'^grade/(?P<pk>[-\w]+)/$', views.grade_assignment, name='grade'),
     path('create_quiz/', views.create_quiz, name='create_quiz'),
-    path('create_question/', views.create_question, name='create_question'),
+    path('create_question/<int:quiz_id>/', views.CreateQuestionView.as_view(), name='create_question'),
+    path('create_question/', views.CreateQuestionViewWithoutId.as_view(), name='create_question_without_id'),
     path('quiz/<int:quiz_id>/submit/', views.SubmitQuizView.as_view(), name='submit_quiz'),
     path('quiz/results/<int:submission_id>/', views.QuizResultsView.as_view(), name='quiz_results'),
 ]

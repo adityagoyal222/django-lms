@@ -30,6 +30,7 @@ class CreateCourse(LoginRequiredMixin, generic.CreateView):
         return super(CreateCourse, self).form_valid(form)
     
 class CreateChapterView(LoginRequiredMixin, generic.CreateView):
+    model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
     success_url = '/all/'

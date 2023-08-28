@@ -55,6 +55,10 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'rest_framework',
     'markdown',
+    'widget_tweaks',
+    "debug_toolbar",
+    
+    
 ]
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
@@ -66,6 +70,7 @@ GRAPHENE = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -73,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    
 ]
 
 ROOT_URLCONF = 'django_lms.urls'

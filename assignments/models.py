@@ -23,6 +23,7 @@ class Assignment(models.Model):
 from django.db import models
 
 class Quiz(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     quiz_title = models.CharField(max_length=200)
     quiz_description = models.TextField()
 

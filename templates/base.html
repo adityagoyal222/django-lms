@@ -69,6 +69,8 @@
                 <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
                 <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
                 {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
+                <a href="{% url 'assignments:create_quiz' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a>
+                <a href="{% url 'assignments:create_question_without_id' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Add Questions</a>
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
