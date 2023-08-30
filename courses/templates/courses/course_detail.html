@@ -18,7 +18,11 @@
     <button class="text-2xl font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
     </button>
-    {{ chapter.quiz }}
+    {% if chapter.quiz %}
+    <a href="{% url 'assignments:submit_quiz' quiz_id=chapter.quiz.id %}" class="text-blue-600 hover:underline">Take Quiz</a>
+    {% else %}
+    <p class="text-red-600">No Quiz</p>
+{% endif %}
 
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
@@ -30,7 +34,8 @@
         </div>
         {% endfor %}
     </div>
-    {% comment %} <a href="{% url 'assignments:submit_quiz' quiz_id=chapter.quiz.id %}" class="btn btn-primary">Take Quiz</a> {% endcomment %}
+    
+
 </div>
 {% endfor %}
 {% else %}

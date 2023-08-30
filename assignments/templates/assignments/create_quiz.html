@@ -15,6 +15,7 @@
         {% csrf_token %}
         {% comment %} {% bootstrap_field form.course %}  {% endcomment %}
         {% bootstrap_field quiz_form.course %}
+        {% bootstrap_field quiz_form.chapter %}
         {% bootstrap_field quiz_form.quiz_title %}
         {% bootstrap_field quiz_form.quiz_description %}
         {{ form.name.errors }}

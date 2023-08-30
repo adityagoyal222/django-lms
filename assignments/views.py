@@ -16,7 +16,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
 from assignments.models import Assignment, SubmitAssignment, Quiz, Question, Choice, QuizSubmission
-from assignments.forms import GradeAssignmentForm, CreateAssignmentForm, SubmitAssignmentForm, QuizForm, QuizAnswerFormSet, QuestionForm, ChoiceForm, SubmitQuizForm
+from assignments.forms import GradeAssignmentForm, CreateAssignmentForm, SubmitAssignmentForm, QuizForm, QuizAnswerForm, QuestionForm, ChoiceForm, SubmitQuizForm
 from courses.models import Course
 
 # Create your views here.    
@@ -256,45 +256,41 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
-class QuizAnswerView(generic.FormView):
+class QuizAnswerView(LoginRequiredMixin,generic.FormView):
     template_name = 'assignments/quiz_answer.html'
-    form_class = QuizAnswerFormSet
+    form_class = QuizAnswerForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['quiz_id'] = self.kwargs['quiz_id']
-        quiz = self.get_quiz()
-        kwargs['queryset'] = quiz.questions.all()
         return kwargs
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['quiz'] = self.get_quiz()
-        return context
-    
+
     def get_quiz(self):
         return get_object_or_404(Quiz, pk=self.kwargs['quiz_id'])
 
-    def calculate_score(self, question, selected_choices):
-        correct_choices = question.choices.filter(is_correct=True)
-        selected_correct_choices = selected_choices.filter(is_correct=True)
-        return set(selected_correct_choices) == set(correct_choices)
-   
-
+    def calculate_score(self, form):
+        score = 0
+        for name, value in form.cleaned_data.items():
+            if name.startswith('question_') and value is not None:
+                question_id = int(name.split('_')[1])
+                question = Question.objects.get(pk=question_id)
+                correct_choices = question.choice.filter(is_correct=True).values_list('id', flat=True)
+                if value in correct_choices:
+                    score += 1
+        return score    
+    
     def form_valid(self, form):
         quiz = self.get_quiz()
-        score = sum(
-            self.calculate_score(formset.cleaned_data['question'], formset.cleaned_data['choices'])
-            for formset in form)
+        score = self.calculate_score(form)
         submission = quiz.quizsubmission_set.create(
             student=self.request.user,
             score=score
         )
-
         return super().form_valid(form)
-
+    
     def get_success_url(self):
-        return reverse_lazy('quiz_results', args=[self.kwargs['quiz_id']])
+        return reverse_lazy('assignments:quiz_results', args=[self.kwargs['quiz_id']])
+
 
 
 

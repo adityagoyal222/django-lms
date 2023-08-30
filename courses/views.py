@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect,HttpResponseRedirect
 import datetime
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
@@ -33,7 +33,6 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
     model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
-    success_url = '/all/'
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -45,6 +44,9 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
         user_object = get_object_or_404(User, username=self.request.user.username)
         form.instance.teacher = user_object
         return super().form_valid(form)
+    def get_success_url(self):
+        url = reverse('courses:list')
+        return url
 
 class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     form_class = CreateLessonForm

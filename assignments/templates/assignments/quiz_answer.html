@@ -1,0 +1,20 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load widget_tweaks %}
+{% load bootstrap4 %}
+{% load custom_tags %}
+
+{% block title_name %}
+  Answer Quiz
+{% endblock title_name %}
+
+{% block main_content %}
+
+<h1>Answer the Quiz below:{{ quiz.quiz_title}}</h1>
+
+
+<form method="post" class="p-2 bg-gray-100 rounded-lg font-sans">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="m-2 p-2 text-lg font-sans font-semibold bg-green-600 hover:bg-green-400 rounded-lg" type="submit">Submit Answers</button>
+</form>
+{% endblock %}
