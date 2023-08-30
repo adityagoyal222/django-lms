@@ -275,8 +275,10 @@ class QuizAnswerView(LoginRequiredMixin,generic.FormView):
                 question_id = int(name.split('_')[1])
                 question = Question.objects.get(pk=question_id)
                 correct_choices = question.choice.filter(is_correct=True).values_list('id', flat=True)
-                if value in correct_choices:
+                print(f"Question ID: {question_id}, Selected Choice: {value}, Correct Choices: {list(correct_choices)}")
+                if str(value) in map(str, correct_choices):
                     score += 1
+                print(f"Current Score: {score}")
         return score    
     
     def form_valid(self, form):
