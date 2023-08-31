@@ -8,14 +8,16 @@
 
 {% block main_content %}
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
+{% if user.user_type == 1 %}
 <!-- Progress Bar -->
 <div class="progress">
-  <div class="progress-bar" id="progressBar" style="width: 0;"></div>
+  <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
+{% endif %}
 <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
-{% comment %} <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p> {% endcomment %}
+<p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
 <h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4>
 <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
 
@@ -28,15 +30,23 @@
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+          {% if user.user_type == 1 %}
           <!-- Radio Button -->
-          <input type="radio" name="lesson{{ forloop.counter }}" class="lessonRadio" {% if lesson.is_read %}checked{% endif %}>
+          {% if lesson.is_read %}
+          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}" checked>
+          {% else %}
+          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}">
+          {% endif %} 
+          {% endif %}
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-gray-700">
                 {{ lesson.lesson_content|convert_markdown|safe }}
-                <button class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                  onclick="markAsRead({{ forloop.counter0 }})">
+                {% if user.user_type == 1 %}
+                <button id="markAsReadButton_{{ lesson.id }}" class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+                  onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
                   Mark as Read
                 </button>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -122,38 +132,120 @@
 {% endif %}
 
 <script>
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
   function toggleChapter(id) {
       const chapter = document.getElementById(id);
       chapter.classList.toggle('hidden');
   }
-  // Initialize the progress based on the number of lessons
- const totalLessons = {{ total_lessons }};
- const progressBar = document.getElementById('progressBar');
- const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
- let completedLessons = 0; 
+     // Initialize the progress based on the number of lessons
+     const totalLessons = {{ total_lessons }};
+     console.log("Total Lessons:", total_lessons)
+     const progressBar = document.getElementById('progressBar');
+     const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+  
+ function updatechecked(){
+   
+   // Fetch the completed lessons count via AJAX
+   const courseId = parseInt('{{ course.pk }}');
+ console.log('Course ID:', courseId);
+ fetch("{% url 'courses:completed_lesson_count' course.pk %}", {
+   method: "GET",
+   headers: {
+     "Content-Type": "application/json",
+     "X-CSRFToken": getCookie("csrftoken"),
+   },
+ })
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`Network response was not ok, status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+    if (data.completed_lessons_count !== undefined) {
+      const completedLessons = data.completed_lessons_count;
+      updateProgress(completedLessons);
+      console.log("JSON Response:", data);
+    }
+   })
+   .catch(error => {
+     console.error('Fetch error:', error);
+   });
  
- function updateProgress() {
-   const percentage = (completedLessons / totalLessons) * 100;
-   progressBar.style.width = `${percentage}%`;
+ function updateProgress(completedLessons) {
+     const progressBar = document.getElementById('progressBar');
+     const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+     const totalLessons = {{ total_lessons }};
+ 
+   // Update the checked state of checkboxes for completed lessons
+     completedLessons.forEach(lessonId => {
+       const lessonCheckbox = document.querySelector(`#lessonRadio${lessonId}`);
+       if (lessonCheckbox) {
+         lessonCheckbox.checked = true;
+         lessonCheckbox.disabled = true;
+ 
+         // Disable the corresponding "Mark as Read" button
+         const lessonButton = document.querySelector(`#markAsReadButton_${lessonId}`);
+         if (lessonButton) {
+           lessonButton.disabled = true;
+         }
+       }
+   });
+ }
  }
 
- function markAsRead(lessonIndex) {
-  // Enable the radio button for the clicked lesson
-  lessonRadioButtons[lessonIndex].disabled = true;
+  function markAsRead(lessonIndex) {
+    updatechecked()
+    console.log("Lessonn Index:", lessonIndex); 
+    const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+    lessonRadioButtons[lessonIndex].disabled = true;
+    const lessonButton = document.querySelector(`#markAsReadButton_${lessonIndex}`);
+    lessonButton.disabled = true;
   
-  // Update completedLessons and progress bar
-  completedLessons++;
-  updateProgress();
-}
- 
- // Attach the markAsRead function to all radio buttons
- lessonRadioButtons.forEach((lessonRadio, index) => {
-   lessonRadio.addEventListener('change', () => {
-     if (lessonRadio.checked) {
-       markAsRead(index);
-     }
-   });
- }); 
+    fetch("{% url 'courses:mark_lesson_as_read' lesson_id=0 %}".replace('0', lessonIndex), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        lessonRadioButtons[lessonIndex].checked = true;
+        //lessonButton.checked = true;
+        
+        alert(data.message)
+        
+        // Log the JSON response
+        console.log("JSON Response:", data.message);
+      });
+  }
+  
+  
+  
+  // Attach the markAsRead function to all radio buttons
+  lessonRadioButtons.forEach((lessonRadio, index) => {
+    lessonRadio.addEventListener('change', () => {
+      if (lessonRadio.checked) {
+        markAsRead(index);
+      }
+    });
+  }); 
 </script>
+
   
 {% endblock main_content %}

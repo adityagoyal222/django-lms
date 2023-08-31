@@ -26,3 +26,4 @@ class SignUp(CreateView):
 #         except Lesson.DoesNotExist:
 #             return JsonResponse({'message': 'Lesson not found.'}, status=404)
 #     return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
