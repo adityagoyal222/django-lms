@@ -288,10 +288,11 @@ class QuizAnswerView(LoginRequiredMixin,generic.FormView):
             student=self.request.user,
             score=score
         )
+        self.kwargs['submission_id'] = submission.id
         return super().form_valid(form)
     
     def get_success_url(self):
-        return reverse_lazy('assignments:quiz_results', args=[self.kwargs['quiz_id']])
+        return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id']])
 
 
 
