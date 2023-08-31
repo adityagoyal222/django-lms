@@ -54,6 +54,7 @@ class QuizSubmission(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.quiz.quiz_title} - Score: {self.score}"
+      
 class SubmitAssignment(models.Model):
     author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200, blank=False)

@@ -78,7 +78,8 @@ class QuestionTextAndChoicesWidget(forms.MultiWidget):
         if value:
             return [None, value]
         return [None, None]
-class QuizAnswerForm(forms.Form):
+
+      class QuizAnswerForm(forms.Form):
     def __init__(self, *args, **kwargs):
         quiz_id = kwargs.pop('quiz_id')
         super().__init__(*args, **kwargs)
@@ -91,7 +92,6 @@ class QuizAnswerForm(forms.Form):
                 widget=forms.RadioSelect,
                 label=question.question_text
             )
-
 
 class QuestionForm(forms.ModelForm):
     class Meta:
