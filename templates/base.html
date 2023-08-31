@@ -68,7 +68,9 @@
                 <a href="{% url 'courses:create_lesson' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #d9534f;font-size: 20px;"></i> Create New Lesson</a>
                 <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
                 <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
                 <a href="{% url 'assignments:create_quiz' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a>
+                <a href="{% url 'assignments:create_question_without_id' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Add Questions</a>
                 <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
@@ -144,11 +146,8 @@
         .then(data => {
             // Handle the response data and create a new paragraph element for the chatbot response
             const botMessage = document.createElement('p');
-<<<<<<< HEAD
             botMessage.classList.add('user-message', 'bg-gray-900', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
-=======
-            botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
+
             botMessage.textContent = data.response;
             const chatbotBody = document.getElementById('chatbot-body');
             chatbotBody.appendChild(botMessage);

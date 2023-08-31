@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from courses.models import Course
+from courses.models import Course, Chapter
 from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -24,7 +24,8 @@ from django.db import models
 
 class Quiz(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    quiz_title = models.CharField(max_length=200)
+    chapter = models.ForeignKey(Chapter, related_name="chapter_quizzes", on_delete=models.CASCADE)
+    quiz_title = models.CharField(max_length=200, unique=True)
     quiz_description = models.TextField()
 
     def __str__(self):
@@ -38,7 +39,7 @@ class Question(models.Model):
         return self.question_text
 
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name="choice",on_delete=models.CASCADE)
     text = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
 
@@ -52,7 +53,8 @@ class QuizSubmission(models.Model):
     submitted_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.username} - {self.quiz.title} - Score: {self.score}"
+        return f"{self.student.username} - {self.quiz.quiz_title} - Score: {self.score}"
+      
 class SubmitAssignment(models.Model):
     author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200, blank=False)

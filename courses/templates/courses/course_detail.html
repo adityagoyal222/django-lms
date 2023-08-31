@@ -13,13 +13,19 @@
 
 
 {% if user.is_authenticated %}
-{% for chapter, lessons in chapters_with_lessons.items %}
+{% for chapter, content in chapters_with_lessons_and_quizzes.items %}
 <div class="bg-gray-100 p-4 m-2 rounded-lg">
     <button class="text-2xl font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
     </button>
+    {% if content.quizzes %}
+    <a href="{% url 'assignments:submit_quiz' quiz_id=content.quizzes.0.id %}" class="text-blue-600 hover:underline">Take Quiz</a>
+    {% else %}
+    <p class="text-red-600">No Quiz</p>
+    {% endif %}
+
     <div id="{{ chapter.id }}" class="mt-2 hidden">
-        {% for lesson in lessons %}
+        {% for lesson in content.lessons %}
         <div class="bg-white p-3 rounded-lg shadow-md mb-2">
             <p class="text-xl">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-gray-700">

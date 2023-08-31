@@ -22,7 +22,7 @@ class Chapter(models.Model):
     chapter_name = models.CharField(max_length=200)
     chapter_description = models.TextField()
     course = models.ForeignKey(Course, related_name="chapters", on_delete=models.CASCADE)
-    
+    chapter_quiz = models.ForeignKey('assignments.Quiz', related_name='quiz', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.chapter_name
     class Meta:

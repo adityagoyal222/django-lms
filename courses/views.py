@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect,HttpResponseRedirect
 import datetime
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
@@ -9,7 +9,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
 from courses.models import Course, Enrollment, Lesson, Chapter
-from assignments.models import Assignment
+from assignments.models import Assignment, Quiz
 from resources.models import Resource
 
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
@@ -30,9 +30,9 @@ class CreateCourse(LoginRequiredMixin, generic.CreateView):
         return super(CreateCourse, self).form_valid(form)
     
 class CreateChapterView(LoginRequiredMixin, generic.CreateView):
+    model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
-    success_url = '/all/'
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -44,6 +44,9 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
         user_object = get_object_or_404(User, username=self.request.user.username)
         form.instance.teacher = user_object
         return super().form_valid(form)
+    def get_success_url(self):
+        url = reverse('courses:list')
+        return url
 
 class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     form_class = CreateLessonForm
@@ -69,19 +72,23 @@ class CourseDetail(generic.DetailView):
         chapters = Chapter.objects.filter(course=course)
         
         # Create a dictionary to store chapters and their related lessons
-        chapters_with_lessons = {}
+        chapters_with_lessons_and_quizzes = {}
         
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
-            chapters_with_lessons[chapter] = lessons
+            quizzes = Quiz.objects.filter(chapter=chapter)
+            chapters_with_lessons_and_quizzes[chapter] = {
+                'lessons': lessons,
+                'quizzes': quizzes,
+            }
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
-        context['chapters_with_lessons'] = chapters_with_lessons
+        context['chapters_with_lessons_and_quizzes'] = chapters_with_lessons_and_quizzes
         return context
 
 class ListCourse(generic.ListView):
