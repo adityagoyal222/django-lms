@@ -146,11 +146,8 @@
         .then(data => {
             // Handle the response data and create a new paragraph element for the chatbot response
             const botMessage = document.createElement('p');
-<<<<<<< HEAD
             botMessage.classList.add('user-message', 'bg-gray-900', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
-=======
-            botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
+            
             botMessage.textContent = data.response;
             const chatbotBody = document.getElementById('chatbot-body');
             chatbotBody.appendChild(botMessage);
