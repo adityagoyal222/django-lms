@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from users.models import User
 
+
 # Create your models here.
 class Course(models.Model):
     course_name = models.CharField(max_length=200)
@@ -51,3 +52,11 @@ class Enrollment(models.Model):
 
     class Meta:
         unique_together = ('course', 'student')
+
+class CompletedLesson(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'lesson')
