@@ -10,6 +10,9 @@ class Course(models.Model):
     teacher = models.ForeignKey(User, related_name="course", on_delete=models.CASCADE)
     students = models.ManyToManyField(User, through='Enrollment', related_name="student_course")
 
+    def total_quizzes(self):
+        return self.chapters.aggregate(total_quizzes=models.Count('chapter_quizzes'))['total_quizzes']
+    
     def __str__(self):
         return self.course_name
 

@@ -70,10 +70,10 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
 class CourseDetail(generic.DetailView):
     model = Course
     
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         course = Course.objects.get(pk=self.kwargs['pk']) 
         
-           # Get chapters related to the course
+        # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
         
         # Create a dictionary to store chapters and their related lessons
@@ -91,21 +91,23 @@ class CourseDetail(generic.DetailView):
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
 
-
         # Get the total number of lessons for the course
         total_lessons = Lesson.objects.filter(chapter__course=course).count()
-        print("Total Lessons:", total_lessons)
-        
+        total_quizzes = course.total_quizzes()
+
         # Get the total number of completed lessons for the user in that course
         if self.request.user.is_authenticated:
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
-            completion_percentage = (completed_lessons / total_lessons) * 100
-            print("Completed Lessons:", completed_lessons)
-            print("Completion Percentage:", completion_percentage)
+     
+            completed_quizzes = self.request.user.completed_quizzes(course)
+          
+             
+            completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
         else:
             completed_lessons = 0
-            
-        
+            completed_quizzes = 0
+            completion_percentage = 0
+
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
@@ -113,8 +115,10 @@ class CourseDetail(generic.DetailView):
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
         return context
+
 
 class ListCourse(generic.ListView):
     model = Course
@@ -216,17 +220,12 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
         course = get_object_or_404(Course, pk=course_id)
-        print("Course:", course)
-        print("Course ID:", course_id)
-        completed_lessons_count = request.user.completed_lessons.filter(lesson__chapter__course_id=course_id).count()
-        context = {
-            'completed_lessons_count': completed_lessons_count,
-            'course': course,
-        }
-        return render(request, 'courses/course_detail.html', context)
+        completed_lessons_count = request.user.completed_lessons.filter(
+            lesson__chapter__course=course
+        ).count()
+        return JsonResponse({'completed_lessons_count': completed_lessons_count})
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
-    
 
 @require_POST
 def mark_lesson_as_read(request, lesson_id):
@@ -247,15 +246,15 @@ def mark_lesson_as_read(request, lesson_id):
 
                 completed_lessons_count = completed_lesson.count()
                 total_lessons = Lesson.objects.count()
-                completion_percentage = (completed_lessons_count / total_lessons) * 100
+                # completion_percentage = (completed_lessons_count / total_lessons) * 100
                 context = {
                     'completed_lessons_count': completed_lessons_count,
                     'lesson': lesson,
-                    'completion_percentage': completion_percentage,
+                    # 'completion_percentage': completion_percentage,
                 }
                 print("Completed Lesson Count:", completed_lessons_count)
                 print("Lesson:", lesson)
-                print("Completion Percentage:", completion_percentage)
+                # print("Completion Percentage:", completion_percentage)
                 return JsonResponse({"message": "Lesson marked as read successfully."})
                 # return JsonResponse({"completed_lessons_count": completed_lessons_count})
 
