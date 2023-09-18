@@ -238,7 +238,7 @@ def mark_lesson_as_read(request, lesson_id):
                     request.user.completed_lessons.add(completed_lesson)
                     request.user.save()
 
-                completed_lessons_count = completed_lesson.count()
+                completed_lessons_count = request.user.completed_lessons.count()
                 total_lessons = Lesson.objects.count()
                 completion_percentage = (completed_lessons_count / total_lessons) * 100
                 context = {

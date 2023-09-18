@@ -5,7 +5,7 @@
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #; /* Black */
+  background-color: #052635; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
 }
@@ -21,13 +21,31 @@ p, a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 20px;
-  color: #;
+  color: #ffff;
   display: block;
+}
+
+/* Custom CSS for growing underline */
+.grow-underline {
+    position: relative;
+    transition: transform 0.3s, width 0.3s;
+}
+
+.grow-underline::before {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* Adjust as needed to control the underline's position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px; /* Adjust as needed to control the underline's thickness */
+    background-color: yellow; /* Set the underline color to yellow */
+    transition: width 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: #f6c020;
 }
 
 /* Style page content */

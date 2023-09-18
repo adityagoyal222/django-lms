@@ -34,31 +34,28 @@
 {% comment %} <body class="bg-gradient-to-r from-cyan-500 to-blue-900 "> {% endcomment %}
 <body class="bg-gray-200 text-white ">
     {% comment %} <img class="bg-cover bg-no-repeat items-center absolute" src="{% static 'django_lms/images/landing.jpg'%}"/> {% endcomment %}
-    <div class=" shadow-sm h-[70px, auto] w-full p-2 flex flex-row relative">
-        <div class="items-start p-1 m-1 w-[80px] h-[80px]">
-            <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/>
+    
+    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-cyan-950 bg-opacity-50 m-5">
+        <div class="h-[70px, auto] w-full p-2 flex flex-row relative">
+            <div class="items-start p-1 m-2 w-[80px] h-[80px]">
+                <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/>
+            </div>
+            <div class="mx-auto my-auto">
+                <h1 class="text-3xl font-bold font-serif">ABYA</h1>
+            </div>
+            <div class="my-auto text-white hover:text-yellow-400">
+                <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:no-underline font-bold py-2 px-4">Home</a>
+                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:shadow-yellow-400 grow-underline hover:before:grow-underline font-bold py-2 px-4">Login</a>
+                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 grow-underline hover:grow-underline font-bold py-2 px-4">Register</a>
+            </div>
         </div>
-        <div class="mx-auto my-auto">
-            <h1 class="text-3xl font-bold font-serif">ABYA</h1>
-        </div>
-        <div class="my-auto text-white hover:text-yellow-400">
-            <a href="{% url 'home' %}" class="text-white hover:text-yellow-400 hover:no-underline font-bold py-2 px-4">Home</a>
-            <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400  hover:shadow-lg hover:no-underline font-bold py-2 px-4">Login</a>
-            <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:shadow-lg hover:no-underline font-bold py-2 px-4">Register</a>
-        </div>
-    </div>
-    <div class="w-[75%] h-[400px auto] mx-auto flex items-center justify-center rounded-xl bg-black text-yellow-400 bg-opacity-20 m-5">
-        {% comment %} <div>
-            <h1 class="text-4xl font-bold text-white font-serif">Welcome to ABYA</h1>
-            <p class="text-xl font-serif">Innovation. Creativity. Teamwork.</p>
-        </div> {% endcomment %}
-        <div class="index-image">
+        <div class="index-image text-yellow-400">
             <div class="mx-auto items-center flex justify-center w-[60%] py-5">
                 <div class="flex flex-row my-auto space-x-4">
-                <div class="items-start justify-start my-auto">
+                <div class="items-start justify-start my-auto m-3 space-x-3">
                     <h1 class="display-4 ">Learning Management System</h1>
                     <p class="text-gray-100 ">Innovation. Creativity. Teamwork.</p>
-                    <p class="bg-gray-100 bg-opacity-60 hover:bg-opacity-80  rounded-md shadow-sm p-2 mt-2 hover:shadow-2xl w-auto"><a href="{% url 'courses:list' %}" class="mx-auto items-center justify-center flex text-xl font-serif font-semibold decoration-none hover:no-underline text-black ">View All Courses</a></p>
+                    <p class="bg-gray-100 bg-opacity-60 hover:text-cyan-950 hover:bg-opacity-80  rounded-md shadow-sm p-2 mt-2 hover:shadow-2xl w-auto"><a href="{% url 'courses:list' %}" class="mx-auto items-center justify-center flex text-xl font-serif font-semibold decoration-none hover:no-underline text-black ">View All Courses</a></p>
                 </div>
                 <div class="items-end justify-end my-auto"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
                 </div>
