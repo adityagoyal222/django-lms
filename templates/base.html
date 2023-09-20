@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
 <body class="w-full">
-    <div id="chatbot-sidenav" class="h-full w-[20%] top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
-        <img src="{% static 'django_lms/images/close3.svg' %}" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
+    <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
+        <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
         {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
         <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
         <div class="m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
@@ -38,9 +38,9 @@
          
         <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
             {% csrf_token %}
-            <input id='chattext' name="chattext" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
+            <input id='chattext' name="chattext" class="bg-gray-300 m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
             {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
-            <button type="submit" class="bg-transparent m-2 p-2 outline-none shadow-md  rounded-md items-start w-[20%] hover:bg-gray-300">Send</button>
+            <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
         </form>
     </div>
     <div class="sidenav m-3 rounded-xl bg-gradient-to-r from-cyan-950 to-black">
@@ -51,11 +51,11 @@
         
         {% if user.is_authenticated %}
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
-            <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-black font-extrabold" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-black font-extrabold" aria-hidden="true"></i>All Courses</a>
+            <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
+            <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a>
             
             {% if user.user_type == 1 %}
-                <span class="sidemenu" ><h5 id="side-head"  class="text-black font-extrabold"><i class="fa fa-list courses-icon text-black font-extrabold" aria-hidden="true"></i>Your Courses</h5></span>
+                <span class="sidemenu" ><h5 id="side-head"  class="text-black font-extrabold"><i class="fa fa-list courses-icon text-white font-extrabold" aria-hidden="true"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user in course.students.all %}
@@ -90,8 +90,8 @@
         {% if user.is_authenticated %}
         {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
         <div class="flex m-2" onclick="toggleChatbot()">
-            <img src={%static 'django_lms/images/chat.svg'%} alt="Open Sidebar" alt="Chatbot"  class="w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
-            <p class="text-black font-semibold my-auto hover:text-white hover:cursor-pointer text-xl">Chatbot</p>
+            <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+            <p class="text-white font-semibold my-auto hover:text-yellow-400 hover:cursor-pointer text-xl">Chatbot</p>
         </div>
         {% comment %} {% endif %} {% endcomment %}
         {% endif %}

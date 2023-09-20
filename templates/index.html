@@ -20,7 +20,7 @@
     <style>
         body {
             /* Use the background image provided */
-            background-image: url("{% static 'django_lms/images/landing4.jpg' %}");
+            background-image: url("{% static 'django_lms/images/web3.jpg' %}");
             /* Set background size and position */
             background-size: cover;
             background-position: center;
@@ -32,11 +32,11 @@
     </style>
 </head>
 {% comment %} <body class="bg-gradient-to-r from-cyan-500 to-blue-900 "> {% endcomment %}
-<body class="bg-gray-200 text-white ">
+<body class="bg-gray-200 text-white">
     {% comment %} <img class="bg-cover bg-no-repeat items-center absolute" src="{% static 'django_lms/images/landing.jpg'%}"/> {% endcomment %}
     
-    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-cyan-950 bg-opacity-50 m-5">
-        <div class="h-[70px, auto] w-full p-2 flex flex-row relative">
+    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-black bg-opacity-20 m-5">
+        <div class="h-[70px, auto] w-full p-2 flex flex-row relative my-auto">
             <div class="items-start p-1 m-2 w-[80px] h-[80px]">
                 <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/>
             </div>
@@ -45,8 +45,8 @@
             </div>
             <div class="my-auto text-white hover:text-yellow-400">
                 <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:no-underline font-bold py-2 px-4">Home</a>
-                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:shadow-yellow-400 grow-underline hover:before:grow-underline font-bold py-2 px-4">Login</a>
-                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 grow-underline hover:grow-underline font-bold py-2 px-4">Register</a>
+                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:border-2 hover:p-1 hover:rounded-2xl hover:shadow-yellow-400 grow-underline hover:before:grow-underline font-bold py-2 px-4">Login</a>
+                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:border-2 hover:p-1 hover:rounded-2xl grow-underline hover:grow-underline font-bold py-2 px-4">Register</a>
             </div>
         </div>
         <div class="index-image text-yellow-400">
