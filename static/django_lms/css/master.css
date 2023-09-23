@@ -1,5 +1,5 @@
 .sidenav {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
+  height: 90vh; /* Full-height: remove this if you want "auto" height */
   width: 20%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
@@ -15,6 +15,33 @@ h1, h2, h3, h4, h5, h6 {
 p, a {
   font-family: 'Raleway', 'sans-serif';
 }
+
+
+/* Dropdown menu styles */
+#dropdown-menu {
+    display: block;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Transition effect for the dropdown menu */
+#dropdown-menu.transition-transform {
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+
+/* Styling for dropdown items */
+#dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+}
+
+#dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+
 
 /* The navigation menu links */
 .sidenav a {

@@ -21,6 +21,39 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
 </head>
 <body class="w-full">
+    {% if user.is_authenticated %}
+    <div class="bg-cyan-950 w-full relative h-[100px] m-0">
+        <div class="items-end mx-auto justify-end flex flex-row m-2">
+         <div class="">
+            <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
+         </div>
+        <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
+            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
+                             fill="none"
+                             id="drop-down"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M19 9l-7 7-7-7"
+                                     />
+                        </svg>
+            <!-- Dropdown Menu -->
+            <div id="dropdown-menu" class="hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
+                <!-- Dropdown Items -->
+                <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Account</a>
+                <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
+                <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">All Courses</a>
+                <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
+            </div>
+                                               
+        </div>
+        </div>
+    </div>
+    {% endif %}
     <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
         <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
         {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
@@ -43,14 +76,12 @@
             <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
         </form>
     </div>
-    <div class="sidenav m-3 rounded-xl bg-gradient-to-r from-cyan-950 to-black">
+    <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[115px] ml-2 rounded-lg">
         {% comment %} style="background-color: #052635 {% endcomment %}
         
         <div class="side-items">
-        <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
         
         {% if user.is_authenticated %}
-            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
             <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
             <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a>
             
@@ -142,11 +173,7 @@
         .then(data => {
             // Handle the response data and create a new paragraph element for the chatbot response
             const botMessage = document.createElement('p');
-<<<<<<< HEAD
-            botMessage.classList.add('user-message', 'bg-gray-900', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
-=======
             botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
->>>>>>> 1f11d46bf158a6134aaa2e8b777432759d714666
             botMessage.textContent = data.response;
             const chatbotBody = document.getElementById('chatbot-body');
             chatbotBody.appendChild(botMessage);
@@ -158,5 +185,21 @@
             console.error('Error:', error);
         });
     } {% endcomment %}
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownButton = document.getElementById("drop-down");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+    
+        dropdownButton.addEventListener("click", function (e) {
+            // Prevent the default click behavior
+            e.preventDefault();
+    
+            // Toggle the "hidden" class to show/hide the dropdown menu
+            dropdownMenu.classList.toggle("hidden");
+    
+            // Toggle the "scale-0" class to control the scaling effect
+            dropdownMenu.classList.toggle("scale-0");
+        });
+    });
+    
 </script>
 </html>
