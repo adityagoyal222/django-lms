@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from courses.models import Course, Enrollment, Lesson, Chapter
+from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse
 from assignments.models import Assignment, Quiz
 from resources.models import Resource
 from .models import CompletedLesson
@@ -107,6 +107,12 @@ class CourseDetail(generic.DetailView):
             completed_lessons = 0
             completed_quizzes = 0
             completion_percentage = 0
+        
+        if completion_percentage >= 100:
+            #this is how i choose to update to the db that a user has completed a course
+            completedcourse = CompletedCourse(user = self.request.user, course = course)
+            completedcourse.save()
+            
 
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
