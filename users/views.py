@@ -13,6 +13,8 @@ class SignUp(CreateView):
     success_url = reverse_lazy('users:login')
     template_name = 'users/signup.html'
 
+def Contact(request):
+    return render(request, 'users/contact.html')
 
 # @csrf_protect
 # def complete_lesson(request):

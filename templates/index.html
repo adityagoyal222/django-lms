@@ -35,7 +35,7 @@
 <body class="bg-gray-200 text-white">
     {% comment %} <img class="bg-cover bg-no-repeat items-center absolute" src="{% static 'django_lms/images/landing.jpg'%}"/> {% endcomment %}
     
-    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-black bg-opacity-20 m-5">
+    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-black bg-opacity-10 m-5">
         <div class="h-[70px, auto] w-full p-2 flex flex-row relative my-auto">
             <div class="items-start p-1 m-2 w-[80px] h-[80px]">
                 <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/>
@@ -43,11 +43,13 @@
             <div class="mx-auto my-auto">
                 <h1 class="text-3xl font-bold font-serif">ABYA</h1>
             </div>
-            <div class="my-auto text-white hover:text-yellow-400">
-                <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:no-underline font-bold py-2 px-4">Home</a>
-                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:border-2 hover:p-1 hover:rounded-2xl hover:shadow-yellow-400 grow-underline hover:before:grow-underline font-bold py-2 px-4">Login</a>
-                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:border-2 hover:p-1 hover:rounded-2xl grow-underline hover:grow-underline font-bold py-2 px-4">Register</a>
+            <div class="my-auto text-white font-bold">
+                <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:bg-yellow-400 hover:shadow-md transition duration-300 ease-in-out font-bold py-2 px-4">Home</a>
+                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Login</a>
+                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Register</a>
+                <a href="{% url 'users:contact' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Contact</a>
             </div>
+            
         </div>
         <div class="index-image text-yellow-400">
             <div class="mx-auto items-center flex justify-center w-[60%] py-5">
@@ -60,8 +62,11 @@
                 <div class="items-end justify-end my-auto"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556834136/illus_kftyh4.png" alt="" class="img-fluid"></div>
                 </div>
             </div>
+            <div class="bg-black bg-opacity-40 m-2 p-2 items-center justify-center flex mx-auto hover:cursor-pointer hover:translate-y-2 hover:delay-100 rounded-lg h-[200px] w-1/2 hover:bg-opacity-60 hover:text-yellow-400 hover:animate-pulse transition duration-300 ease-in-out">
+                <p class="text-3xl font-semibold font-serif text-center items-center justify-center mx-auto my-auto flex text-yellow-400">Empowering The Next Generation of Change Leaders</p>
+            </div>
         </div>
     </div>
-
+   
 </body>
 </html>

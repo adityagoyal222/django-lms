@@ -22,9 +22,18 @@
 </head>
 <body class="w-full">
     {% if user.is_authenticated %}
-    <div class="bg-cyan-950 w-full relative h-[100px] m-0">
+    <div class="bg-cyan-950 w-full relative h-[185px] m-0">
         <div class="items-end mx-auto justify-end flex flex-row m-2">
-         <div class="">
+         <div class="flex flex-row p-2 space-x-4 font-bold">
+            <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto transition delay-200 ease-in-out hover:text-yellow-500 hover:no-underline">Dashboard</a>
+            <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
+            {% for course in list_courses %}
+                    
+                    {% if user in course.students.all %}
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold"></a></span>
+                    {% endif %}
+                        
+                {% endfor %}
             <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
          </div>
         <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
@@ -44,9 +53,9 @@
             <!-- Dropdown Menu -->
             <div id="dropdown-menu" class="hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
                 <!-- Dropdown Items -->
-                <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Account</a>
+                <a href="{% url 'profile' pk=user.pk %}" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Profile</a>
+                <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Dashboard</a>
                 <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
-                <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">All Courses</a>
                 <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
             </div>
                                                
@@ -76,7 +85,7 @@
             <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
         </form>
     </div>
-    <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[115px] ml-2 rounded-lg">
+    <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[200px] ml-2 rounded-lg">
         {% comment %} style="background-color: #052635 {% endcomment %}
         
         <div class="side-items">
