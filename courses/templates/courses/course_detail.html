@@ -58,23 +58,16 @@
         {% endif %}
 
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
-          {% if user.user_type == 1 %}
-          <!-- Radio Button -->
-          {% if lesson.is_read %}
-          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}" checked>
-          {% else %}
-          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}">
-          {% endif %} 
-          {% endif %}
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-gray-700">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
-                <button id="markAsReadButton_{{ lesson.id }}" class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                  onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
-                  Mark as Read
-                </button>
+        <button class="mark-lesson-button bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+            data-lesson-id="{{ lesson.id }}">Mark as Read</button>
                 {% endif %}
+                <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
+                {% csrf_token %}
+
             </div>
         </div>
         {% endfor %}
@@ -238,45 +231,52 @@
    });
  }
  }
-
-  function markAsRead(lessonIndex) {
-    updatechecked()
-    console.log("Lessonn Index:", lessonIndex); 
-    const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
-    lessonRadioButtons[lessonIndex].disabled = true;
-    const lessonButton = document.querySelector(`#markAsReadButton_${lessonIndex}`);
-    lessonButton.disabled = true;
-  
-    fetch("{% url 'courses:mark_lesson_as_read' lesson_id=0 %}".replace('0', lessonIndex), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        lessonRadioButtons[lessonIndex].checked = true;
-        //lessonButton.checked = true;
-        
-        alert(data.message)
-        
-        // Log the JSON response
-        console.log("JSON Response:", data.message);
-      });
-  }
-  
-  
-  
-  // Attach the markAsRead function to all radio buttons
-  lessonRadioButtons.forEach((lessonRadio, index) => {
-    lessonRadio.addEventListener('change', () => {
-      if (lessonRadio.checked) {
-        markAsRead(index);
-      }
-    });
-  }); 
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const markLessonButtons = document.querySelectorAll('.mark-lesson-button');
+
+    markLessonButtons.forEach((markLessonButton) => {
+        markLessonButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default button click behavior
+
+            // Check if the button is disabled (already clicked)
+            if (markLessonButton.disabled) {
+                return; // Don't process if already disabled
+            }
+
+            const lessonId = markLessonButton.getAttribute('data-lesson-id');
+            const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+            // Send an AJAX request to mark the lesson as complete
+            fetch('{% url 'courses:mark_lesson_as_complete' %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Change content type to JSON
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ lesson_id: lessonId }), // Convert to JSON format
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.message); // Log the response message
+                // Disable the button after marking as complete
+                markLessonButton.disabled = true;
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+
+
+
+
+
+</script>
+
 <script>
     // Define lessonData as a JavaScript variable and populate it with data from Django template
     var lessonData = [

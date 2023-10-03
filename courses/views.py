@@ -16,7 +16,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from .models import Lesson
-
+import json
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
 # Create your views here.
@@ -110,8 +110,11 @@ class CourseDetail(generic.DetailView):
         
         if completion_percentage >= 100:
             #this is how i choose to update to the db that a user has completed a course
-            completedcourse = CompletedCourse(user = self.request.user, course = course)
-            completedcourse.save()
+            # Check if the user has already completed the course
+            if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
+                # Create a new CompletedCourse instance only if it doesn't exist
+                completedcourse = CompletedCourse(user=self.request.user, course=course)
+                completedcourse.save()
             
 
         context = super(CourseDetail, self).get_context_data(**kwargs)
@@ -232,42 +235,41 @@ def get_completed_lessons_count(request, course_id):
         return JsonResponse({'completed_lessons_count': completed_lessons_count})
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
+        
 
-@require_POST
-def mark_lesson_as_read(request, lesson_id):
+def mark_lesson_as_complete(request):
+    """Marks a lesson as complete for the current user.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response indicating whether the lesson was marked as complete
+        successfully.
+    """
+
+    if request.method != 'POST':
+        return JsonResponse({'message': 'Invalid request.'}, status=400)
+
     try:
-        if request.user.is_authenticated and request.method == "POST":
-            lesson = get_object_or_404(Lesson, pk=lesson_id)
-            
-            with transaction.atomic():
-                # Check if the lesson is already marked as completed for the user
-                completed_lesson, created = CompletedLesson.objects.get_or_create(
-                    user=request.user, lesson=lesson
-                )
+        data = json.loads(request.body.decode('utf-8'))
+        lesson_id = data.get('lesson_id')
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
-                if created:
-                    # A new CompletedLesson instance was created, increment the count
-                    request.user.completed_lessons.add(completed_lesson)
-                    request.user.save()
+    if not lesson_id:
+        return JsonResponse({'message': 'Missing lesson ID.'}, status=400)
 
-                completed_lessons_count = completed_lesson.count()
-                total_lessons = Lesson.objects.count()
-                # completion_percentage = (completed_lessons_count / total_lessons) * 100
-                context = {
-                    'completed_lessons_count': completed_lessons_count,
-                    'lesson': lesson,
-                    # 'completion_percentage': completion_percentage,
-                }
-                print("Completed Lesson Count:", completed_lessons_count)
-                print("Lesson:", lesson)
-                # print("Completion Percentage:", completion_percentage)
-                return JsonResponse({"message": "Lesson marked as read successfully."})
-                # return JsonResponse({"completed_lessons_count": completed_lessons_count})
+    try:
+        lesson = Lesson.objects.get(pk=lesson_id)
+    except Lesson.DoesNotExist:
+        return JsonResponse({'message': 'Lesson not found.'}, status=404)
 
-        else:
-            return JsonResponse({"message": "Invalid request method."}, status=400)
+    if CompletedLesson.objects.filter(user=request.user, lesson=lesson).exists():
+        return JsonResponse({'message': 'Lesson is already marked as complete.'}, status=200)
 
-    except Exception as e:
-        # Log the exception for debugging purposes
-        print("Exception:", str(e))
-        return JsonResponse({"error": "An error occurred."}, status=500)
+    completed_lesson = CompletedLesson(user=request.user, lesson=lesson)
+    completed_lesson.save()
+
+    return JsonResponse({'message': 'Lesson marked as complete successfully.'}, status=200)
+

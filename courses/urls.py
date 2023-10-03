@@ -17,5 +17,5 @@ urlpatterns = [
     path('update_lesson/<int:pk>/', views.UpdateLessonView.as_view(), name='update_lesson'),
     path('update_course/<int:pk>/', views.UpdateCourseView.as_view(), name='update_course'),
     path('get_completed_lessons_count/<int:course_id>/', views.get_completed_lessons_count, name='completed_lesson_count'),
-    path('mark_lesson_as_read/<int:lesson_id>/', views.mark_lesson_as_read, name='mark_lesson_as_read'),
+    path('mark_lesson_as_complete/', views.mark_lesson_as_complete, name='mark_lesson_as_complete'),
 ]
