@@ -1,214 +1,258 @@
-{% load static tailwind_tags %}
-{% load static %}
-{% load static tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% tailwind_css %}
-    <title>
-        
-        {% block title %}
+    {% load static tailwind_tags %}
+    {% load static %}
+    {% load static tailwind_tags %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% tailwind_css %}
+        <title>
             
-        {% endblock title %}
-        
-    </title>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
-</head>
-<body class="w-full">
-    {% if user.is_authenticated %}
-    <div class="bg-cyan-950 w-full relative h-[185px] m-0">
-        <div class="items-end mx-auto justify-end flex flex-row m-2">
-         <div class="flex flex-row p-2 space-x-4 font-bold">
-            <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto transition delay-200 ease-in-out hover:text-yellow-500 hover:no-underline">Dashboard</a>
-            <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
-            {% for course in list_courses %}
-                    
-                    {% if user in course.students.all %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold"></a></span>
-                    {% endif %}
+            {% block title %}
+                
+            {% endblock title %}
+            
+        </title>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
+    </head>
+    <body class="w-full">
+        {% if user.is_authenticated %}
+        <div class="bg-cyan-950 w-full relative h-[185px] m-0">
+            <div class="items-end mx-auto justify-end flex flex-row m-2">
+            <div class="flex flex-row p-2 space-x-4 font-bold">
+                <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto transition delay-200 ease-in-out hover:text-yellow-500 hover:no-underline">Dashboard</a>
+                <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
+                {% for course in list_courses %}
                         
-                {% endfor %}
-            <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
-         </div>
-        <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
-            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
-                             fill="none"
-                             id="drop-down"
-                             viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M19 9l-7 7-7-7"
-                                     />
-                        </svg>
-            <!-- Dropdown Menu -->
-            <div id="dropdown-menu" class="hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
-                <!-- Dropdown Items -->
-                <a href="{% url 'profile' pk=user.pk %}" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Profile</a>
-                <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Dashboard</a>
-                <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
-                <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
+                        {% if user in course.students.all %}
+                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold"></a></span>
+                        {% endif %}
+                            
+                    {% endfor %}
+                <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
             </div>
-                                               
+            <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
+                <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
+                                fill="none"
+                                id="drop-down"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"
+                                        />
+                            </svg>
+                <!-- Dropdown Menu -->
+                <div id="dropdown-menu" class="hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
+                    <!-- Dropdown Items -->
+                    <a href="{% url 'profile' pk=user.pk %}" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Profile</a>
+                    <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Dashboard</a>
+                    <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
+                    <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
+                </div>
+                                                
+            </div>
+            </div>
         </div>
-        </div>
-    </div>
-    {% endif %}
-    <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
-        <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
-        {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
-        <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
-        <div class="m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
-            <!-- Previous chat messages -->
-            {% for message in response %}
-                {% if message.role == "system" %}
-                    <p class="system-message bg-gray-700 shadow-sm text-white w-[80%] mr-auto items-start justify-start flex left-0 p-2 rounded-2xl">{{ message.content }}</p>
-                {% else %}
-                    <p class="user-message bg-white shadow-lg text-black w-[80%] ml-auto items-end justify-end flex right-0 p-2 rounded-2xl">{{ message.content }}</p>
-                {% endif %}
-            {% endfor %}
-        </div>
-         
-        <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
-            {% csrf_token %}
-            <input id='chattext' name="chattext" class="bg-gray-300 m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
-            {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
-            <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
-        </form>
-    </div>
-    <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[200px] ml-2 rounded-lg">
-        {% comment %} style="background-color: #052635 {% endcomment %}
-        
-        <div class="side-items">
-        
-        {% if user.is_authenticated %}
-            <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a>
-            
-            {% if user.user_type == 1 %}
-                <span class="sidemenu" ><h5 id="side-head"  class="text-black font-extrabold"><i class="fa fa-list courses-icon text-white font-extrabold" aria-hidden="true"></i>Your Courses</h5></span>
-                {% for course in list_courses %}
-                    
-                    {% if user in course.students.all %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold">{{course}}</a></span>
+        {% endif %}
+        <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
+            <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
+            {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
+            <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
+            <div class="m-2 bg-gray-300 p-2 rounded-sm flex flex-col h-[82%] scroll-auto overflow-x-hidden" id="chatbot-body">
+                <!-- Previous chat messages -->
+                {% for message in response %}
+                    {% if message.role == "system" %}
+                        <p class="system-message bg-gray-700 shadow-sm text-white w-[80%] mr-auto items-start justify-start flex left-0 p-2 rounded-2xl">{{ message.content }}</p>
+                    {% else %}
+                        <p class="user-message bg-white shadow-lg text-black w-[80%] ml-auto items-end justify-end flex right-0 p-2 rounded-2xl">{{ message.content }}</p>
                     {% endif %}
-                        
                 {% endfor %}
-            {% else %}
-                <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
-                <a href="{% url 'courses:create_chapter' %}" class="text-purple-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Section</a>
-                <a href="{% url 'courses:create_lesson' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #d9534f;font-size: 20px;"></i> Create New Lesson</a>
-                <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
-                <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
-                {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
-                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
-                {% for course in list_courses %}
-                    
-                    {% if user.id == course.teacher.id %}
-                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
-                    {% endif %}
-                        
-                {% endfor %}                 
-            {% endif %}
-            <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
-        {% else %}
-            <a class="sidemenu side-element text-black">Guest</a>
-            <a href="{% url 'home' %}" class="text-black font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'users:login' %}" class="text-black font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
-            <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
-            <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
-        {% endif %}
-        {% if user.is_authenticated %}
-        {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
-        <div class="flex m-2" onclick="toggleChatbot()">
-            <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
-            <p class="text-white font-semibold my-auto hover:text-yellow-400 hover:cursor-pointer text-xl">Chatbot</p>
-        </div>
-        {% comment %} {% endif %} {% endcomment %}
-        {% endif %}
-        </div>
-               
-    </div>
- 
-
-    
-        
-    <div class="content">
-        {% block body_content %}
+            </div>
             
-        {% endblock body_content %}
-    </div> 
+            <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
+                {% csrf_token %}
+                <input id='chattext' name="chattext" class="bg-gray-300 m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
+                {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
+                <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
+            </form>
+        </div>
+        <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[200px] ml-2 rounded-lg">
+            {% comment %} style="background-color: #052635 {% endcomment %}
+            
+            <div class="side-items">
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
+                <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a>
+                
+                {% if user.user_type == 1 %}
+                <!-- Your Courses -->
+                <a href="#" class="text-black font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</a>
+                <ul class="ml-4">
+                    {% for course in list_courses %}
+                        {% if user in course.students.all %}
+                            <li class="course-item">
+                                <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{ course }}</a>
+                                {% if course.chapter_set.all %}
+                                    <!-- Chapters Toggle -->
+                                    <i class="fas fa-chevron-down cursor-pointer text-white ml-2" onclick="toggleChapters('{{ course.pk }}')"></i>
+                                    <ul id="chapters-{{ course.pk }}" class="hidden ml-4">
+                                        {% for chapter in course.chapter_set.all %}
+                                            <li class="chapter-item">
+                                                <a href="{% url 'courses:chapter_detail' course.pk chapter.pk %}" class="text-gray-900">{{ chapter.chapter_name }}</a>
+                                                {% if chapter.lesson_set.all %}
+                                                    <!-- Lessons Toggle -->
+                                                    <i class="fas fa-chevron-down cursor-pointer text-white ml-2" onclick="toggleLessons('{{ chapter.pk }}')"></i>
+                                                    <ul id="lessons-{{ chapter.pk }}" class="hidden ml-4">
+                                                        {% for lesson in chapter.lesson_set.all %}
+                                                            <li class="lesson-item">
+                                                                <a href="{% url 'courses:lesson_detail' course.pk chapter.pk lesson.pk %}" class="text-gray-900">{{ lesson.lesson_name }}</a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                
 
-</body>
-<script>
-    function toggleChatbot() {
-        const chatbotSidenav = document.getElementById('chatbot-sidenav');
-        chatbotSidenav.classList.toggle('hidden');
+                {% else %}
+                    <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
+                    <a href="{% url 'courses:create_chapter' %}" class="text-purple-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Section</a>
+                    <a href="{% url 'courses:create_lesson' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #d9534f;font-size: 20px;"></i> Create New Lesson</a>
+                    <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
+                    <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                    {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
+                    <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
+                    {% for course in list_courses %}
+                        
+                        {% if user.id == course.teacher.id %}
+                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
+                        {% endif %}
+                            
+                    {% endfor %}                 
+                {% endif %}
+                <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+            {% else %}
+                <a class="sidemenu side-element text-black">Guest</a>
+                <a href="{% url 'home' %}" class="text-black font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+                <a href="{% url 'users:login' %}" class="text-black font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
+                <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+                <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
+            <div class="flex m-2" onclick="toggleChatbot()">
+                <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+                <p class="text-white font-semibold my-auto hover:text-yellow-400 hover:cursor-pointer text-xl">Chatbot</p>
+            </div>
+            {% comment %} {% endif %} {% endcomment %}
+            {% endif %}
+            </div>
+                
+        </div>
+    
+
+        
+            
+        <div class="content">
+            {% block body_content %}
+                
+            {% endblock body_content %}
+        </div> 
+
+    </body>
+    <script>
+        function toggleChapters(courseId) {
+            console.log("Toggling chapters for course ID:", courseId);
+            const chapters = document.getElementById(`chapters-${courseId}`);
+            if (chapters) {
+        chapters.classList.toggle('hidden');
+    } else {
+        console.log(`Element with ID 'chapters-${courseId}' not found.`);
     }
-
-    {% comment %} function sendText() {
-        // Get the chat text from the input field
-        const chattext = document.getElementById('chattext').value;
-        if (chattext.trim() === '') {
-            return; // Don't send empty messages
+        }
+        
+        function toggleLessons(chapterId) {
+            console.log("Toggling lessons for chapter ID:", chapterId);
+            const lessons = document.getElementById(`lessons-${chapterId}`);
+            lessons.classList.toggle('hidden');
+        }
+        
+        function toggleChatbot() {
+            const chatbotSidenav = document.getElementById('chatbot-sidenav');
+            chatbotSidenav.classList.toggle('hidden');
         }
 
-        // Clear the input field after sending the message
-        document.getElementById('chattext').value = '';
+        {% comment %} function sendText() {
+            // Get the chat text from the input field
+            const chattext = document.getElementById('chattext').value;
+            if (chattext.trim() === '') {
+                return; // Don't send empty messages
+            }
 
-        // Get the session ID from your Django backend and store it in a variable
-        const sessionId = "{{ request.session.session_key }}";
+            // Clear the input field after sending the message
+            document.getElementById('chattext').value = '';
 
-        // Make an HTTP POST request to your Django view to get the chatbot response
-        fetch("{% url 'chattext'%}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': "{{ csrf_token }}",
-                'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
-            },
-            body: new URLSearchParams({ 'chattext': chattext }) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response data and create a new paragraph element for the chatbot response
-            const botMessage = document.createElement('p');
-            botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
-            botMessage.textContent = data.response;
-            const chatbotBody = document.getElementById('chatbot-body');
-            chatbotBody.appendChild(botMessage);
+            // Get the session ID from your Django backend and store it in a variable
+            const sessionId = "{{ request.session.session_key }}";
 
-            // Scroll to the bottom to show the latest messages
-            chatbotBody.scrollTop = chatbotBody.scrollHeight;
-        })
-        .catch(error => {
-            console.error('Error:', error);
+            // Make an HTTP POST request to your Django view to get the chatbot response
+            fetch("{% url 'chattext'%}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': "{{ csrf_token }}",
+                    'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
+                },
+                body: new URLSearchParams({ 'chattext': chattext }) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data and create a new paragraph element for the chatbot response
+                const botMessage = document.createElement('p');
+                botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
+                botMessage.textContent = data.response;
+                const chatbotBody = document.getElementById('chatbot-body');
+                chatbotBody.appendChild(botMessage);
+
+                // Scroll to the bottom to show the latest messages
+                chatbotBody.scrollTop = chatbotBody.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        } {% endcomment %}
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdownButton = document.getElementById("drop-down");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+        
+            dropdownButton.addEventListener("click", function (e) {
+                // Prevent the default click behavior
+                e.preventDefault();
+        
+                // Toggle the "hidden" class to show/hide the dropdown menu
+                dropdownMenu.classList.toggle("hidden");
+        
+                // Toggle the "scale-0" class to control the scaling effect
+                dropdownMenu.classList.toggle("scale-0");
+            });
         });
-    } {% endcomment %}
-    document.addEventListener("DOMContentLoaded", function () {
-        const dropdownButton = document.getElementById("drop-down");
-        const dropdownMenu = document.getElementById("dropdown-menu");
-    
-        dropdownButton.addEventListener("click", function (e) {
-            // Prevent the default click behavior
-            e.preventDefault();
-    
-            // Toggle the "hidden" class to show/hide the dropdown menu
-            dropdownMenu.classList.toggle("hidden");
-    
-            // Toggle the "scale-0" class to control the scaling effect
-            dropdownMenu.classList.toggle("scale-0");
-        });
-    });
-    
-</script>
-</html>
+        
+    </script>
+    </html>

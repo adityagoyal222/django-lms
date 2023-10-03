@@ -103,6 +103,9 @@ class CourseDetail(generic.DetailView):
         context['assignments'] = assignments
         context['resources'] = resources
         context['chapters_with_lessons'] = chapters_with_lessons
+        # return chapter name and lesson name
+        context["lesson"] = Lesson.objects.all()[2]
+        context["chapter"] = Chapter.objects.all()[2]
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
