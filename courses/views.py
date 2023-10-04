@@ -72,14 +72,17 @@ class CourseDetail(generic.DetailView):
         
            # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
+
+        # chapters_with_lessons = {}
         
         # Create a dictionary to store chapters and their related lessons
-        chapters_with_lessons = {}
+        chapters_with_lessons = []
         
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
-            chapters_with_lessons[chapter] = lessons
+            chapters_with_lessons.append((chapter, lessons))
+            
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
@@ -102,10 +105,8 @@ class CourseDetail(generic.DetailView):
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
-        context['chapters_with_lessons'] = chapters_with_lessons
+        context['chapters_with_lessons'] = chapters_with_lessons 
         # return chapter name and lesson name
-        context["lesson"] = Lesson.objects.all()[2]
-        context["chapter"] = Chapter.objects.all()[2]
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
@@ -262,3 +263,24 @@ def mark_lesson_as_read(request, lesson_id):
         # Log the exception for debugging purposes
         print("Exception:", str(e))
         return JsonResponse({"error": "An error occurred."}, status=500)
+
+
+# get chapters and lesson titles and render them 
+@require_POST
+def get_chapter_lesson(request, course_id):
+    if request.user.is_authenticated:
+        course = get_object_or_404(Course, pk=course_id)
+        print("Course:", course)
+        print("Course ID:", course_id)
+        chapters = Chapter.objects.filter(course=course)
+        print("Chapters:", chapters)
+        lessons = Lesson.objects.filter(chapter__course=course)
+        print("Lessons:", lessons)
+        context = {
+            'chapters': chapters,
+            'lessons': lessons,
+            'course': course,
+        }
+        return render(request, 'courses/course_detail.html', context)
+    else:
+        return JsonResponse({'message': 'Invalid request method.'}, status=400)

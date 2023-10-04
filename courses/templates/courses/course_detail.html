@@ -6,7 +6,9 @@
   LMS - {{course.course_name}}
 {% endblock title_name %}
 
+
 {% block main_content %}
+<div class="mt-[50px]">
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
 {% if user.user_type == 1 %}
 <!-- Progress Bar -->
@@ -22,7 +24,7 @@
 <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
 
 
-{% for chapter, lessons in chapters_with_lessons.items %}
+{% for chapter, lessons in chapters_with_lessons %}
 <div class="bg-gray-100 p-4 m-2 rounded-lg">
     <button class="text-xl font-sans font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
@@ -247,5 +249,6 @@
   }); 
 </script>
 
-  
+</div> 
 {% endblock main_content %}
+

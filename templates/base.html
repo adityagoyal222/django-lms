@@ -23,11 +23,12 @@
     </head>
     <body class="w-full">
         {% if user.is_authenticated %}
-        <div class="bg-cyan-950 w-full relative h-[185px] m-0">
+        <div class="bg-cyan-950 w-full top-0 fixed  mt-0">
             <div class="items-end mx-auto justify-end flex flex-row m-2">
             <div class="flex flex-row p-2 space-x-4 font-bold">
                 <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto transition delay-200 ease-in-out hover:text-yellow-500 hover:no-underline">Dashboard</a>
                 <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
+                <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
                 {% for course in list_courses %}
                         
                         {% if user in course.students.all %}
@@ -86,14 +87,14 @@
                 <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
             </form>
         </div>
-        <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[200px] ml-2 rounded-lg">
+        <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[140px] ml-0">
             {% comment %} style="background-color: #052635 {% endcomment %}
             
             <div class="side-items">
             
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
-                <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a>
+                {% comment %} <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a> {% endcomment %}
                 
                 {% if user.user_type == 1 %}
                 <!-- Your Courses -->
@@ -102,33 +103,62 @@
                     {% for course in list_courses %}
                         {% if user in course.students.all %}
                             <li class="course-item">
-                                <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{ course }}</a>
-                                {% if course.chapter_set.all %}
-                                    <!-- Chapters Toggle -->
-                                    <i class="fas fa-chevron-down cursor-pointer text-white ml-2" onclick="toggleChapters('{{ course.pk }}')"></i>
-                                    <ul id="chapters-{{ course.pk }}" class="hidden ml-4">
-                                        {% for chapter in course.chapter_set.all %}
-                                            <li class="chapter-item">
-                                                <a href="{% url 'courses:chapter_detail' course.pk chapter.pk %}" class="text-gray-900">{{ chapter.chapter_name }}</a>
-                                                {% if chapter.lesson_set.all %}
-                                                    <!-- Lessons Toggle -->
-                                                    <i class="fas fa-chevron-down cursor-pointer text-white ml-2" onclick="toggleLessons('{{ chapter.pk }}')"></i>
-                                                    <ul id="lessons-{{ chapter.pk }}" class="hidden ml-4">
-                                                        {% for lesson in chapter.lesson_set.all %}
-                                                            <li class="lesson-item">
-                                                                <a href="{% url 'courses:lesson_detail' course.pk chapter.pk lesson.pk %}" class="text-gray-900">{{ lesson.lesson_name }}</a>
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endif %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
+                                <div class="flex flex-row space-x-2">
+                                    <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold item-start">{{ course }}</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor" onclick="toggleChapters('{{ course.pk }}')">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </div>
+                                
+                                <!-- Loop through chapters_with_lessons for the current course -->
+                {% for chapter, lessons in chapters_with_lessons %}
+                {% if chapter.course == course %}
+                    <ul class="ml-4 hidden" id="chapters-{{ course.pk }}">
+                        <li class="chapter-item">
+                            <div class="flex flex-row space-x-2">
+                                {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
+                                <button class="text-md text-gray-100 font-sans font-semibold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+                                    {{ chapter.chapter_name }}
+                                </button>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor" onclick="toggleLessons('{{ chapter.pk }}')">
+                            <path stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                                    />
+                        </svg>
+                            </div>
+                            {% if lessons %}
+                                <ul class="ml-6 text-sm hidden" id="lessons-{{ chapter.pk }}">
+                                    {% for lesson in lessons %}
+                                        <li class="lesson-item"  >
+                                            <a href="#" class="text-green-900 item-start">{{ lesson.lesson_name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endfor %}
                             </li>
                         {% endif %}
                     {% endfor %}
                 </ul>
+                
+                
                 
 
                 {% else %}
@@ -182,10 +212,15 @@
             console.log("Toggling chapters for course ID:", courseId);
             const chapters = document.getElementById(`chapters-${courseId}`);
             if (chapters) {
-        chapters.classList.toggle('hidden');
-    } else {
-        console.log(`Element with ID 'chapters-${courseId}' not found.`);
-    }
+                chapters.classList.toggle('hidden');
+            } else {
+                console.log(`Element with ID 'chapters-${courseId}' not found.`);
+            }
+        }
+
+        function toggleChapter(id) {
+            const chapter = document.getElementById(id);
+            chapter.classList.toggle('hidden');
         }
         
         function toggleLessons(chapterId) {
@@ -193,6 +228,7 @@
             const lessons = document.getElementById(`lessons-${chapterId}`);
             lessons.classList.toggle('hidden');
         }
+        
         
         function toggleChatbot() {
             const chatbotSidenav = document.getElementById('chatbot-sidenav');
