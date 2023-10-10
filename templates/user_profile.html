@@ -9,7 +9,7 @@
     
 
 {% block body_content %}
-    <div class="container font-serif bg-transparent">
+    <div class="m-[150px] max-w-[60%] text-cyan-950 font-serif bg-transparent">
         {% if user.is_authenticated %}
             <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
             <h1 class="text-3xl font-semibold">Username: {{user.username}}</h1>

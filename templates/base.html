@@ -23,10 +23,10 @@
     </head>
     <body class="w-full">
         {% if user.is_authenticated %}
-        <div class="bg-cyan-950 w-full top-0 fixed  mt-0">
+        <div class="bg-black bg-opacity-80 w-full top-0 fixed  mt-0">
             <div class="items-end mx-auto justify-end flex flex-row m-2">
             <div class="flex flex-row p-2 space-x-4 font-bold">
-                <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto transition delay-200 ease-in-out hover:text-yellow-500 hover:no-underline">Dashboard</a>
+                <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
                 <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
                 <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
                 {% for course in list_courses %}
@@ -39,7 +39,7 @@
                 <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
             </div>
             <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
-                <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element">{{user}}</a>
+                <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
                                 fill="none"
@@ -53,7 +53,7 @@
                                         />
                             </svg>
                 <!-- Dropdown Menu -->
-                <div id="dropdown-menu" class="hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
+                <div id="dropdown-menu" class="text-cyan-950 hidden bg-white mt-5 absolute transition-transform transform scale-0 origin-top-right right-0 w-[220px] py-2 border border-gray-300 rounded-md shadow-lg p-2">
                     <!-- Dropdown Items -->
                     <a href="{% url 'profile' pk=user.pk %}" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">My Profile</a>
                     <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Dashboard</a>
@@ -87,7 +87,8 @@
                 <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
             </form>
         </div>
-        <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[140px] ml-0">
+        {% comment %} <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[140px] ml-0"> {% endcomment %}
+        <div class="sidenav bg-black bg-opacity-80 mt-[140px] ml-0">
             {% comment %} style="background-color: #052635 {% endcomment %}
             
             <div class="side-items">
@@ -99,12 +100,12 @@
                 {% if user.user_type == 1 %}
                 <!-- Your Courses -->
                 <a href="#" class="text-black font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</a>
-                <ul class="ml-4">
+                <ul class="ml-5">
                     {% for course in list_courses %}
                         {% if user in course.students.all %}
                             <li class="course-item">
                                 <div class="flex flex-row space-x-2">
-                                    <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold item-start">{{ course }}</a>
+                                    <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold item-start text-md">{{ course }}</a>
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                     class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
                                     fill="none"
@@ -119,40 +120,39 @@
                                 </div>
                                 
                                 <!-- Loop through chapters_with_lessons for the current course -->
-                {% for chapter, lessons in chapters_with_lessons %}
-                {% if chapter.course == course %}
-                    <ul class="ml-4 hidden" id="chapters-{{ course.pk }}">
-                        <li class="chapter-item">
-                            <div class="flex flex-row space-x-2">
-                                {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
-                                <button class="text-md text-gray-100 font-sans font-semibold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
-                                    {{ chapter.chapter_name }}
-                                </button>
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor" onclick="toggleLessons('{{ chapter.pk }}')">
-                            <path stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 9l-7 7-7-7"
-                                    />
-                        </svg>
-                            </div>
-                            {% if lessons %}
-                                <ul class="ml-6 text-sm hidden" id="lessons-{{ chapter.pk }}">
-                                    {% for lesson in lessons %}
-                                        <li class="lesson-item"  >
-                                            <a href="#" class="text-green-900 item-start">{{ lesson.lesson_name }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </li>
-                    </ul>
-                {% endif %}
-            {% endfor %}
+                                {% for chapter, lessons in chapters_with_lessons %}
+                                {% if chapter.course == course %}
+                                    <li class="chapter-item">
+                                        <div class="flex flex-row space-x-2">
+                                            {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
+                                            <button class="items-start ml-2 text-xl font-sans text-gray-100 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+                                                {{ chapter.chapter_name }}
+                                            </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor" onclick="toggleLessons('{{ chapter.pk }}')">
+                                                <path stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"
+                                                />
+                                            </svg>
+                                        </div>
+                                        {% if lessons %}
+                                            <ul class="ml-5 hidden" id="lessons-{{ chapter.pk }}">
+                                                <!-- Loop through lessons for the current chapter -->
+                                                {% for lesson in lessons %}
+                                                    <li class="lesson-item">
+                                                        <a href="#" class="text-green-900 item-start text-xs">{{ lesson.lesson_name }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                             </li>
                         {% endif %}
                     {% endfor %}
