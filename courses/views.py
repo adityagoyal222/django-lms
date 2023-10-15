@@ -95,7 +95,7 @@ class CourseDetail(generic.DetailView):
         # Get the total number of completed lessons for the user in that course
         if self.request.user.is_authenticated:
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
-            completion_percentage = (completed_lessons / total_lessons) * 100
+            completion_percentage = round((completed_lessons / total_lessons) * 100)
             print("Completed Lessons:", completed_lessons)
             print("Completion Percentage:", completion_percentage)
         else:

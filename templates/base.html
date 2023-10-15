@@ -23,12 +23,16 @@
     </head>
     <body class="w-full">
         {% if user.is_authenticated %}
-        <div class="bg-black bg-opacity-80 w-full top-0 fixed  mt-0">
+        <div class="bg-black bg-opacity-80 w-full top-0 fixed mt-0">
+            <div class="items-start p-1 left-2 ml-0 my-auto absolute">
+                {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
+                <img width="300" height="300" src="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png" class="attachment-large size-large wp-image-821" alt="" loading="lazy" srcset="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png 1024w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-300x116.png 300w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-768x297.png 768w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1536x594.png 1536w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-2048x792.png 2048w" sizes="(max-width: 800px) 100vw, 800px">
+            </div>
             <div class="items-end mx-auto justify-end flex flex-row m-2">
             <div class="flex flex-row p-2 space-x-4 font-bold">
-                <a href="{% url 'courses:list' %}" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
-                <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
-                <a href="" class="text-xl text-white my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
+                <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
+                <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
+                <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
                 {% for course in list_courses %}
                         
                         {% if user in course.students.all %}
@@ -38,10 +42,10 @@
                     {% endfor %}
                 <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
             </div>
-            <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-400 flex-row flex">
-                <a href="{% url 'profile' pk=user.pk %}" class="sidemenu side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
+            <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row flex">
+                <a href="{% url 'profile' pk=user.pk %}" class="sidemenu uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
+                                class="h-6 w-6 text-gray-50 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
                                 fill="none"
                                 id="drop-down"
                                 viewBox="0 0 24 24"
@@ -61,6 +65,28 @@
                     <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
                 </div>
                                                 
+            </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-black bg-opacity-80 w-full top-0 relative mt-0">
+            <div class="items-start p-1 left-2 ml-0 my-auto absolute">
+                {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
+                <img width="300" height="300" src="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png" class="attachment-large size-large wp-image-821" alt="" loading="lazy" srcset="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png 1024w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-300x116.png 300w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-768x297.png 768w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1536x594.png 1536w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-2048x792.png 2048w" sizes="(max-width: 800px) 100vw, 800px">
+            </div>
+            <div class="items-end mx-auto justify-end flex flex-row m-2">
+            <div class="flex flex-row p-2 space-x-4 font-bold">
+                <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
+                {% comment %} <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a> {% endcomment %}
+                {% comment %} <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a> {% endcomment %}
+                {% for course in list_courses %}
+                        
+                        {% if user in course.students.all %}
+                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold"></a></span>
+                        {% endif %}
+                            
+                    {% endfor %}
+                <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
             </div>
             </div>
         </div>
@@ -87,30 +113,38 @@
                 <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
             </form>
         </div>
-        {% comment %} <div class="sidenav bg-gradient-to-r from-cyan-950 to-black mt-[140px] ml-0"> {% endcomment %}
-        <div class="sidenav bg-black bg-opacity-80 mt-[140px] ml-0">
+        {% comment %} <div class="sidenav bg-gradient-to-r from-gray-600 to-gray-700 mt-[140px] ml-0"> {% endcomment %}
+
+        {% comment %} sidebar {% endcomment %}
+        <div class=" bg-gray-100 text-cyan-950 fixed w-[450px] h-[900px] overflow-y-auto">
             {% comment %} style="background-color: #052635 {% endcomment %}
-            
-            <div class="side-items">
-            
-            {% if user.is_authenticated %}
-                <a href="{% url 'home' %}" class="text-black font-extrabold"><i class="fa fa-home text-white font-extrabold" aria-hidden="true"></i>Home</a>
+            {% if user.is_authenticated %} 
+            <div class="side-items flex flex-col text-2xl p-3 m-2 hover:decoration-yellow-500 text-white font-bold">
+            <div class="bg-gray-50 shadow-md h-auto w-full rounded-lg m-2 ">
+                <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
+                <div class="progress w-[90%] mx-auto h-2">
+                    <div class="progress-bar bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
+            </div>
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
+                <a href="{% url 'home' %}" class="hover:text-yellow-500 mb-3 mt-3 hover:no-underline text-cyan-950 font-extrabold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
                 {% comment %} <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a> {% endcomment %}
-                
                 {% if user.user_type == 1 %}
                 <!-- Your Courses -->
-                <a href="#" class="text-black font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</a>
-                <ul class="ml-5">
+                <a href="#" class="hover:text-yellow-500 hover:no-underline text-cyan-950 font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</a>
+                <ul class="ml-2 mt-3 pt-2 space-y-4">
                     {% for course in list_courses %}
                         {% if user in course.students.all %}
-                            <li class="course-item">
+                            <li class="course-item pb-4 border-b text-cyan-950">
                                 <div class="flex flex-row space-x-2">
-                                    <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold item-start text-md">{{ course }}</a>
+                                    <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                    <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold items-center hover:text-yellow-400 hover:no-underline text-lg">{{ course }}</a>
                                     <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
+                                    class="h-6 w-6 text-cyan-950 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke="currentColor" onclick="toggleChapters('{{ course.pk }}')">
+                                    stroke="currentColor" onclick="toggleChapters('{{ course.pk }}')"> 
                                     <path stroke-linecap="round"
                                         stroke-linejoin="round"
                                         stroke-width="2"
@@ -122,14 +156,17 @@
                                 <!-- Loop through chapters_with_lessons for the current course -->
                                 {% for chapter, lessons in chapters_with_lessons %}
                                 {% if chapter.course == course %}
-                                    <li class="chapter-item">
+                                {% comment %} <ul class="ml-2 hidden" id="chapters-{{ course.pk }}"> {% endcomment %}
+                                    <li class="chapter-item pb-3 border-b text-cyan-950">
                                         <div class="flex flex-row space-x-2">
                                             {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
-                                            <button class="items-start ml-2 text-xl font-sans text-gray-100 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
-                                                {{ chapter.chapter_name }}
-                                            </button>
+                                            <input type="checkbox" id="item1" name="items" class="text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                                <button class="items-center ml-2 text-sm w-[80%] font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+                                                    {{ chapter.chapter_name }}
+                                                </button>
+                                            
                                             <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="h-6 w-6 text-white hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
+                                                class="h-6 w-6 text-cyan-950 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor" onclick="toggleLessons('{{ chapter.pk }}')">
@@ -144,13 +181,18 @@
                                             <ul class="ml-5 hidden" id="lessons-{{ chapter.pk }}">
                                                 <!-- Loop through lessons for the current chapter -->
                                                 {% for lesson in lessons %}
-                                                    <li class="lesson-item">
-                                                        <a href="#" class="text-green-900 item-start text-xs">{{ lesson.lesson_name }}</a>
+                                                    <li class="lesson-item flex flex-row space-x-2 pb-3">
+                                                        {% comment %} <a href="#" class="text-green-900 item-start text-xs">{{ lesson.lesson_name }}</a> {% endcomment %}
+                                                        <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-3 h-3 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                                        <button class="items-end ml-2 w-[90%] text-xl font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleLesson('{{ lesson.id }}')">
+                                                            {{ lesson.lesson_name }}
+                                                        </button>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         {% endif %}
                                     </li>
+                                {% comment %} </ul> {% endcomment %}
                                 {% endif %}
                             {% endfor %}
                             </li>
@@ -177,19 +219,21 @@
                             
                     {% endfor %}                 
                 {% endif %}
-                <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                <a href="{% url 'users:logout' %}" class="text-cyan-950 hover:text-yellow-500 hover:no-underline font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
             {% else %}
-                <a class="sidemenu side-element text-black">Guest</a>
-                <a href="{% url 'home' %}" class="text-black font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-                <a href="{% url 'users:login' %}" class="text-black font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
-                <a href="{% url 'users:signup' %}" class="text-black font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
-                <a href="{% url 'courses:list' %}" class="text-black font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+                <div class="flex flex-col space-y-4 text-2xl font-extrabold m-3 p-2">
+                <a class="sidemenu side-element text-cyan-950 hover:text-yellow-500 hover:no-underline">Guest</a>
+                <a href="{% url 'home' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
+                <a href="{% url 'users:login' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
+                <a href="{% url 'users:signup' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+                <a href="{% url 'courses:list' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
+                </div>
             {% endif %}
             {% if user.is_authenticated %}
             {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
-            <div class="flex m-2" onclick="toggleChatbot()">
-                <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
-                <p class="text-white font-semibold my-auto hover:text-yellow-400 hover:cursor-pointer text-xl">Chatbot</p>
+            <div class="flex" onclick="toggleChatbot()">
+                <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
+                <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Chatbot</p>
             </div>
             {% comment %} {% endif %} {% endcomment %}
             {% endif %}
@@ -221,6 +265,11 @@
         function toggleChapter(id) {
             const chapter = document.getElementById(id);
             chapter.classList.toggle('hidden');
+        }
+
+        function toggleLesson(id) {
+            const lesson = document.getElementById(id);
+            lesson.classList.toggle('hidden');
         }
         
         function toggleLessons(chapterId) {

@@ -34,14 +34,14 @@
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
           {% if user.user_type == 1 %}
           <!-- Radio Button -->
-          {% if lesson.is_read %}
+          {% comment %} {% if lesson.is_read %}
           <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}" checked>
           {% else %}
           <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}">
-          {% endif %} 
+          {% endif %}  {% endcomment %}
           {% endif %}
-            <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700">
+            <p class="text-xl font-sans  mx-[100px] font-semibold underline">{{ lesson.lesson_name }}</p>
+            <div class="mt-2 text-gray-700 mx-[100px]">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"

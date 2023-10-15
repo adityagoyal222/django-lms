@@ -42,7 +42,11 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            textColor: {
+                'custom-color': '#AD8625', // Replace with your desired color
+              },
+        },
     },
     screens: {
         sm: '640px',
