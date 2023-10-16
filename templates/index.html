@@ -17,8 +17,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&family=Raleway&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'django_lms/css/master.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
+        #landing {
             /* Use the background image provided */
             background-image: url("{% static 'django_lms/images/web3.jpg' %}");
             /* Set background size and position */
@@ -35,8 +37,8 @@
 <body class="bg-gray-200 text-white">
     {% comment %} <img class="bg-cover bg-no-repeat items-center absolute" src="{% static 'django_lms/images/landing.jpg'%}"/> {% endcomment %}
     
-    <div class="w-[90%] h-[900px] mx-auto flex flex-col items-center justify-center rounded-xl bg-black bg-opacity-10 m-5">
-        <div class="h-[70px, auto] w-full p-2 flex flex-row relative my-auto space-x-[40%]">
+    <div id="landing" class="w-full h-[100vh] mx-auto flex flex-col items-center justify-center bg-black bg-opacity-10">
+        <div class="h-[70px, auto] w-full p-2 flex flex-row relative my-auto space-x-[30%] container">
             <div class="items-start p-1 m-2">
                 {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
                 <img width="500" height="500" src="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png" class="attachment-large size-large wp-image-821" alt="" loading="lazy" srcset="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png 1024w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-300x116.png 300w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-768x297.png 768w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1536x594.png 1536w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-2048x792.png 2048w" sizes="(max-width: 800px) 100vw, 800px">
@@ -46,10 +48,10 @@
             </div> {% endcomment %}
             <div class="my-auto text-white font-bold items-end">
                 <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:bg-yellow-400 hover:shadow-md transition duration-300 ease-in-out font-bold py-2 px-4">Home</a>
-                <a href="{% url 'courses:list' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Dashboard</a>
                 <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Login</a>
                 <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Register</a>
-                <a href="{% url 'users:contact' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Contact</a>
+                <a href="#about" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">About</a>
+                <a href="#contact" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Contact</a>
             </div>
             
         </div>
@@ -69,6 +71,173 @@
             </div>
         </div>
     </div>
+   <!-- About Section -->
+<section id="about" class="about bg-gray-100 py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center">
+            <h2 class="text-3xl font-semibold text-cyan-950 mb-4 underline-offset-auto uppercase">Why We Are The Best!</h2>
+            <div class="ekit_heading_separetor_wraper">
+                <div class="elementskit-border-divider"></div>
+            </div>
+            <p class="text-lg text-gray-600 text-center max-w-2xl">
+                Abya is your gateway to a world of knowledge and learning. We are dedicated to empowering the next generation of change leaders through innovative education and creative collaboration.
+            </p>
+        </div>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-transparent p-6 rounded-lg flex flex-row hover:cursor-pointer hover:shadow-md transition delay-200 ease-in-out">
+                <img src="https://thenounproject.com/api/private/icons/2797169/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Learn Together Icon" class="w-[150px] h-[150px] text-cyan-950 mr-2 my-auto">
+                <div class="flex flex-col my-auto">
+                <h3 class="text-xl font-semibold text-cyan-950 mb-2">Learn Together</h3>
+                <p class="text-gray-600">
+                    Learning together with like-minded participants has proven to be more effective than learning alone.
+                </p>
+                </div>
+            </div>
+            <div class="bg-transparent p-6 rounded-lg flex flex-row hover:cursor-pointer hover:shadow-md transition delay-200 ease-in-out">
+                <img src="https://thenounproject.com/api/private/icons/4568402/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[150px] h-[150px] text-cyan-950 mr-2 my-auto">
+                <div class="flex flex-col my-auto">
+                <h3 class="text-xl font-semibold text-cyan-950 mb-2">Available from Anywhere Any Device</h3>
+                <p class="text-gray-600">
+                    No matter where you are or in which part of the country you reside in, you can learn from anywhere.
+                </p>
+            </div>
+            </div>
+            <div class="bg-transparent p-6 rounded-lg flex flex-row hover:cursor-pointer hover:shadow-md transition delay-200 ease-in-out">
+                <img src="https://thenounproject.com/api/private/icons/1214792/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[150px] h-[150px] text-cyan-950 mr-2 my-auto">
+                <div class="flex flex-col my-auto">
+                    <h3 class="text-xl font-semibold text-cyan-950 mb-2">Access Mentors</h3>
+                    <p class="text-gray-600">
+                        Throughout the Learning journey, you will have access to mentors -- who are influential leaders in the disruptive tech space.
+                    </p>
+                </div>
+            </div>
+            <div class="bg-transparent p-6 rounded-lg flex flex-row hover:cursor-pointer hover:shadow-md transition delay-200 ease-in-out">
+                <img src="https://thenounproject.com/api/private/icons/2573072/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[150px] h-[150px] text-white mr-2 my-auto">
+                <div class="flex flex-col my-auto">
+                <h3 class="text-xl font-semibold text-cyan-950 mb-2">Fun & Easy to Follow Content</h3>
+                <p class="text-gray-600">
+                    Learn the basics and then proceed to intermidiate level, from zero knowledge and skill to the deep dive of developing smart contracts.
+                </p>
+            </div>
+            </div>
+        </div>
+        <div class="flex flex-row mt-5 relative w-[70%] container p-2 mx-auto items-center justify-center h-[400px]">
+            <div class="items-start bg-gray-200 text-cyan-950 p-5">
+                <p class="mx-auto items-center justify-center flex font-bold text-xl">Our Values</p>
+                <div class="mx-auto m-2 flex items-center justify-center max-w-[500px] h-auto flex-row flex-wrap">
+                    <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
+                        <img src="https://thenounproject.com/api/private/icons/6189049/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
+                        <p class="mx-auto items-center justify-center flex">Innovation</p>
+                    </div>
+                    <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
+                        <img src="https://thenounproject.com/api/private/icons/6186496/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
+                        <p class="mx-auto items-center justify-center flex">Creativity</p>
+                    </div>
+                    <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
+                        <img src="https://thenounproject.com/api/private/icons/5542179/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
+                        <p class="mx-auto items-center justify-center flex">Teamwork</p>
+                    </div>
+                    <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
+                        <img src="https://thenounproject.com/api/private/icons/1612513/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
+                        <p class="mx-auto items-center justify-center flex">Diversity</p>
+                    </div>
+                    <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
+                        <img src="https://thenounproject.com/api/private/icons/5995805/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
+                        <p class="mx-auto items-center justify-center flex">Integrity</p>
+                    </div>
+                </div>
+            </div>
+            <div class="items-end bg-cyan-950 text-yellow-500 p-2 max-w-[500px] h-[400px]">
+                <span class="my-auto container">
+                <p class="mx-auto items-center justify-center flex font-bold text-xl">How can we Help You?</p>
+                <p class="items-center justify-center p-2 m-2 mx-auto flex text-white">Are you a university student and want to change the course of history? Do you want to be part of something bigger than yourself? If your answer is YES, then ABYA is the place for you! </p>
+                <button class="bg-gray-100 m-2 p-2 mx-auto items-center justify-center flex text-cyan-950 font-bold rounded-md hover:bg-yellow-500 transition delay-200 ease-in-out">Register Today!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact bg-cyan-950 text-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center">
+            <h2 class="text-3xl font-semibold mb-4 underline-offset-auto uppercase">Contact Us</h2>
+            <div class="ekit_heading_separetor_wraper">
+                <div class="elementskit-border-divider"></div>
+            </div>
+        </div>
+        <div class="m-2 p-2 mx-auto flex flex-row justify-between">
+            <!-- Add your contact information or contact form here -->
+            <div class="items-start left-5 my-auto">
+                <img width="350" height="254" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
+            </div>
+             <!-- Quick Links -->
+             <div class="w-1/4 p-5 m-2 items-center my-auto">
+                <h3 class="text-2xl font-semibold mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#landing" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">Home</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">Courses</a></li>
+                    <li><a href="#about" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">About Us</a></li>
+                    <li><a href="#contact" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="w-1/3 p-5 items-center m-2 my-auto">               
+                <!-- Contact Info -->
+                <div class="mt-6 md:mt-0">
+                    <div class="text-white p-6 rounded-lg h-full">
+                        <p class="text-lg font-semibold">Contact Information</p>
+                        <ul class="mt-4 space-y-2">
+                            <li class="hover:text-yellow-500"><i class="fa fa-map-marker text-2xl p-2"></i>Crystal Business Plaza, Off Magadi Road, Rongai, Kenya</li>
+                            <li class="hover:text-yellow-500"><i class="fa fa-phone text-2xl p-2"></i>+254 (0) 97546916</li>
+                            <li class="hover:text-yellow-500"><i class="fa fa-envelope text-2xl p-2"></i>info@abyauniversity.com</li>
+                        </ul>
+                        <div class="flex flex-row text-white space-x-4 mt-4">
+                            <a href="https://www.linkedin.com/company/abya-africa" target="_blank" aria-label="LinkedIn" class="linkedin hover:text-yellow-500 transition delay-200 ease-in-out hover:-translate-y-1.5">
+                                <i class="fab fa-linkedin fa-2x"></i>
+                            </a>
+                            <a href="https://twitter.com/abyaafrica" target="_blank" aria-label="Twitter" class="twitter hover:text-yellow-500 transition delay-200 ease-in-out hover:-translate-y-1.5">
+                                <i class="fab fa-twitter fa-2x"></i>
+                            </a>
+                            <a href="https://www.facebook.com/abyaafrica" target="_blank" aria-label="Facebook" class="facebook hover:text-yellow-500 transition delay-200 ease-in-out hover:-translate-y-1.5">
+                                <i class="fab fa-facebook fa-2x"></i>
+                            </a>
+                            <a href="https://www.instagram.com/abyaafrica" target="_blank" aria-label="Instagram" class="instagram hover:text-yellow-500 transition delay-200 ease-in-out hover:-translate-y-1.5">
+                                <i class="fab fa-instagram fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="items-end  w-1/3 shadow-lg my-auto">
+                <!-- Contact Form -->
+                <form class="w-full bg-white bg-opacity-90 rounded-lg p-6 shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Get In Touch</h2>
+                    <div class="space-y-4">
+                        <div class="mb-4">
+                            <input type="text" class="w-full p-3 rounded-lg border border-gray-300 focus:border-cyan-500 focus:ring focus:ring-cyan-200" placeholder="Your Name">
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" class="w-full p-3 rounded-lg border border-gray-300 focus:border-cyan-500 focus:ring focus:ring-cyan-200" placeholder="Your Email">
+                        </div>
+                        <div class="mb-4">
+                            <input type="text" class="w-full p-3 rounded-lg border border-gray-300 focus:border-cyan-500 focus:ring focus:ring-cyan-200" placeholder="Subject">
+                        </div>
+                        <div class="mb-4">
+                            <textarea class="w-full p-3 rounded-lg border border-gray-300 focus:border-cyan-500 focus:ring focus:ring-cyan-200" rows="4" placeholder="Type your message here"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-cyan-900 text-white rounded-lg hover:text-black hover:bg-yellow-400 transition duration-300 ease-in-out">Send Message</button>
+                    </div>
+                </form>
+            </div>
+            <!-- You can add a contact form here if needed -->
+        </div>
+    </div>
+</section>
+
    
 </body>
+<footer>
+
+</footer>
 </html>

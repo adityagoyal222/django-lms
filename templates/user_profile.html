@@ -9,9 +9,10 @@
     
 
 {% block body_content %}
-    <div class="m-[150px] max-w-[60%] text-cyan-950 font-serif bg-transparent">
+    <div class="m-[150px] w-[70%] text-cyan-950 font-serif bg-transparent overflow-auto  mx-auto h-[850px]">
         {% if user.is_authenticated %}
             <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+            {% comment %} <p>{{ user.}}</p> {% endcomment %}
             <h1 class="text-3xl font-semibold">Username: {{user.username}}</h1>
             <h4 class="text-xl">First Name: {{user.first_name}}</h4>
             <h4 class="text-xl">Last Name: {{user.last_name}}</h4>
@@ -58,19 +59,23 @@
                 {% for course in course_list %}
                     
                     {% if user in course.students.all %}
-                        <div class=" bg-black bg-opacity-10 m-2 shadow-md rounded-md" style="width: 18rem">
-                            <div class="card-body">
-                            <h5 class="card-title">{{course.course_name}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
-                            <p class="card-text">
-                                {{course.course_description}}
-                            </p>
-                            <a href="{% url 'courses:detail' pk=course.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold hover:no-underline">More Info</a>
-                            <a href="{% url 'courses:unenroll' pk=course.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
-                            <p class="m-2">{{course.students.count}}
-                                    member{{course.students.count|pluralize}}</p>
-                            </div>
+                    <div class="bg-black bg-opacity-40 m-2 shadow-md rounded-md" style="width: 20rem">
+                        <div class="card-image">
+                          <!-- Place your image here -->
+                          <img src="{% static 'django_lms/images/landing12.jpg' %}" alt="Course Image" class="w-full h-50 object-cover rounded-t-md" />
                         </div>
+                        <div class="card-body p-4">
+                          <h5 class="card-title">{{course.course_name}}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
+                          <p class="card-text">
+                            {{course.course_description}}
+                          </p>
+                          <a href="{% url 'courses:detail' pk=course.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold hover:no-underline">More Info</a>
+                          <a href="{% url 'courses:unenroll' pk=course.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
+                          <p class="m-2">{{course.students.count}} member{{course.students.count|pluralize}}</p>
+                        </div>
+                      </div>
+                      
                     {% endif %}
                
                 {% empty %}

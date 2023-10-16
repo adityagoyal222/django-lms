@@ -33,7 +33,7 @@
 {% comment %} <div class="progress">
   <div class="progress-bar relative m-2" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
 </div> {% endcomment %}
-          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-blue-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
+          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-cyan-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
           {% if user.user_type == 2 %}
           
           {% endif %}

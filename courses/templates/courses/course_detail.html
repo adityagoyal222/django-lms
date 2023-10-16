@@ -8,30 +8,30 @@
 
 
 {% block main_content %}
-<div class="mt-[50px]">
+<div class="mt-[50px] w-[90%] mx-auto text-cyan-950 h-[830px] overflow-y-auto relative">
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
-{% if user.user_type == 1 %}
+{% comment %} {% if user.user_type == 1 %} {% endcomment %}
 <!-- Progress Bar -->
-<div class="progress">
+{% comment %} <div class="progress">
   <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-{% endif %}
+</div> {% endcomment %}
+{% comment %} {% endif %} {% endcomment %}
 <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
-<h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4>
-<p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
+{% comment %} <h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4> {% endcomment %}
+{% comment %} <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p> {% endcomment %}
 
 
 {% for chapter, lessons in chapters_with_lessons %}
-<div class="bg-gray-100 p-4 m-2 rounded-lg">
-    <button class="text-xl font-sans font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+<div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg">
+    <button class="text-xl font-sans font-bold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
     </button>
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
-        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+        <div class="bg-gray-50 p-3 m-2 rounded-lg border-b-2 mb-2">
           {% if user.user_type == 1 %}
           <!-- Radio Button -->
           {% comment %} {% if lesson.is_read %}
@@ -44,7 +44,7 @@
             <div class="mt-2 text-gray-700 mx-[100px]">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
-                <button id="markAsReadButton_{{ lesson.id }}" class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+                <button id="markAsReadButton_{{ lesson.id }}" class="bg-cyan-950 hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
                   onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
                   Mark as Read
                 </button>
@@ -60,7 +60,7 @@
 {% if user.user_type == 1 %} {%if user in course.students.all%}
 <a
   href="{% url 'courses:unenroll' pk=course.pk %}"
-  class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline"
+  class="bg-red-600 container text-white hover:bg-red-500 p-2 relative rounded-md text-md font-extrabold hover:no-underline"
   >Unenroll</a
 >
 {% else %}

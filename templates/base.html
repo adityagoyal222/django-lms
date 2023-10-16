@@ -36,11 +36,11 @@
                 {% for course in list_courses %}
                         
                         {% if user in course.students.all %}
-                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="text-gray-900 font-extrabold"></a></span>
+                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}"  class="font-extrabold"></a></span>
                         {% endif %}
                             
                     {% endfor %}
-                <span class="sidemenu side-element"><i class="fa fa-user-circle-o fa-5x" aria-hidden="true" id="profile"></i></span>
+                <span class="sidemenu side-element text-gray-50"><i class="fa fa-user-circle-o fa-5x text-gray-50" aria-hidden="true" id="profile"></i></span>
             </div>
             <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row flex">
                 <a href="{% url 'profile' pk=user.pk %}" class="sidemenu uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
@@ -115,15 +115,15 @@
         </div>
         {% comment %} <div class="sidenav bg-gradient-to-r from-gray-600 to-gray-700 mt-[140px] ml-0"> {% endcomment %}
 
-        {% comment %} sidebar {% endcomment %}
-        <div class=" bg-gray-100 text-cyan-950 fixed w-[450px] h-[900px] overflow-y-auto">
+        <!--sidebar {% endcomment-->
+        <div class=" bg-gray-200 text-cyan-950 fixed w-[450px] h-[900px] overflow-y-auto">
             {% comment %} style="background-color: #052635 {% endcomment %}
             {% if user.is_authenticated %} 
             <div class="side-items flex flex-col text-2xl p-3 m-2 hover:decoration-yellow-500 text-white font-bold">
-            <div class="bg-gray-50 shadow-md h-auto w-full rounded-lg m-2 ">
+            <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
                 <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
-                <div class="progress w-[90%] mx-auto h-2">
-                    <div class="progress-bar bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="bg-white w-[90%] mx-auto h-2 rounded-md">
+                    <div class="bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             </div>
@@ -157,11 +157,11 @@
                                 {% for chapter, lessons in chapters_with_lessons %}
                                 {% if chapter.course == course %}
                                 {% comment %} <ul class="ml-2 hidden" id="chapters-{{ course.pk }}"> {% endcomment %}
-                                    <li class="chapter-item pb-3 border-b text-cyan-950">
+                                    <li class="chapter-item pb-3 border-b text-cyan-950 hover:shadow-md p-2">
                                         <div class="flex flex-row space-x-2">
                                             {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
                                             <input type="checkbox" id="item1" name="items" class="text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
-                                                <button class="items-center ml-2 text-sm w-[80%] font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+                                                <button class="items-center ml-2 text-sm w-[80%] font-sans text-cyan-950 font-normal hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
                                                     {{ chapter.chapter_name }}
                                                 </button>
                                             
@@ -184,7 +184,7 @@
                                                     <li class="lesson-item flex flex-row space-x-2 pb-3">
                                                         {% comment %} <a href="#" class="text-green-900 item-start text-xs">{{ lesson.lesson_name }}</a> {% endcomment %}
                                                         <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-3 h-3 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
-                                                        <button class="items-end ml-2 w-[90%] text-xl font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleLesson('{{ lesson.id }}')">
+                                                        <button class="items-end ml-2 w-[90%] text-sm font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleLesson('{{ lesson.id }}')">
                                                             {{ lesson.lesson_name }}
                                                         </button>
                                                     </li>
