@@ -32,8 +32,12 @@
                 {% for course in course_list %}
                     
                     {% if course.teacher.id == user.id %}
-                        <div class="bg-black bg-opacity-10 m-2 shadow-md rounded-md hover:shadow-2xl" style="width: 20rem">
-                            <div class="card-body">
+                        <div class="bg-black bg-opacity-40 m-2 shadow-md rounded-md" style="width: 20rem">
+                            <div class="card-image">
+                                <!-- Place your image here -->
+                                <img src="{% static 'django_lms/images/web5.jpg' %}" alt="Course Image" class="w-full h-50 object-cover rounded-t-md" />
+                              </div>
+                            <div class="card-body p-4">
                             <h5 class="card-title">{{course.course_name}}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
                             <p class="card-text">

@@ -10,10 +10,10 @@
     <h1 class="font-sans font-extrabold text-3xl m-2">Create new Course</h1>
     
     {% if user_type == 2 %}
-        <form action="{% url 'courses:create' %}" method="POST" class="p-3 rounded-lg shadow-lg">
+        <form action="{% url 'courses:create' %}" method="POST" class="p-3 rounded-lg shadow-lg text-cyan-950 font-semibold">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" value="Create" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold"/>
+            <input type="submit" value="Create" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 p-2 rounded-md text-md font-extrabold"/>
         </form>
     {% else %}
         <div class="jumbotron">

@@ -26,7 +26,7 @@
         <div class="bg-black bg-opacity-80 w-full top-0 fixed mt-0">
             <div class="items-start p-1 left-2 ml-0 my-auto absolute">
                 {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
-                <img width="300" height="300" src="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png" class="attachment-large size-large wp-image-821" alt="" loading="lazy" srcset="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png 1024w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-300x116.png 300w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-768x297.png 768w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1536x594.png 1536w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-2048x792.png 2048w" sizes="(max-width: 800px) 100vw, 800px">
+                <img width="300" height="300" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
             </div>
             <div class="items-end mx-auto justify-end flex flex-row m-2">
             <div class="flex flex-row p-2 space-x-4 font-bold">
@@ -91,7 +91,7 @@
             </div>
         </div>
         {% endif %}
-        <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
+        <div id="chatbot-sidenav" class="h-[890px] w-[20%] bg-cyan-950 top-[145px] fixed shadow-2xl right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
             <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
             {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
             <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
@@ -106,20 +106,25 @@
                 {% endfor %}
             </div>
             
-            <form method="post" class="flex flex-row w-full" action={% url 'chattext'%} >
+            <form method="post" class="flex flex-row h-[50px] w-full pb-2 relative" action={% url 'chattext'%} >
                 {% csrf_token %}
-                <input id='chattext' name="chattext" class="bg-gray-300 m-2 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
+                <input id='chattext' name="chattext" class="bg-gray-300 m-1 p-2 outline-none shadow-md  rounded-md items-start w-[80%]" placeholder="Enter Text"/>
                 {% comment %} <img src={%static 'django_lms/images/send.svg'%} onclick="sendText()" class="w-10 items-end hover:cursor-pointer m-2 h-10"/> {% endcomment %}
-                <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-2 p-2 outline-none shadow-md  rounded-xl items-start w-[20%]">Send</button>
+                <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-1 p-2 outline-none shadow-md  rounded-lg items-start w-[20%]">Send</button>
             </form>
         </div>
         {% comment %} <div class="sidenav bg-gradient-to-r from-gray-600 to-gray-700 mt-[140px] ml-0"> {% endcomment %}
 
         <!--sidebar {% endcomment-->
+        {% if user.is_authenticated %}
+        <div class=" bg-gray-200 text-cyan-950 top-[150px] fixed w-[450px] h-[900px] overflow-y-auto">
+        {% else %}
         <div class=" bg-gray-200 text-cyan-950 fixed w-[450px] h-[900px] overflow-y-auto">
+        {% endif %}
             {% comment %} style="background-color: #052635 {% endcomment %}
             {% if user.is_authenticated %} 
             <div class="side-items flex flex-col text-2xl p-3 m-2 hover:decoration-yellow-500 text-white font-bold">
+            {% if user.user_type == 1 %}
             <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
                 <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
                 <div class="bg-white w-[90%] mx-auto h-2 rounded-md">
@@ -127,6 +132,7 @@
                 </div>
                 <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             </div>
+            {% endif %}
             {% comment %} {% if user.is_authenticated %} {% endcomment %}
                 <a href="{% url 'home' %}" class="hover:text-yellow-500 mb-3 mt-3 hover:no-underline text-cyan-950 font-extrabold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
                 {% comment %} <a href="{% url 'courses:list' %}" class="text-black font-extrabold"><i class="fa fa-list-ul text-white font-extrabold" aria-hidden="true"></i>All Courses</a> {% endcomment %}
@@ -204,17 +210,17 @@
                 
 
                 {% else %}
-                    <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
-                    <a href="{% url 'courses:create_chapter' %}" class="text-purple-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Section</a>
-                    <a href="{% url 'courses:create_lesson' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #d9534f;font-size: 20px;"></i> Create New Lesson</a>
-                    <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
-                    <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                    <a href="{% url 'courses:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Course</a>
+                    <a href="{% url 'courses:create_chapter' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Section</a>
+                    <a href="{% url 'courses:create_lesson' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Lesson</a>
+                    <a href="{% url 'assignments:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Assignment</a>
+                    <a href="{% url 'assignments:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Resource</a>
                     {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
-                    <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
+                    <span class="sidemenu text-cyan-950 font-extrabold"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
                     {% for course in list_courses %}
                         
                         {% if user.id == course.teacher.id %}
-                            <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
+                            <span class="course-item ml-4"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-cyan-950 hover:text-yellow-500">{{course}}</a></span>
                         {% endif %}
                             
                     {% endfor %}                 

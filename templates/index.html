@@ -22,7 +22,7 @@
     <style>
         #landing {
             /* Use the background image provided */
-            background-image: url("{% static 'django_lms/images/web3.jpg' %}");
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url("{% static 'django_lms/images/web3.jpg' %}");
             /* Set background size and position */
             background-size: cover;
             background-position: center;
@@ -30,6 +30,17 @@
             padding-top: 20px;
             /* Apply a dark overlay on the background image */
             background-color: rgba(0, 0, 0, 0.6); /* You can adjust the opacity (0 to 1) to control the darkness */
+        }
+        /* CSS for sidenav container */
+        #sidenav {
+            width: 0;
+        }
+    
+        /* Hide the navigation button on larger screens */
+        @media (min-width: 640px) {
+            #openSidenav {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -46,12 +57,12 @@
             {% comment %} <div class="mx-auto my-auto">
                 <h1 class="text-3xl font-bold font-serif">ABYA</h1>
             </div> {% endcomment %}
-            <div class="my-auto text-white font-bold items-end">
+            <div class="my-auto text-white font-bold items-end mx-auto">
                 <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:bg-yellow-400 hover:shadow-md transition duration-300 ease-in-out font-bold py-2 px-4">Home</a>
-                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Login</a>
-                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Register</a>
-                <a href="#about" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">About</a>
-                <a href="#contact" class="text-white hover:text-yellow-400 hover:bg-yellow-500 hover:border-yellow-500 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Contact</a>
+                <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Login</a>
+                <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Register</a>
+                <a href="#about" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">About</a>
+                <a href="#contact" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Contact</a>
             </div>
             
         </div>
@@ -70,6 +81,20 @@
                 <p class="text-3xl font-semibold font-serif text-center items-center justify-center mx-auto my-auto flex text-yellow-400">Empowering The Next Generation of Change Leaders</p>
             </div>
         </div>
+        <!-- Navigation button -->
+    <button id="openSidenav" class="text-white p-2 rounded-lg hover:bg-yellow-500 hover:text-black hover:shadow-md transition duration-300 ease-in-out fixed top-4 right-4 z-10">☰</button>
+
+    <!-- Sidenav container -->
+    <div id="sidenav" class="w-0 h-full fixed top-0 right-0 bg-cyan-950 text-white overflow-x-hidden transition duration-300 ease-in-out">
+        <!-- Sidenav content goes here -->
+        <div class="p-4">
+            <a href="{% url 'home' %}" class="text-white block py-2 px-4 hover:bg-yellow-500 hover:text-black hover:rounded-lg transition duration-300 ease-in-out font-bold">Home</a>
+            <a href="{% url 'users:login' %}" class="text-white block py-2 px-4 hover:bg-yellow-500 hover:text-black hover:rounded-lg transition duration-300 ease-in-out font-bold">Login</a>
+            <a href="{% url 'users:signup' %}" class="text-white block py-2 px-4 hover:bg-yellow-500 hover:text-black hover:rounded-lg transition duration-300 ease-in-out font-bold">Register</a>
+            <a href="#about" class="text-white block py-2 px-4 hover:bg-yellow-500 hover:text-black hover:rounded-lg transition duration-300 ease-in-out font-bold">About</a>
+            <a href="#contact" class="text-white block py-2 px-4 hover:bg-yellow-500 hover:text-black hover:rounded-lg transition duration-300 ease-in-out font-bold">Contact</a>
+        </div>
+    </div>
     </div>
    <!-- About Section -->
 <section id="about" class="about bg-gray-100 py-16">
@@ -121,10 +146,10 @@
             </div>
             </div>
         </div>
-        <div class="flex flex-row mt-5 relative w-[70%] container p-2 mx-auto items-center justify-center h-[400px]">
-            <div class="items-start bg-gray-200 text-cyan-950 p-5">
+        <div class="flex flex-col sm:flex-row md:flex-row mt-5 relative w-[70%] container p-2 mx-auto items-center justify-center h-[400px] sm:h-auto md:h-auto">
+            <div class="items-start bg-gray-200 text-cyan-950 p-5 sm:h-[400px]">
                 <p class="mx-auto items-center justify-center flex font-bold text-xl">Our Values</p>
-                <div class="mx-auto m-2 flex items-center justify-center max-w-[500px] h-auto flex-row flex-wrap">
+                <div class="mx-auto m-2 flex items-center justify-center max-w-[500px] h-auto flex-row flex-wrap ">
                     <div class="flex flex-col hover:cursor-pointer hover:bg-white transition delay-200 ease-in-out p-2">
                         <img src="https://thenounproject.com/api/private/icons/6189049/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0" alt="Available Icon" class="w-[100px] h-[100px] text-cyan-950 mr-2 my-auto">
                         <p class="mx-auto items-center justify-center flex">Innovation</p>
@@ -147,7 +172,7 @@
                     </div>
                 </div>
             </div>
-            <div class="items-end bg-cyan-950 text-yellow-500 p-2 max-w-[500px] h-[400px]">
+            <div class="items-end bg-cyan-950 text-yellow-500 p-2 max-w-[500px] h-[400px] sm:p-2 sm:w-1/2 sm:h-[400px]">
                 <span class="my-auto container">
                 <p class="mx-auto items-center justify-center flex font-bold text-xl">How can we Help You?</p>
                 <p class="items-center justify-center p-2 m-2 mx-auto flex text-white">Are you a university student and want to change the course of history? Do you want to be part of something bigger than yourself? If your answer is YES, then ABYA is the place for you! </p>
@@ -161,19 +186,19 @@
 <!-- Contact Section -->
 <section id="contact" class="contact bg-cyan-950 text-white py-16">
     <div class="container mx-auto px-4">
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center sm:pt-4">
             <h2 class="text-3xl font-semibold mb-4 underline-offset-auto uppercase">Contact Us</h2>
             <div class="ekit_heading_separetor_wraper">
                 <div class="elementskit-border-divider"></div>
             </div>
         </div>
-        <div class="m-2 p-2 mx-auto flex flex-row justify-between">
+        <div class="m-2 p-2 mx-auto flex flex-col sm:flex-row md:flex-row sm:w-full">
             <!-- Add your contact information or contact form here -->
-            <div class="items-start left-5 my-auto">
-                <img width="350" height="254" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
+            <div class="items-start left-5 my-auto sm:mx-auto">
+                <img width="700" height="654" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
             </div>
              <!-- Quick Links -->
-             <div class="w-1/4 p-5 m-2 items-center my-auto">
+             <div class="w-full flex flex-col md:w-1/2 p-5 m-2 items-center my-auto sm:mx-auto sm:w-full sm:flex">
                 <h3 class="text-2xl font-semibold mb-4">Quick Links</h3>
                 <ul class="space-y-2">
                     <li><a href="#landing" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">Home</a></li>
@@ -182,7 +207,7 @@
                     <li><a href="#contact" class="hover:text-yellow-500 hover:cursor-pointer hover:no-underline">Contact Us</a></li>
                 </ul>
             </div>
-            <div class="w-1/3 p-5 items-center m-2 my-auto">               
+            <div class="w-full md:w-1/2 p-5 items-center m-2 my-auto sm:w-full">               
                 <!-- Contact Info -->
                 <div class="mt-6 md:mt-0">
                     <div class="text-white p-6 rounded-lg h-full">
@@ -209,9 +234,10 @@
                     </div>
                 </div>
             </div>
-            <div class="items-end  w-1/3 shadow-lg my-auto">
+            <div class="items-end w-full sm:w-2/3 md:w-2/3 shadow-lg my-auto">
                 <!-- Contact Form -->
-                <form class="w-full bg-white bg-opacity-90 rounded-lg p-6 shadow-lg">
+                {% comment %} sm:mx-auto sm:w-2/3 md:w-2/3 md:mx-auto {% endcomment %}
+                <form class="w-full bg-white bg-opacity-90 rounded-lg p-6 shadow-lg sm:mx-auto sm:w-2/3 md:w-2/3 md:mx-auto">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Get In Touch</h2>
                     <div class="space-y-4">
                         <div class="mb-4">
@@ -237,7 +263,20 @@
 
    
 </body>
-<footer>
+<script>
+    // JavaScript for sidenav toggle
+    document.addEventListener("DOMContentLoaded", function() {
+        const openSidenavButton = document.getElementById("openSidenav");
+        const sidenav = document.getElementById("sidenav");
 
-</footer>
+        openSidenavButton.addEventListener("click", function() {
+            if (sidenav.style.width === "0px" || sidenav.style.width === "") {
+                sidenav.style.width = "250px"; // Adjust the width as needed
+            } else {
+                sidenav.style.width = "0";
+            }
+        });
+    });
+</script>
+
 </html>

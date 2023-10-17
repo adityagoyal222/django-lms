@@ -96,7 +96,8 @@ p, a {
 
 .sidemenu {
   display: block;
-  color: #f4f4f4;
+  color: #052635;
+  left: 0px;
 }
 
 .side-element {
