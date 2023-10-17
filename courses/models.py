@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from users.models import User
-# from courses.models import Enrollment
+
 
 # Create your models here.
 class Course(models.Model):

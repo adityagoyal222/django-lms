@@ -79,19 +79,12 @@ class CourseDetail(generic.DetailView):
         # chapters_with_lessons = {}
         
         # Create a dictionary to store chapters and their related lessons
-        chapters_with_lessons = []
-        chapters_with_lessons_and_quizzes = {}
+        chapters_with_lessons = {}
         
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
-            chapters_with_lessons.append((chapter, lessons))
-            
-            quizzes = Quiz.objects.filter(chapter=chapter)
-            chapters_with_lessons_and_quizzes[chapter] = {
-                'lessons': lessons,
-                'quizzes': quizzes,
-            }
+            chapters_with_lessons[chapter] = lessons
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
@@ -103,14 +96,9 @@ class CourseDetail(generic.DetailView):
         # Get the total number of completed lessons for the user in that course
         if self.request.user.is_authenticated:
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
-            completion_percentage = round((completed_lessons / total_lessons) * 100)
+            completion_percentage = (completed_lessons / total_lessons) * 100
             print("Completed Lessons:", completed_lessons)
             print("Completion Percentage:", completion_percentage)
-     
-            completed_quizzes = self.request.user.completed_quizzes(course)
-          
-             
-            completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
         else:
             completed_lessons = 0
             completed_quizzes = 0
@@ -128,9 +116,7 @@ class CourseDetail(generic.DetailView):
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
-        context['chapters_with_lessons'] = chapters_with_lessons 
-        # return chapter name and lesson name
-        context['chapters_with_lessons_and_quizzes'] = chapters_with_lessons_and_quizzes
+        context['chapters_with_lessons'] = chapters_with_lessons
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course

@@ -25,16 +25,6 @@
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
-{% comment %} <h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4> {% endcomment %}
-{% comment %} <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p> {% endcomment %}
-
-
-{% for chapter, lessons in chapters_with_lessons %}
-<div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg">
-    <button class="text-xl font-sans font-bold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
-
-<p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
-<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
 <h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4>
 <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
 
@@ -53,44 +43,23 @@
     
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
-        <div class="bg-gray-50 p-3 m-2 rounded-lg border-b-2 mb-2">
+        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
           {% if user.user_type == 1 %}
           <!-- Radio Button -->
-          {% comment %} {% if lesson.is_read %}
+          {% if lesson.is_read %}
           <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}" checked>
           {% else %}
           <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}">
-          {% endif %}  {% endcomment %}
+          {% endif %} 
           {% endif %}
-            <p class="text-xl font-sans  mx-[100px] font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700 mx-[100px]">
-                {{ lesson.lesson_content|convert_markdown|safe }}
-                {% if user.user_type == 1 %}
-                <button id="markAsReadButton_{{ lesson.id }}" class="bg-cyan-950 hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                  onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
-                  Mark as Read
-                </button>
-        {% for lesson in content.lessons %}
-        
-        {% if lesson.video %}
-        <p class="text-gray-700">Watch this</p>
-        <div class="mt-2">
-            <div class="lesson-video-container">
-            <div id="text-gray-700"> {{ lesson.video }}</div>
-            <div id="player{{ lesson.id }}"></div>
-            </div>
-            
-            
-        </div>
-        {% endif %}
-
-        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-gray-700">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
-        <button class="mark-lesson-button bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-            data-lesson-id="{{ lesson.id }}">Mark as Read</button>
+                <button id="markAsReadButton_{{ lesson.id }}" class="bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+                  onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
+                  Mark as Read
+                </button>
                 {% endif %}
                 <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
                 {% csrf_token %}
