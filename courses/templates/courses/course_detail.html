@@ -1,7 +1,7 @@
 {% extends 'courses/course_base.html' %} 
 {% load bootstrap4 %}
 {% load courses_extras %}
-
+{% load static %}
 {% block title_name %}
   LMS - {{course.course_name}}
 {% endblock title_name %}
@@ -14,8 +14,13 @@
 <!-- Progress Bar -->
 {% comment %} <div class="progress">
   <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-</div> {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
+</div>
+{% endif %}
+
+{% if completion_percentage >= 100 %}
+<p class="font-sans text-xl m-2 text-green-600">Course Completed!</p>
+{% endif %}
+
 <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
@@ -27,8 +32,25 @@
 {% for chapter, lessons in chapters_with_lessons %}
 <div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg">
     <button class="text-xl font-sans font-bold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+
+<p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
+<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
+<h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4>
+<p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p>
+
+
+{% if user.is_authenticated %}
+{% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+<div class="bg-gray-100 p-4 m-2 rounded-lg">
+    <button class="text-xl font-sans font-bold hover:text-blue-600 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
         {{ chapter.chapter_name }}
     </button>
+    {% if content.quizzes %}
+    <a href="{% url 'assignments:submit_quiz' quiz_id=content.quizzes.0.id %}" class="text-blue-600 hover:underline">Take Quiz</a>
+    {% else %}
+    <p class="text-red-600">No Quiz</p>
+    {% endif %}
+    
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in lessons %}
         <div class="bg-gray-50 p-3 m-2 rounded-lg border-b-2 mb-2">
@@ -48,13 +70,40 @@
                   onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
                   Mark as Read
                 </button>
+        {% for lesson in content.lessons %}
+        
+        {% if lesson.video %}
+        <p class="text-gray-700">Watch this</p>
+        <div class="mt-2">
+            <div class="lesson-video-container">
+            <div id="text-gray-700"> {{ lesson.video }}</div>
+            <div id="player{{ lesson.id }}"></div>
+            </div>
+            
+            
+        </div>
+        {% endif %}
+
+        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+            <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
+            <div class="mt-2 text-gray-700">
+                {{ lesson.lesson_content|convert_markdown|safe }}
+                {% if user.user_type == 1 %}
+        <button class="mark-lesson-button bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+            data-lesson-id="{{ lesson.id }}">Mark as Read</button>
                 {% endif %}
+                <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
+                {% csrf_token %}
+
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 {% endfor %}
+{% else %}
+    <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
+{% endif %}
 
 
 {% if user.user_type == 1 %} {%if user in course.students.all%}
@@ -209,46 +258,77 @@
    });
  }
  }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const markLessonButtons = document.querySelectorAll('.mark-lesson-button');
 
-  function markAsRead(lessonIndex) {
-    updatechecked()
-    console.log("Lessonn Index:", lessonIndex); 
-    const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
-    lessonRadioButtons[lessonIndex].disabled = true;
-    const lessonButton = document.querySelector(`#markAsReadButton_${lessonIndex}`);
-    lessonButton.disabled = true;
-  
-    fetch("{% url 'courses:mark_lesson_as_read' lesson_id=0 %}".replace('0', lessonIndex), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        lessonRadioButtons[lessonIndex].checked = true;
-        //lessonButton.checked = true;
-        
-        alert(data.message)
-        
-        // Log the JSON response
-        console.log("JSON Response:", data.message);
-      });
-  }
-  
-  
-  
-  // Attach the markAsRead function to all radio buttons
-  lessonRadioButtons.forEach((lessonRadio, index) => {
-    lessonRadio.addEventListener('change', () => {
-      if (lessonRadio.checked) {
-        markAsRead(index);
-      }
+    markLessonButtons.forEach((markLessonButton) => {
+        markLessonButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default button click behavior
+
+            // Check if the button is disabled (already clicked)
+            if (markLessonButton.disabled) {
+                return; // Don't process if already disabled
+            }
+
+            const lessonId = markLessonButton.getAttribute('data-lesson-id');
+            const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+            // Send an AJAX request to mark the lesson as complete
+            fetch('{% url 'courses:mark_lesson_as_complete' %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Change content type to JSON
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ lesson_id: lessonId }), // Convert to JSON format
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.message); // Log the response message
+                // Disable the button after marking as complete
+                markLessonButton.disabled = true;
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
     });
-  }); 
+});
+
+
+
+
+
 </script>
 
-</div> 
+<script>
+    // Define lessonData as a JavaScript variable and populate it with data from Django template
+    var lessonData = [
+        {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+        {% for lesson in content.lessons %}
+        {
+            id: '{{ lesson.id }}',
+            height: '360', // Set the desired video height
+            width: '640',  // Set the desired video width
+            videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+        },
+        {% endfor %}
+        {% endfor %}
+    ];
+    
+</script>
+
+<!-- Include your JavaScript file that uses lessonData -->
+<script src="{% static 'js/player.js' %}"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+function onYouTubeIframeAPIReady() {
+        initializeYouTubePlayers();
+    }
+</script>
+  
 {% endblock main_content %}
 

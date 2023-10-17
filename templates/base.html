@@ -90,6 +90,10 @@
             </div>
             </div>
         </div>
+        {% comment %} {% endif %} {% endcomment %}
+        <a href="{% url 'editor:ide' %}" class="code-editor-icon text-gray font-semibold p-4 rounded-full ">
+            Code
+          </a>
         {% endif %}
         <div id="chatbot-sidenav" class="h-full w-[20%] bg-cyan-950 top-0 shadow-2xl fixed right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
             <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>

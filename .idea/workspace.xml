@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2981afea-639e-49c1-a110-8580660b8b0c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/courses/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/courses/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/courses/templates/courses/course_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/courses/templates/courses/course_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/templates/resources/resource_base.html" beforeDir="false" afterPath="$PROJECT_DIR$/resources/templates/resources/resource_base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2VZlWtL19uGFMetzaOWDC70GMQz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "development",
+    "last_opened_file_path": "/home/machar/lms_project/django-lms"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2981afea-639e-49c1-a110-8580660b8b0c" name="Changes" comment="" />
+      <created>1695051518652</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1695051518652</updated>
+    </task>
+    <servers />
+  </component>
+</project>

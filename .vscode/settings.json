@@ -4,16 +4,31 @@
         {
             "mysqlOptions": {
                 "authProtocol": "default",
+                "enableSsl": "Disabled",
+                "ssl": {}
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "database": "django_lms",
+            "username": "root",
+            "name": "testconnect",
+            "askForPassword": true
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
                 "enableSsl": "Disabled"
             },
             "previewLimit": 50,
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "testconnection",
             "database": "django_lms",
-            "username": "toor",
-            "password": "password"
+            "username": "root",
+            "password": "lms123",
+            "name": "test123"
         }
     ]
 }
