@@ -8,7 +8,7 @@
 
 
 {% block main_content %}
-<div class="mt-[50px] w-[90%] mx-auto text-cyan-950 h-[830px] overflow-y-auto relative">
+<div class="mt-[50px] max-w-[75%] text-cyan-950 h-[830px] overflow-y-auto relative">
 <h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
 {% comment %} {% if user.user_type == 1 %} {% endcomment %}
 <!-- Progress Bar -->
@@ -41,7 +41,7 @@
           {% endif %}  {% endcomment %}
           {% endif %}
             <p class="text-xl font-sans  mx-[100px] font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700 mx-[100px]">
+            <div class="mt-2 text-gray-700 mx-[100px] text-lg space-y-4">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="bg-cyan-950 hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"

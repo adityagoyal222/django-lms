@@ -91,7 +91,8 @@
             </div>
         </div>
         {% endif %}
-        <div id="chatbot-sidenav" class="h-[890px] w-[20%] bg-cyan-950 top-[145px] fixed shadow-2xl right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden">
+        {% if user.is_authenticated %}
+        <div id="chatbot-sidenav" class="h-[890px] w-[20%] bg-cyan-950 top-[145px] fixed shadow-2xl right-0 justify-end mx-auto mr-0 rounded-md scroll-auto hidden" style="z-index: 1000;">
             <img src="{% static 'django_lms/images/close-final.png' %}" alt="close" onclick="toggleChatbot()" class="w-10 h-10 left-0 hover:cursor-pointer flex items-start justify-start  m-2"/>
             {% comment %} <button onclick="toggleChatbot()" class="flex items-start justify-start m-2 bg-red-500 p-2 rounded-xl hover:cursor-pointer font-sans font-semibold text-lg shadow-xl">Close</button> {% endcomment %}
             <h2 class="items-center justify-center mx-auto flex text-2xl font-sans font-semibold bg-gray-300 m-2 w-full  p-2 rounded-lg">ABYA Chatbot</h2>
@@ -101,7 +102,7 @@
                     {% if message.role == "system" %}
                         <p class="system-message bg-gray-700 shadow-sm text-white w-[80%] mr-auto items-start justify-start flex left-0 p-2 rounded-2xl">{{ message.content }}</p>
                     {% else %}
-                        <p class="user-message bg-white shadow-lg text-black w-[80%] ml-auto items-end justify-end flex right-0 p-2 rounded-2xl">{{ message.content }}</p>
+                        <p class="user-message bg-white shadow-lg text-black max-w-[80%] w-auto ml-auto items-end justify-end flex right-0 p-2 rounded-2xl">{{ message.content }}</p>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -113,6 +114,7 @@
                 <button type="submit" class="bg-gray-300 hover:bg-yellow-400 m-1 p-2 outline-none shadow-md  rounded-lg items-start w-[20%]">Send</button>
             </form>
         </div>
+        {% endif %}
         {% comment %} <div class="sidenav bg-gradient-to-r from-gray-600 to-gray-700 mt-[140px] ml-0"> {% endcomment %}
 
         <!--sidebar {% endcomment-->
@@ -243,9 +245,99 @@
             </div>
             {% comment %} {% endif %} {% endcomment %}
             {% endif %}
-            </div>
-                
+            </div>                
         </div>
+        {% if user.is_authenticated %}
+            <div class="w-[20%] right-0 top-[145px] h-[90vh] lg mx-auto fixed bg-transparent text-cyan-950 border-l-[1px] border-l-cyan-950 p-4 rounded">
+                <div class="text-2xl font-bold mb-4">October 2023</div>
+                <table class="w-full border">
+                    <thead>
+                        <tr>
+                            <th class="p-2 text-center font-semibold">Sun</th>
+                            <th class="p-2 text-center font-semibold">Mon</th>
+                            <th class="p-2 text-center font-semibold">Tue</th>
+                            <th class="p-2 text-center font-semibold">Wed</th>
+                            <th class="p-2 text-center font-semibold">Thu</th>
+                            <th class="p-2 text-center font-semibold">Fri</th>
+                            <th class="p-2 text-center font-semibold">Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-2 text-center text-gray-400">26</td>
+                            <td class="p-2 text-center text-gray-400">27</td>
+                            <td class="p-2 text-center text-gray-400">28</td>
+                            <td class="p-2 text-center text-gray-400">29</td>
+                            <td class="p-2 text-center text-gray-400">30</td>
+                            <td class="p-2 text-center">1</td>
+                            <td class="p-2 text-center">2</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 text-center">3</td>
+                            <td class="p-2 text-center">4</td>
+                            <td class="p-2 text-center">5</td>
+                            <td class="p-2 text-center">6</td>
+                            <td class="p-2 text-center">7</td>
+                            <td class="p-2 text-center">8</td>
+                            <td class="p-2 text-center">9</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 text-center">10</td>
+                            <td class="p-2 text-center">11</td>
+                            <td class="p-2 text-center">12</td>
+                            <td class="p-2 text-center">13</td>
+                            <td class="p-2 text-center">14</td>
+                            <td class="p-2 text-center">15</td>
+                            <td class="p-2 text-center">16</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 text-center">17</td>
+                            <td class="p-2 text-center">18</td>
+                            <td class="p-2 text-center">19</td>
+                            <td class="p-2 text-center">20</td>
+                            <td class="p-2 text-center">21</td>
+                            <td class="p-2 text-center">22</td>
+                            <td class="p-2 text-center">23</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 text-center">24</td>
+                            <td class="p-2 text-center">25</td>
+                            <td class="p-2 text-center">26</td>
+                            <td class="p-2 text-center">27</td>
+                            <td class="p-2 text-center">28</td>
+                            <td class="p-2 text-center">29</td>
+                            <td class="p-2 text-center">30</td>
+                        </tr>
+                        <!-- Continue this structure for the remaining weeks in the month -->
+                    </tbody>
+                </table>
+                <div id="reminder">
+                    <h2 class="text-xl font-bold mb-2">Reminders:</h2>
+                    @foreach ($user->tasks as $task)
+                    @if (Carbon\Carbon::parse($task->date)->format('m') == Carbon\Carbon::now()->
+                    format('m'))
+                    <div class="flex flex-row space-x-2">
+                        <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-4 h-4 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                        <p class="text-cyan-950 font-semibold"></p>
+                        <form action="/remove/" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-yellow-700 hover:text-yellow-700 hover:cursor-pointer hover:no-underline font-semibold">X</button>
+                        </form>
+                        </div>
+                    @endif
+                </div>
+                <div id="reminders-section" class="w-full max-w-screen-lg mx-auto mt-8 p-4">
+                    <h2 class="text-2xl font-sans font-semibold bg-gray-300 p-2 rounded-lg">Reminders</h2>
+                    <div class="bg-white p-4 rounded shadow-lg">
+                        <!-- Your reminders content goes here -->
+                        <p>Reminder 1: Complete project by Friday.</p>
+                        <p>Reminder 2: Meeting at 3 PM on Monday.</p>
+                        <!-- Add more reminders as needed -->
+                    </div>
+                </div>
+            </div>
+            {% endif %}
     
 
         
@@ -288,7 +380,27 @@
         function toggleChatbot() {
             const chatbotSidenav = document.getElementById('chatbot-sidenav');
             chatbotSidenav.classList.toggle('hidden');
+
+            // Store the visibility state in local storage
+            const chatbotVisible = !chatbotSidenav.classList.contains('hidden');
+            localStorage.setItem('chatbotVisible', chatbotVisible);
         }
+
+         // Function to initialize the chatbot's visibility based on local storage
+         function initializeChatbotVisibility() {
+            const chatbotSidenav = document.getElementById('chatbot-sidenav');
+            const chatbotVisible = localStorage.getItem('chatbotVisible') === 'true';
+
+            if (chatbotVisible) {
+                chatbotSidenav.classList.remove('hidden');
+            } else {
+                chatbotSidenav.classList.add('hidden');
+            }
+        }
+
+
+        // Call the initialize function when the page loads
+        window.addEventListener('load', initializeChatbotVisibility);
 
         {% comment %} function sendText() {
             // Get the chat text from the input field
