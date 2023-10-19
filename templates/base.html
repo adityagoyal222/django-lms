@@ -33,6 +33,8 @@
                 <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
                 <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
                 <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
+                <img src="{% static 'django_lms/images/bell.png' %}" onclick="notificationbell()" id="bell" class="w-[35px] ml-3 hover:cursor-pointer h-[35px] text-gray-50 m-2 my-auto transition duration-300 ease-in-out"/>
+                {% comment %} <a href="#" class="hover:text-yellow-500 hover:no-underline w-[150px] h-[150px] text-gray-50 m-2 my-auto font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i></a> {% endcomment %}
                 {% for course in list_courses %}
                         
                         {% if user in course.students.all %}
@@ -248,7 +250,7 @@
             </div>                
         </div>
         {% if user.is_authenticated %}
-            <div class="w-[20%] right-0 top-[145px] h-[90vh] lg mx-auto fixed bg-transparent text-cyan-950 border-l-[1px] border-l-cyan-950 p-4 rounded">
+            <div id="calendar" class="w-[20%] right-0 top-[195px] h-auto my-auto mx-auto fixed bg-transparent text-cyan-950 border-l-cyan-950 p-4 rounded hidden transform scale-0 transition-transform ease-in-out duration-300">
                 <div class="text-2xl font-bold mb-4">October 2023</div>
                 <table class="w-full border">
                     <thead>
@@ -311,7 +313,7 @@
                         <!-- Continue this structure for the remaining weeks in the month -->
                     </tbody>
                 </table>
-                <div id="reminder">
+                <div id="reminder" class="mt-2">
                     <h2 class="text-xl font-bold mb-2">Reminders:</h2>
                     @foreach ($user->tasks as $task)
                     @if (Carbon\Carbon::parse($task->date)->format('m') == Carbon\Carbon::now()->
@@ -456,6 +458,32 @@
                 dropdownMenu.classList.toggle("scale-0");
             });
         });
+
+
+
+        function notificationbell() {
+            const notification = document.getElementById("bell");
+            const calendar = document.getElementById("calendar");
+           
+            notification.addEventListener("click", function (e) {
+                e.preventDefault();
+        
+                // Toggle the "hidden" class to show/hide the dropdown menu
+                calendar.classList.toggle("hidden");
+        
+                // Toggle the "scale-0" class to control the scaling effect
+                calendar.classList.toggle("scale-0");
+        
+                // Add a class to animate the drop-down effect
+                if (calendar.classList.contains("hidden")) {
+                    // If hidden, add a class to animate the drop-down effect
+                    calendar.classList.remove("transition-transform");
+                } else {
+                    // If visible, remove the class to stop the animation
+                    calendar.classList.add("transition-transform");
+                }
+            });
+        }
         
     </script>
     </html>
