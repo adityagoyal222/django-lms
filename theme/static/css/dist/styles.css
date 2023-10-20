@@ -703,10 +703,13 @@ video {
   margin-bottom: 0.5rem;
 }
 
+<<<<<<< HEAD
 .mb-3 {
   margin-bottom: 0.75rem;
 }
 
+=======
+>>>>>>> 8abd9087ee5dd5c4f060d2e5d9b4d9fcc627a2b7
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -715,6 +718,7 @@ video {
   margin-bottom: 1.25rem;
 }
 
+<<<<<<< HEAD
 .mb-6 {
   margin-bottom: 1.5rem;
 }
@@ -723,10 +727,13 @@ video {
   margin-left: 0px;
 }
 
+=======
+>>>>>>> 8abd9087ee5dd5c4f060d2e5d9b4d9fcc627a2b7
 .ml-2 {
   margin-left: 0.5rem;
 }
 
+<<<<<<< HEAD
 .ml-4 {
   margin-left: 1rem;
 }
@@ -735,6 +742,8 @@ video {
   margin-left: 1.25rem;
 }
 
+=======
+>>>>>>> 8abd9087ee5dd5c4f060d2e5d9b4d9fcc627a2b7
 .ml-auto {
   margin-left: auto;
 }
@@ -1601,6 +1610,16 @@ video {
   color: rgb(8 51 68 / var(--tw-text-opacity));
 }
 
+.text-blue-500 {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
+}
+
 .text-gray-100 {
   --tw-text-opacity: 1;
   color: rgb(243 244 246 / var(--tw-text-opacity));
@@ -1646,6 +1665,19 @@ video {
   color: rgb(79 70 229 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
+=======
+.text-purple-400 {
+  --tw-text-opacity: 1;
+  color: rgb(192 132 252 / var(--tw-text-opacity));
+}
+
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+
+>>>>>>> 8abd9087ee5dd5c4f060d2e5d9b4d9fcc627a2b7
 .text-red-700 {
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity));
@@ -1821,6 +1853,11 @@ video {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-green-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-green-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(22 101 52 / var(--tw-bg-opacity));
@@ -1883,6 +1920,7 @@ video {
   color: rgb(250 204 21 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
 .hover\:text-yellow-500:hover {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
@@ -1891,6 +1929,10 @@ video {
 .hover\:text-yellow-700:hover {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
+=======
+.hover\:underline:hover {
+  text-decoration-line: underline;
+>>>>>>> 8abd9087ee5dd5c4f060d2e5d9b4d9fcc627a2b7
 }
 
 .hover\:no-underline:hover {

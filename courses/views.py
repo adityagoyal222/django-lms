@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect,HttpResponseRedirect
 import datetime
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
@@ -8,15 +8,15 @@ from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from courses.models import Course, Enrollment, Lesson, Chapter
-from assignments.models import Assignment
+from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse
+from assignments.models import Assignment, Quiz
 from resources.models import Resource
 from .models import CompletedLesson
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from .models import Lesson
-
+import json
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
 # Create your views here.
@@ -35,9 +35,9 @@ class CreateCourse(LoginRequiredMixin, generic.CreateView):
         return super(CreateCourse, self).form_valid(form)
     
 class CreateChapterView(LoginRequiredMixin, generic.CreateView):
+    model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
-    success_url = '/all/'
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -49,6 +49,9 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
         user_object = get_object_or_404(User, username=self.request.user.username)
         form.instance.teacher = user_object
         return super().form_valid(form)
+    def get_success_url(self):
+        url = reverse('courses:list')
+        return url
 
 class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     form_class = CreateLessonForm
@@ -67,51 +70,74 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
 class CourseDetail(generic.DetailView):
     model = Course
     
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         course = Course.objects.get(pk=self.kwargs['pk']) 
         
-           # Get chapters related to the course
+        # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
 
         # chapters_with_lessons = {}
         
         # Create a dictionary to store chapters and their related lessons
         chapters_with_lessons = []
+        chapters_with_lessons_and_quizzes = {}
         
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
             chapters_with_lessons.append((chapter, lessons))
             
+            quizzes = Quiz.objects.filter(chapter=chapter)
+            chapters_with_lessons_and_quizzes[chapter] = {
+                'lessons': lessons,
+                'quizzes': quizzes,
+            }
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
 
-
         # Get the total number of lessons for the course
         total_lessons = Lesson.objects.filter(chapter__course=course).count()
-        print("Total Lessons:", total_lessons)
-        
+        total_quizzes = course.total_quizzes()
+
         # Get the total number of completed lessons for the user in that course
         if self.request.user.is_authenticated:
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
             completion_percentage = round((completed_lessons / total_lessons) * 100)
             print("Completed Lessons:", completed_lessons)
             print("Completion Percentage:", completion_percentage)
+     
+            completed_quizzes = self.request.user.completed_quizzes(course)
+          
+             
+            completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
         else:
             completed_lessons = 0
-            
+            completed_quizzes = 0
+            completion_percentage = 0
         
+        if completion_percentage >= 100:
+            #this is how i choose to update to the db that a user has completed a course
+            # Check if the user has already completed the course
+            if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
+                # Create a new CompletedCourse instance only if it doesn't exist
+                completedcourse = CompletedCourse(user=self.request.user, course=course)
+                completedcourse.save()
+            
+
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
         context['chapters_with_lessons'] = chapters_with_lessons 
         # return chapter name and lesson name
+        context['chapters_with_lessons_and_quizzes'] = chapters_with_lessons_and_quizzes
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
         return context
+
 
 class ListCourse(generic.ListView):
     model = Course
@@ -213,74 +239,47 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
         course = get_object_or_404(Course, pk=course_id)
-        print("Course:", course)
-        print("Course ID:", course_id)
-        completed_lessons_count = request.user.completed_lessons.filter(lesson__chapter__course_id=course_id).count()
-        context = {
-            'completed_lessons_count': completed_lessons_count,
-            'course': course,
-        }
-        return render(request, 'courses/course_detail.html', context)
+        completed_lessons_count = request.user.completed_lessons.filter(
+            lesson__chapter__course=course
+        ).count()
+        return JsonResponse({'completed_lessons_count': completed_lessons_count})
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
-    
+        
 
-@require_POST
-def mark_lesson_as_read(request, lesson_id):
+def mark_lesson_as_complete(request):
+    """Marks a lesson as complete for the current user.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response indicating whether the lesson was marked as complete
+        successfully.
+    """
+
+    if request.method != 'POST':
+        return JsonResponse({'message': 'Invalid request.'}, status=400)
+
     try:
-        if request.user.is_authenticated and request.method == "POST":
-            lesson = get_object_or_404(Lesson, pk=lesson_id)
-            
-            with transaction.atomic():
-                # Check if the lesson is already marked as completed for the user
-                completed_lesson, created = CompletedLesson.objects.get_or_create(
-                    user=request.user, lesson=lesson
-                )
+        data = json.loads(request.body.decode('utf-8'))
+        lesson_id = data.get('lesson_id')
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
-                if created:
-                    # A new CompletedLesson instance was created, increment the count
-                    request.user.completed_lessons.add(completed_lesson)
-                    request.user.save()
+    if not lesson_id:
+        return JsonResponse({'message': 'Missing lesson ID.'}, status=400)
 
-                completed_lessons_count = request.user.completed_lessons.count()
-                total_lessons = Lesson.objects.count()
-                completion_percentage = (completed_lessons_count / total_lessons) * 100
-                context = {
-                    'completed_lessons_count': completed_lessons_count,
-                    'lesson': lesson,
-                    'completion_percentage': completion_percentage,
-                }
-                print("Completed Lesson Count:", completed_lessons_count)
-                print("Lesson:", lesson)
-                print("Completion Percentage:", completion_percentage)
-                return JsonResponse({"message": "Lesson marked as read successfully."})
-                # return JsonResponse({"completed_lessons_count": completed_lessons_count})
+    try:
+        lesson = Lesson.objects.get(pk=lesson_id)
+    except Lesson.DoesNotExist:
+        return JsonResponse({'message': 'Lesson not found.'}, status=404)
 
-        else:
-            return JsonResponse({"message": "Invalid request method."}, status=400)
+    if CompletedLesson.objects.filter(user=request.user, lesson=lesson).exists():
+        return JsonResponse({'message': 'Lesson is already marked as complete.'}, status=200)
 
-    except Exception as e:
-        # Log the exception for debugging purposes
-        print("Exception:", str(e))
-        return JsonResponse({"error": "An error occurred."}, status=500)
+    completed_lesson = CompletedLesson(user=request.user, lesson=lesson)
+    completed_lesson.save()
 
+    return JsonResponse({'message': 'Lesson marked as complete successfully.'}, status=200)
 
-# get chapters and lesson titles and render them 
-@require_POST
-def get_chapter_lesson(request, course_id):
-    if request.user.is_authenticated:
-        course = get_object_or_404(Course, pk=course_id)
-        print("Course:", course)
-        print("Course ID:", course_id)
-        chapters = Chapter.objects.filter(course=course)
-        print("Chapters:", chapters)
-        lessons = Lesson.objects.filter(chapter__course=course)
-        print("Lessons:", lessons)
-        context = {
-            'chapters': chapters,
-            'lessons': lessons,
-            'course': course,
-        }
-        return render(request, 'courses/course_detail.html', context)
-    else:
-        return JsonResponse({'message': 'Invalid request method.'}, status=400)

@@ -1,0 +1,17 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+  Quiz Results
+{% endblock title_name %}
+
+{% block main_content %}
+  <div class="p-4 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">Quiz Results</h1>
+    <p class="mb-2"><span class="font-semibold">Username:</span> {{ submission.student.username }}</p>
+    <p class="mb-2"><span class="font-semibold">Quiz Title:</span> {{ submission.quiz}}</p>
+    <p class="mb-4"><span class="font-semibold">Score:</span> {{ submission.score }}</p>
+  
+    <a href="{% url 'courses:list' %}" class="text-blue-500 hover:underline">Back to Courses</a>
+  </div>
+{% endblock %}

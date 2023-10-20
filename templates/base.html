@@ -70,6 +70,26 @@
             </div>
             </div>
         </div>
+                {% endfor %}
+            {% else %}
+                <a href="{% url 'courses:create' %}" class="text-green-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Course</a>
+                <a href="{% url 'courses:create_chapter' %}" class="text-purple-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5cb85c;font-size: 20px;"></i> Create New Section</a>
+                <a href="{% url 'courses:create_lesson' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #d9534f;font-size: 20px;"></i> Create New Lesson</a>
+                <a href="{% url 'assignments:create' %}" class="text-yellow-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #f0ad4e;font-size: 20px;"></i> Create New Assignment</a>
+                <a href="{% url 'assignments:create' %}" class="text-blue-300"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #5bc0de;font-size: 20px;"></i> Create New Resource</a>
+                {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
+                <a href="{% url 'assignments:create_quiz' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a>
+                <a href="{% url 'assignments:create_question_without_id' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Add Questions</a>
+                <span class="sidemenu"><h5 id="side-head"><i class="fa fa-list courses-icon" aria-hidden="true"></i>Your Courses</h5></span>
+                {% for course in list_courses %}
+                    
+                    {% if user.id == course.teacher.id %}
+                        <span class="course-item"><a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900">{{course}}</a></span>
+                    {% endif %}
+                        
+                {% endfor %}                 
+            {% endif %}
+            <a href="{% url 'users:logout' %}" class="text-black font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
         <div class="bg-black bg-opacity-80 w-full top-0 relative mt-0">
             <div class="items-start p-1 left-2 ml-0 my-auto absolute">
@@ -108,6 +128,25 @@
                     {% endif %}
                 {% endfor %}
             </div>
+        {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
+        <div class="flex m-2" onclick="toggleChatbot()">
+            <img src={%static 'django_lms/images/chat.svg'%} alt="Open Sidebar" alt="Chatbot"  class="w-8 left-0 hover:cursor-pointer flex items-start justify-start  m-2 h-10"/>
+            <p class="text-black font-semibold my-auto hover:text-white hover:cursor-pointer text-xl">Chatbot</p>
+        </div>
+        {% comment %} {% endif %} {% endcomment %}
+        <a href="{% url 'editor:ide' %}" class="code-editor-icon text-gray font-semibold p-4 rounded-full ">
+            Code
+          </a>
+        {% endif %}
+        </div>
+               
+    </div>
+ 
+
+    
+        
+    <div class="content">
+        {% block body_content %}
             
             <form method="post" class="flex flex-row h-[50px] w-full pb-2 relative" action={% url 'chattext'%} >
                 {% csrf_token %}
@@ -387,6 +426,25 @@
             const chatbotVisible = !chatbotSidenav.classList.contains('hidden');
             localStorage.setItem('chatbotVisible', chatbotVisible);
         }
+        // Make an HTTP POST request to your Django view to get the chatbot response
+        fetch("{% url 'chattext'%}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': "{{ csrf_token }}",
+                'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
+            },
+            body: new URLSearchParams({ 'chattext': chattext }) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data and create a new paragraph element for the chatbot response
+            const botMessage = document.createElement('p');
+            botMessage.classList.add('user-message', 'bg-gray-900', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
+            
+            botMessage.textContent = data.response;
+            const chatbotBody = document.getElementById('chatbot-body');
+            chatbotBody.appendChild(botMessage);
 
          // Function to initialize the chatbot's visibility based on local storage
          function initializeChatbotVisibility() {

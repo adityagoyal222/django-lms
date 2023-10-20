@@ -23,6 +23,8 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path('send-chatbot-response/', views_project.send_chatbot_response, name='chattext'),
     path('markdownx/', include('markdownx.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
+    # path('', include('admin_material.urls')),
     # path('api-auth/', include('rest_framework.urls')),
 
 ]
