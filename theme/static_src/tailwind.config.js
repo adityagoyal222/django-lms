@@ -41,9 +41,21 @@ module.exports = {
          */
         // '../../**/*.py'
     ],
+    darkMode: "class", // or 'media' or 'class'
     theme: {
-        extend: {},
+        extend: {
+            textColor: {
+                'custom-color': '#AD8625', // Replace with your desired color
+              },
+        },
     },
+    screens: {
+        sm: '468px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1200px',
+    },
+    }
     plugins: [
         /**
          * '@tailwindcss/forms' is the forms plugin that provides a minimal styling
@@ -54,5 +66,7 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/line-clamp'),
         require('@tailwindcss/aspect-ratio'),
-    ],
-}
+    ]
+
+
+

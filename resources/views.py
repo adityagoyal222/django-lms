@@ -27,3 +27,5 @@ def delete_view(request, pk):
         obj.delete()
         return HttpResponseRedirect(reverse("courses:list"))
     return render(request, "resources/resource_confirm_delete.html", context)
+
+
