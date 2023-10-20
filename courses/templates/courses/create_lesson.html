@@ -1,0 +1,33 @@
+{% extends 'courses/course_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+    LMS - Create Lesson
+{% endblock title_name %}
+    
+
+{% block main_content %}
+<div class="text-cyan-950">
+    <h1 class="font-sans font-semibold text-3xl m-2">Creating Chapter lessons</h1>
+  
+    {% if user.user_type == 2 %}
+      <form method="POST" action="{% url 'courses:create_lesson' %}" class="shadow-lg p-4 rounded-xl font-sans font-semibold m-2">
+        {% csrf_token %} 
+        {% bootstrap_field form.lesson_name %}
+        {% bootstrap_field form.lesson_content %}
+        {% bootstrap_field form.chapter %}
+        {{ form.name.errors }}
+        <input type="submit" value="Submit" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 p-2 rounded-md text-md font-extrabold hover:no-underline">
+      </form>
+      
+      
+      {% else %}
+          <div class="jumbotron">
+              <h2>You cannot create an assignment</h2>
+          </div>
+      {% endif %}
+  
+  </div>
+        
+{% endblock main_content %}
+    

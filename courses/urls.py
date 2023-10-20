@@ -1,6 +1,7 @@
 # from django.conf.urls import url
-from django.urls import re_path
+from django.urls import re_path, path
 from courses import views
+
 
 app_name = "courses"
 
@@ -10,4 +11,12 @@ urlpatterns = [
     re_path(r'^all/', views.ListCourse.as_view(), name="list"),
     re_path(r'^enroll/(?P<pk>[-\w]+)/$', views.EnrollCourse.as_view(), name='enroll'),
     re_path(r'^unenroll/(?P<pk>[-\w]+)/$', views.UnenrollCourse.as_view(), name='unenroll'),
+    path('create_chapter/', views.CreateChapterView.as_view(), name='create_chapter'),
+    path('create_lesson/', views.CreateLessonView.as_view(), name='create_lesson'),
+    path('update_chapter/<int:pk>/', views.UpdateChapterView.as_view(), name='update_chapter'),
+    path('update_lesson/<int:pk>/', views.UpdateLessonView.as_view(), name='update_lesson'),
+    path('update_course/<int:pk>/', views.UpdateCourseView.as_view(), name='update_course'),
+    path('get_completed_lessons_count/<int:course_id>/', views.get_completed_lessons_count, name='completed_lesson_count'),
+    path('mark_lesson_as_read/<int:lesson_id>/', views.mark_lesson_as_read, name='mark_lesson_as_read'),
+    path('get_chapter_lesson/<int:course_id>/', views.get_chapter_lesson, name='get_chapter_lesson'),
 ]

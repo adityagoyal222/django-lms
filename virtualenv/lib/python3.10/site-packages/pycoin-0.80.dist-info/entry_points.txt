@@ -1,0 +1,9 @@
+[console_scripts]
+block = pycoin.cmds.block:main
+bu = pycoin.cmds.bitcoin_utils:main
+genwallet = pycoin.cmds.genwallet:main
+ku = pycoin.cmds.ku:main
+msg = pycoin.cmds.msg:main
+spend = pycoin.cmds.spend:main
+tx = pycoin.cmds.tx:main
+
