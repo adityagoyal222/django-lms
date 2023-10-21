@@ -15,7 +15,9 @@ from .models import CompletedLesson
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from .models import Lesson
+import datetime
+import calendar
+from .cert_request import send_certificate_request
 import json
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
@@ -224,7 +226,31 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
         else:
             form.add_error(None, "You don't have permission to edit this lesson.")
             return self.form_invalid(form)
+        
+def certificate_view(request, course_id):
+    user = request.user
 
+
+    first_name = user.first_name
+    last_name = user.last_name
+    full_name = first_name + ' ' + last_name
+    course = Course.objects.get(pk=course_id)
+    course_name = course.course_name
+    issuer = "ABYA Africa"
+    now = datetime.datetime.now()
+    unixtime = calendar.timegm(now.utctimetuple())
+    certificate_response = {
+        "name": full_name,
+        "course": course_name,
+        "issuer": issuer,
+        "issuer_date": unixtime
+          }
+    if all(value is not None for value in certificate_response.values()):
+        response = send_certificate_request(certificate_response["name"], certificate_response["issuer"], certificate_response["issuer_date"])
+        print(response)
+        return render(request, 'courses/certificate.html', {'context': response})
+    else:
+        return render(request, 'courses/certificate.html')
 
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
