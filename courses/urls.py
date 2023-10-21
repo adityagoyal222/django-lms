@@ -19,4 +19,5 @@ urlpatterns = [
     path('completed_lessons_count/<int:course_id>/', views.get_completed_lessons_count, name='completed_lesson_count'),
     # path('completed_lesson_count/<int:pk>/', views.CourseDetail.as_view(), name='completed_lesson_count'),
     path('mark_lesson_as_complete/', views.mark_lesson_as_complete, name='mark_lesson_as_complete'),
+    path('certificate/<int:course_id>/', views.certificate_view, name='certificate'),
 ]

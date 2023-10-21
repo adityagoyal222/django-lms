@@ -1,0 +1,627 @@
+.course-professional {
+  background-color: #f2f6f8;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.course-professional .overlap-wrapper {
+  background-color: #153243;
+  overflow: hidden;
+  width: 1123px;
+  height: 794px;
+}
+
+.course-professional .overlap {
+  position: relative;
+  width: 1123px;
+  height: 794px;
+}
+
+.course-professional .whatsapp-image {
+  background-color: #153243;
+  position: absolute;
+  width: 1123px;
+  height: 794px;
+  transform: rotate(0deg);
+  object-fit: cover;
+}
+
+.course-professional .group {
+  position: absolute;
+  width: 1069px;
+  height: 740px;
+  top: 27px;
+  left: 27px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .overlap-group {
+  position: relative;
+  width: 1055px;
+  height: 1012px;
+  top: 6px;
+  left: 6px;
+}
+
+.course-professional .rectangle {
+  position: absolute;
+  width: 1055px;
+  height: 726px;
+  border: 0.96px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .div {
+  position: absolute;
+  width: 1041px;
+  height: 712px;
+  top: 7px;
+  left: 7px;
+  border: 0.96px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .img {
+  position: absolute;
+  width: 1012px;
+  height: 361px;
+  top: 22px;
+  left: 22px;
+}
+
+.course-professional .rectangle-2 {
+  position: absolute;
+  width: 1012px;
+  height: 361px;
+  top: 342px;
+  left: 22px;
+}
+
+.course-professional .ellipse-wrapper {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 685px;
+  left: 1014px;
+  border-radius: 13px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .ellipse {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  top: 3px;
+  left: 3px;
+  border-radius: 9px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .div-wrapper {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 685px;
+  left: 15px;
+  border-radius: 13px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .group-2 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 15px;
+  left: 1014px;
+  border-radius: 13px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .group-3 {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 15px;
+  left: 15px;
+  border-radius: 13px;
+  border: 1px solid;
+  border-color: #fadb83b2;
+}
+
+.course-professional .group-4 {
+  position: absolute;
+  width: 1011px;
+  height: 100px;
+  top: 574px;
+  left: 56px;
+  transform: rotate(0deg);
+}
+
+.course-professional .group-5 {
+  position: absolute;
+  width: 986px;
+  height: 647px;
+  top: 8px;
+  left: 181px;
+}
+
+.course-professional .overlap-2 {
+  position: absolute;
+  width: 446px;
+  height: 943px;
+  top: 43px;
+  left: 180px;
+}
+
+.course-professional .overlap-3 {
+  position: absolute;
+  width: 182px;
+  height: 139px;
+  top: 35px;
+  left: 490px;
+}
+
+.course-professional .text-wrapper {
+  position: absolute;
+  top: 150px;
+  left: 70px;
+  transform: rotate(0deg);
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+.course-professional .overlap-group-wrapper {
+  position: absolute;
+  width: 139px;
+  height: 139px;
+  top: 0;
+  left: 43px;
+}
+
+.course-professional .overlap-4 {
+  position: relative;
+  width: 143px;
+  height: 139px;
+}
+
+.course-professional .group-6 {
+  position: absolute;
+  width: 143px;
+  height: 139px;
+  top: 0;
+  left: 0;
+}
+
+.course-professional .overlap-group-2 {
+  position: relative;
+  height: 143px;
+  top: -2px;
+  left: -2px;
+  border-radius: 71.34px;
+}
+
+.course-professional .ellipse-2 {
+  position: absolute;
+  width: 133px;
+  height: 133px;
+  top: 5px;
+  left: 5px;
+  border-radius: 66.5px;
+  border: 1.96px solid;
+  border-color: #fadb83b2;
+  transform: rotate(0deg);
+}
+
+.course-professional .ellipse-3 {
+  position: absolute;
+  width: 109px;
+  height: 109px;
+  top: 16px;
+  left: 18px;
+  background-color: #fadb83b2;
+  border-radius: 54.5px;
+  transform: rotate(0deg);
+}
+
+.course-professional .ellipse-4 {
+  position: absolute;
+  width: 143px;
+  height: 143px;
+  top: 0;
+  left: 0;
+  border-radius: 71.34px;
+  border: 1.84px dashed;
+  border-color: #fadb83b2;
+  transform: rotate(0deg);
+}
+
+.course-professional .text-wrapper-2 {
+  position: absolute;
+  width: 108px;
+  top: 55px;
+  left: 19px;
+  transform: rotate(0deg);
+  font-family: "Cinzel", Helvetica;
+  font-weight: 700;
+  color: #153243;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 15.6px;
+}
+
+.course-professional .element {
+  position: absolute;
+  width: 22px;
+  height: 7px;
+  top: 96px;
+  left: 60px;
+}
+
+.course-professional .group-7 {
+  position: absolute;
+  width: 22px;
+  height: 65px;
+  top: 35px;
+  left: 90px;
+}
+
+.course-professional .star {
+  top: -9px;
+  left: -25px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.course-professional .star-2 {
+  top: -5px;
+  left: -12px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.course-professional .star-3 {
+  top: 1px;
+  left: 1px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.course-professional .star-4 {
+  top: -5px;
+  left: -38px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.course-professional .star-5 {
+  top: 1px;
+  left: -51px;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.course-professional .overlap-5 {
+  position: absolute;
+  width: 943px;
+  height: 441px;
+  top: 0;
+  left: 0;
+}
+
+.course-professional .certificate-of {
+  position: absolute;
+  top: 65px;
+  left: 27px;
+  transform: rotate(0deg);
+  font-family: "EB Garamond", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 40px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 48px;
+}
+
+.course-professional .text-wrapper-3 {
+  position: absolute;
+  top: 175px;
+  left: 81px;
+  transform: rotate(0deg);
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.course-professional .group-8 {
+  position: absolute;
+  width: 418px;
+  height: 110px;
+  top: 241px;
+  left: 7px;
+}
+
+.course-professional .overlap-group-3 {
+  position: relative;
+  width: 106px;
+  height: 418px;
+}
+
+.course-professional .text-wrapper-4 {
+  position: absolute;
+  top: 130px;
+  left: 65px;
+  transform: rotate(0deg);
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.course-professional .decentralization {
+  position: absolute;
+  width: 418px;
+  top: 163px;
+  left: -15px;
+  transform: rotate(0deg);
+  font-family: "EB Garamond", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 30px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 36px;
+}
+
+.course-professional .text-wrapper-5 {
+  position: absolute;
+  top: 210px;
+  left: -55px;
+  transform: rotate(0deg);
+  font-family: "Alex Brush", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 80px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.course-professional .group-9 {
+  position: absolute;
+  width: 382px;
+  height: 2px;
+  top: 310px;
+  left: 15px;
+}
+
+.course-professional .group-10 {
+  position: absolute;
+  width: 156px;
+  height: 943px;
+  top: 0;
+  left: 0;
+}
+
+.course-professional .group-11 {
+  position: absolute;
+  width: 186px;
+  height: 146px;
+  top: -5px;
+  left: -30px;
+  transform: rotate(0deg);
+}
+
+.course-professional .overlap-6 {
+  position: relative;
+  width: 144px;
+  height: 182px;
+  top: -18px;
+  left: 18px;
+}
+
+.course-professional .overlap-group-4 {
+  position: absolute;
+  width: 142px;
+  height: 182px;
+  top: 360px;
+  left: -200px;
+}
+
+.course-professional .text-wrapper-6 {
+  position: absolute;
+  top: 100px;
+  left: 6px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.course-professional .vector {
+  width: 182px;
+  height: 2px;
+  top: 81px;
+  left: -20px;
+  object-fit: cover;
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.course-professional .vector-2 {
+  width: 131px;
+  height: 58px;
+  top: 17px;
+  left: 0px;
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.course-professional .text-wrapper-7 {
+  position: absolute;
+  top: 500px;
+  left: -200px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+.course-professional .group-12 {
+  position: absolute;
+  width: 294px;
+  height: 152px;
+  top: 350px;
+  left: 400px;
+  transform: rotate(0deg);
+}
+
+.course-professional .overlap-7 {
+  position: relative;
+  width: 290px;
+  height: 193px;
+  top: -32px;
+}
+
+.course-professional .overlap-8 {
+  position: absolute;
+  width: 290px;
+  height: 64px;
+  top: 120px;
+  left: 0;
+}
+
+.course-professional .p {
+  position: absolute;
+  width: 290px;
+  top: 26px;
+  left: 0;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 19.2px;
+}
+
+.course-professional .text-wrapper-8 {
+  position: absolute;
+  top: 0;
+  left: 76px;
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.course-professional .vector-3 {
+  width: 59px;
+  height: 44px;
+  top: -70px;
+  left: 60px;
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.course-professional .overlap-9 {
+  position: absolute;
+  width: 68px;
+  height: 193px;
+  top: 0;
+  left: 69px;
+}
+
+.course-professional .vector-4 {
+  width: 182px;
+  height: 2px;
+  top: 100px;
+  left: -23px;
+  object-fit: cover;
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.course-professional .vector-5 {
+  width: 160px;
+  height: 52px;
+  top: 40px;
+  left: 10px;
+  position: absolute;
+  transform: rotate(0deg);
+}
+
+.course-professional .group-wrapper {
+  position: absolute;
+  width: 65px;
+  height: 22px;
+  top: 20px;
+  left: 406px;
+}
+
+.course-professional .group-13 {
+  position: relative;
+  height: 65px;
+}
+
+.course-professional .text-wrapper-9 {
+  position: absolute;
+  top: 685px;
+  left: 266px;
+  transform: rotate(0deg);
+  font-family: "Poppins", Helvetica;
+  font-weight: 400;
+  color: #fadb83b2;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+.course-professional .logo {
+  position: absolute;
+  width: 158px;
+  height: 131px;
+  top: 74px;
+  left: -100px;
+  object-fit: cover;
+}
