@@ -1,28 +1,19 @@
-{% extends 'courses/course_base.html' %} 
+{% extends 'courses/course_base.html' %}
 {% load bootstrap4 %}
 {% load courses_extras %}
+{% load static %}
 
 {% block title_name %}
-  LMS - {{course.course_name}}
+  LMS - {{ course.course_name }}
 {% endblock title_name %}
-
 
 {% block main_content %}
 <div class="mt-[50px] max-w-[75%] text-cyan-950 h-[830px] overflow-y-auto relative">
-<h1 class="font-sans font-semibold text-3xl m-2">{{course.course_name}}</h1>
-{% comment %} {% if user.user_type == 1 %} {% endcomment %}
-<!-- Progress Bar -->
-{% comment %} <div class="progress">
-  <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-</div> {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
-<!-- Display the total number of lessons -->
+    <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }}</h1>
+    <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
-{% comment %} <h4 class="text-xl m-2">Teacher: <span class="font-semibold">{{course.teacher}}</span></h4> {% endcomment %}
-{% comment %} <p class="text-xl m-2">Description: <span class="font-semibold">{{course.course_description}}</span></p> {% endcomment %}
-
 
 {% for chapter, lessons in chapters_with_lessons %}
 <div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg">
@@ -41,7 +32,7 @@
           {% endif %}  {% endcomment %}
           {% endif %}
             <p class="text-xl font-sans  mx-[100px] font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700 mx-[100px] text-lg space-y-4">
+            <div class="mt-2 text-cyan-950 mx-[100px] text-lg space-y-4">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="bg-cyan-950 hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
@@ -56,81 +47,101 @@
 </div>
 {% endfor %}
 
-
-{% if user.user_type == 1 %} {%if user in course.students.all%}
-<a
-  href="{% url 'courses:unenroll' pk=course.pk %}"
-  class="bg-red-600 container text-white hover:bg-red-500 p-2 relative rounded-md text-md font-extrabold hover:no-underline"
-  >Unenroll</a
->
-{% else %}
-<a href="{% url 'courses:enroll' pk=course.pk %}" class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline"
-  >Enroll</a
->
-{% endif %} 
-{% endif %}
-
-{% if course.teacher.id == user.id or user in course.students.all%}
-  {% if user.user_type == 2 %}
-    
-    <a
-      href="{% url 'assignments:create' %}"
-      class="bg-yellow-500 rounded-md font-semibold text-black hover:text-white hover:bg-black p-2 m-2 shadow-lg text-2xl"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
-    </a>
-    <a
-      href="{% url 'resources:create' %}"
-      class="bg-blue-900 rounded-md font-semibold text-white hover:text-black hover:shadow-xl hover:bg-gray-400 p-2 m-2 shadow-lg text-2xl"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
-    </a>
-  {% endif %}
-    
-  <div class="assignments">
-    <h3 class="font-sans font-semibold text-3xl">Assignments</h3>
-    <ul class="list-group" class="bg-slate-300">
-      {% for assignment in assignments %}
-      <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="list-group-item list-group-item-action ">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1 font-semibold font-serif">{{assignment.assignment_name}}</h5>
-        </div>
-        <p class="mb-1 font-semibold">
-          {{assignment.assignment_description}}
-        </p>
-        <small>Start Date: {{assignment.start_date}}</small><br>
-        <small>Due Date: {{assignment.due_date}} {{assignment.due_time}}</small>
-      </a>
-      {% empty %}
-      <h6>No Assignments</h6>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="resources">
-    <h3 class="font-sans font-2xl font-semibold m-2">Resources</h3>
-
-    <!-- {% include 'assignments/assignment_list.html' %} -->
-    <ul class="list-group">
-      {% for resource in resources %}
-      <div  class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{resource.resource_name}}</h5>
-        </div>
-        <p class="mb-1">
-          Submission: {{resource.resource_file.name}}
-          <a href="{{resource.resource_file.url}}" class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline" download>Download</a>
-        </p>
-        
-        {% if user.id == course.teacher.id %}
-          <small><a href="{% url 'resources:delete' pk=resource.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a></small>
+    <div id="{{ chapter.id }}" class="mt-2 hidden">
+        {% for lesson in lessons %}
+        {% if lesson.video %}
+            <p class="text-gray-700">Watch this</p>
+            <div class="mt-2">
+                <div class="lesson-video-container">
+                    <div id="text-gray-700">{{ lesson.video }}</div>
+                    <div id="player{{ lesson.id }}"></div>
+                </div>
+            </div>
         {% endif %}
-      </div>
-      {% empty %}
-        <h6 class="font-extralight font-serif text-gray-400">No Resources</h6>
+        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+            <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
+            <div class="mt-2 text-gray-700">
+                {{ lesson.lesson_content|convert_markdown|safe }}
+                {% if user.user_type == 1 %}
+                    <button class="mark-lesson-button bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
+                        data-lesson-id="{{ lesson.id }}">Mark as Read</button>
+                {% endif %}
+                <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
+                {% csrf_token %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
-      {% endfor %}
-    </ul>
-  </div>
+{% if not user %}
+    <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
+{% else %}
+    {% if user.user_type == 1 %}
+        {% if user in course.students.all %}
+            <a href="{% url 'courses:unenroll' pk=course.pk %}"
+                class="bg-red-600 container text-white hover:bg-red-500 p-2 relative rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
+        {% else %}
+            <a href="{% url 'courses:enroll' pk=course.pk %}"
+                class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Enroll</a>
+        {% endif %}
+    {% endif %}
+    {% if course.teacher.id == user.id or user in course.students.all %}
+        {% if user.user_type == 2 %}
+            <a href="{% url 'assignments:create' %}"
+                class="bg-yellow-500 rounded-md font-semibold text-black hover:text-white hover:bg-black p-2 m-2 shadow-lg text-2xl">
+                <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
+            </a>
+            <a href="{% url 'resources:create' %}"
+                class="bg-blue-900 rounded-md font-semibold text-white hover:text-black hover:shadow-xl hover:bg-gray-400 p-2 m-2 shadow-lg text-2xl">
+                <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
+            </a>
+        {% endif %}
+        <div class="assignments">
+            <h3 class="font-sans font-semibold text-3xl">Assignments</h3>
+            <ul class="list-group" class="bg-slate-300">
+                {% for assignment in assignments %}
+                <a href="{% url 'assignments:detail' pk=assignment.pk %}"
+                    class="list-group-item list-group-item-action ">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 font-semibold font-serif">{{ assignment.assignment_name }}</h5>
+                    </div>
+                    <p class="mb-1 font-semibold">
+                        {{ assignment.assignment_description }}
+                    </p>
+                    <small>Start Date: {{ assignment.start_date }}</small><br>
+                    <small>Due Date: {{ assignment.due_date }} {{ assignment.due_time }}</small>
+                </a>
+                {% empty %}
+                <h6>No Assignments</h6>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="resources">
+            <h3 class="font-sans font-2xl font-semibold m-2">Resources</h3>
+            <ul class="list-group">
+                {% for resource in resources %}
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ resource.resource_name }}</h5>
+                    </div>
+                    <p class="mb-1">
+                        Submission: {{ resource.resource_file.name }}
+                        <a href="{{ resource.resource_file.url }}"
+                            class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline"
+                            download>Download</a>
+                    </p>
+                    {% if user.id == course.teacher.id %}
+                        <small><a href="{% url 'resources:delete' pk=resource.pk %}"
+                                class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a></small>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <h6 class="font-extralight font-serif text-gray-400">No Resources</h6>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endif %}
 
 <script>
@@ -209,46 +220,66 @@
    });
  }
  }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const markLessonButtons = document.querySelectorAll('.mark-lesson-button');
 
-  function markAsRead(lessonIndex) {
-    updatechecked()
-    console.log("Lessonn Index:", lessonIndex); 
-    const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
-    lessonRadioButtons[lessonIndex].disabled = true;
-    const lessonButton = document.querySelector(`#markAsReadButton_${lessonIndex}`);
-    lessonButton.disabled = true;
-  
-    fetch("{% url 'courses:mark_lesson_as_read' lesson_id=0 %}".replace('0', lessonIndex), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        lessonRadioButtons[lessonIndex].checked = true;
-        //lessonButton.checked = true;
-        
-        alert(data.message)
-        
-        // Log the JSON response
-        console.log("JSON Response:", data.message);
-      });
-  }
-  
-  
-  
-  // Attach the markAsRead function to all radio buttons
-  lessonRadioButtons.forEach((lessonRadio, index) => {
-    lessonRadio.addEventListener('change', () => {
-      if (lessonRadio.checked) {
-        markAsRead(index);
-      }
+    markLessonButtons.forEach((markLessonButton) => {
+        markLessonButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default button click behavior
+
+            // Check if the button is disabled (already clicked)
+            if (markLessonButton.disabled) {
+                return; // Don't process if already disabled
+            }
+
+            const lessonId = markLessonButton.getAttribute('data-lesson-id');
+            const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+            // Send an AJAX request to mark the lesson as complete
+            fetch('{% url 'courses:mark_lesson_as_complete' %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Change content type to JSON
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ lesson_id: lessonId }), // Convert to JSON format
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.message); // Log the response message
+                // Disable the button after marking as complete
+                markLessonButton.disabled = true;
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
     });
-  }); 
+});
+
+
+
+
+
 </script>
 
-</div> 
+<script>
+    // Define lessonData as a JavaScript variable and populate it with data from Django template
+    var lessonData = [
+        {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+        {% for lesson in content.lessons %}
+        {
+            id: '{{ lesson.id }}',
+            height: '360', // Set the desired video height
+            width: '640',  // Set the desired video width
+            videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+        },
+        {% endfor %}
+        {% endfor %}
+    ];
+    
+</script>
 {% endblock main_content %}
-
