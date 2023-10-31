@@ -94,12 +94,12 @@
                 <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
             </a>
         {% endif %}
-        <div class="assignments">
+        <div class="assignments w-[72%]">
             <h3 class="font-sans font-semibold text-3xl">Assignments</h3>
-            <ul class="list-group" class="bg-slate-300">
+            <ul class="list-group" class="bg-slate-300 outline-none ml-3">
                 {% for assignment in assignments %}
                 <a href="{% url 'assignments:detail' pk=assignment.pk %}"
-                    class="list-group-item list-group-item-action ">
+                    class="list-group-item list-group-item-action text-cyan-950 m-2 p-4">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1 font-semibold font-serif">{{ assignment.assignment_name }}</h5>
                     </div>
@@ -114,7 +114,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="resources">
+        <div class="resources w-[72%]">
             <h3 class="font-sans font-2xl font-semibold m-2">Resources</h3>
             <ul class="list-group">
                 {% for resource in resources %}

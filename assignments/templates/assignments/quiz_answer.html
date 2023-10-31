@@ -15,7 +15,7 @@
 
 <form method="post" class="p-4 bg-gray-100 rounded-lg font-sans">
     {% csrf_token %}
-    {{ form.as_p }} 
+    {{ form }} 
     {% comment %} {% for question in quiz.questions.all %}
     <div class="p-2 bg-gray-100 rounded-lg">
         <h3 class="font-semibold">{{ question.question_text }}</h3>
