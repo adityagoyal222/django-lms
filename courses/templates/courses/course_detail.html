@@ -14,6 +14,8 @@
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
+<p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
+<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
 
 {% for chapter, lessons in chapters_with_lessons %}
 <div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg">
@@ -36,8 +38,8 @@
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="bg-cyan-950 hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                  onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
-                  Mark as Read
+                onclick="markAsRead({{ lesson.id }})" {% if lesson.is_read %}disabled{% endif %}>
+                Mark as Read
                 </button>
                 {% endif %}
             </div>
@@ -64,7 +66,7 @@
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                     <button class="mark-lesson-button bg-blue-600 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                        data-lesson-id="{{ lesson.id }}">Mark as Read</button>
+                        data-lesson-id="{{ lesson.id }}" onclick="updatechecked()">Mark as Read</button>
                 {% endif %}
                 <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
                 {% csrf_token %}
@@ -200,6 +202,9 @@
    });
  
  function updateProgress(completedLessons) {
+    //how do i reference the progressbar if it exists in the courses/course_base.html
+
+    
      const progressBar = document.getElementById('progressBar');
      const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
      const totalLessons = {{ total_lessons }};
@@ -259,6 +264,43 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+function markAsRead(lessonId) {
+    // Make an AJAX request to mark the lesson as complete
+    const csrfToken = getCookie("csrftoken");
+
+    fetch("{% url 'courses:mark_lesson_as_complete' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+      body: JSON.stringify({ lesson_id: lessonId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Lesson marked as complete successfully.") {
+          // Update the checkbox status
+          const lessonCheckbox = document.querySelector(`#lessonRadio${lessonId}`);
+          if (lessonCheckbox) {
+            lessonCheckbox.checked = true;
+            lessonCheckbox.disabled = true;
+          }
+
+          // Disable the "Mark as Read" button
+          const markAsReadButton = document.querySelector(`#markAsReadButton_${lessonId}`);
+          if (markAsReadButton) {
+            markAsReadButton.disabled = true;
+          }
+
+          // Update the progress bar and completion percentage
+          updateProgress(data.completed_lessons_count);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
 
 
