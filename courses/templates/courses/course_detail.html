@@ -69,7 +69,7 @@
 {% endif %}
 
    
-</div>
+{% comment %} </div> {% endcomment %}
 
 {% if not user %}
     <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
@@ -94,7 +94,7 @@
                 <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
             </a>
         {% endif %}
-        <div class="assignments w-[72%]">
+        <div class="assignments w-[90%]">
             <h3 class="font-sans font-semibold text-3xl">Assignments</h3>
             <ul class="list-group" class="bg-slate-300 outline-none ml-3">
                 {% for assignment in assignments %}
@@ -140,6 +140,7 @@
         </div>
     {% endif %}
 {% endif %}
+</div>
 
 <script>
   function getCookie(name) {
