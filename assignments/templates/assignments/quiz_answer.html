@@ -9,12 +9,25 @@
 
 {% block main_content %}
 
-<h1>Answer the Quiz below:{{ quiz.quiz_title}}</h1>
+<div class="mt-[150px] text-cyan-950 w-[70%] ml-3 p-4">
+  <h2 class="font-semibold">Answer the Quiz below:{{ quiz.quiz_title}}</h2>
 
 
-<form method="post" class="p-2 bg-gray-100 rounded-lg font-sans">
+<form method="post" class="p-4 bg-gray-100 rounded-lg font-sans">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button class="m-2 p-2 text-lg font-sans font-semibold bg-green-600 hover:bg-green-400 rounded-lg" type="submit">Submit Answers</button>
+    {{ form.as_p }} 
+    {% comment %} {% for question in quiz.questions.all %}
+    <div class="p-2 bg-gray-100 rounded-lg">
+        <h3 class="font-semibold">{{ question.question_text }}</h3>
+        {% for choice in question.choices.all %}
+        <div class="p-2 bg-gray-100 rounded-lg">
+            <input type="radio" id="{{ question.id }}_{{ forloop.counter }}" name="{{ question.id }}" value="{{ choice.id }}">
+            <label for="{{ question.id }}_{{ forloop.counter }}">{{ choice.choice_text }}</label>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %} {% endcomment %}
+    <button class="m-2 p-2 text-lg font-sans font-semibold bg-cyan-950 text-gray-100 hover:outline-none hover:bg-yellow-500 rounded-lg" type="submit">Submit Answers</button>
 </form>
+</div>
 {% endblock %}

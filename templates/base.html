@@ -132,8 +132,8 @@
         <!-- Progress Bar -->
         <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
             <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
-            <div class="bg-white w-[90%] mx-auto h-2 rounded-md">
-                <div class="bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="bg-white w-[90%] mx-auto h-2 rounded-md progress">
+                <div class="bg-yellow-500 progress-bar" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             {% if completion_percentage >= 100 %}
@@ -197,7 +197,7 @@
                                             {% for lesson in lessons %}
                                                 <li class="lesson-item flex flex-row space-x-2 pb-3">
                                                     {% comment %} <a href="#" class="text-green-900 item-start text-xs">{{ lesson.lesson_name }}</a> {% endcomment %}
-                                                    <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-3 h-3 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                                    <input type="checkbox" id="item1" name="items" class="lessonRadio text-custom-color items-start w-3 h-3 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
                                                     <button class="items-end ml-2 w-[90%] text-sm font-sans text-cyan-950 font-light hover:text-yellow-400 focus:outline-none" onclick="toggleLesson('{{ lesson.id }}')">
                                                         {{ lesson.lesson_name }}
                                                     </button>

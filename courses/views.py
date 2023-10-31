@@ -110,7 +110,7 @@ class CourseDetail(generic.DetailView):
             completed_quizzes = self.request.user.completed_quizzes(course)
           
              
-            completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
+            completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
         else:
             completed_lessons = 0
             completed_quizzes = 0
@@ -284,7 +284,7 @@ def mark_lesson_as_complete(request):
     total_quizzes = course.total_quizzes()
     completed_lessons = user.completed_lessons.filter(lesson__chapter__course=course).count()
     completed_quizzes = user.completed_quizzes(course)
-    completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
+    completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
 
     # Update the progress bar or any other elements as needed
 
