@@ -110,7 +110,7 @@ class CourseDetail(generic.DetailView):
             completed_quizzes = self.request.user.completed_quizzes(course)
           
              
-            completion_percentage = ((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100
+            completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
         else:
             completed_lessons = 0
             completed_quizzes = 0
@@ -247,19 +247,12 @@ def get_completed_lessons_count(request, course_id):
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
         
 
+from django.http import JsonResponse
+from .models import CompletedLesson, Course
+
 def mark_lesson_as_complete(request):
-    """Marks a lesson as complete for the current user.
-
-    Args:
-        request: The HTTP request.
-
-    Returns:
-        A JSON response indicating whether the lesson was marked as complete
-        successfully.
-    """
-
     if request.method != 'POST':
-        return JsonResponse({'message': 'Invalid request.'}, status=400)
+        return JsonResponse({'message': 'Invalid request method.'}, status=400)
 
     try:
         data = json.loads(request.body.decode('utf-8'))
@@ -275,11 +268,25 @@ def mark_lesson_as_complete(request):
     except Lesson.DoesNotExist:
         return JsonResponse({'message': 'Lesson not found.'}, status=404)
 
-    if CompletedLesson.objects.filter(user=request.user, lesson=lesson).exists():
+    user = request.user
+
+    # Check if the lesson is already marked as complete for the user
+    if CompletedLesson.objects.filter(user=user, lesson=lesson).exists():
         return JsonResponse({'message': 'Lesson is already marked as complete.'}, status=200)
 
-    completed_lesson = CompletedLesson(user=request.user, lesson=lesson)
+    # Mark the lesson as complete for the user
+    completed_lesson = CompletedLesson(user=user, lesson=lesson)
     completed_lesson.save()
 
-    return JsonResponse({'message': 'Lesson marked as complete successfully.'}, status=200)
+    # Calculate the completion percentage for the course
+    course = lesson.chapter.course
+    total_lessons = Lesson.objects.filter(chapter__course=course).count()
+    total_quizzes = course.total_quizzes()
+    completed_lessons = user.completed_lessons.filter(lesson__chapter__course=course).count()
+    completed_quizzes = user.completed_quizzes(course)
+    completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+
+    # Update the progress bar or any other elements as needed
+
+    return JsonResponse({'message': 'Lesson marked as complete successfully.', 'completed_lessons_count': completed_lessons, 'completion_percentage': completion_percentage}, status=200)
 
