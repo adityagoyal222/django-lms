@@ -16,6 +16,8 @@
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
 <p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
 <p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
+<div id="lessonIds" data-lesson-ids="{{ completed_lesson_ids_json|safe }}"></div>
+
 
 
 {% if user.is_authenticated %}
@@ -51,7 +53,7 @@
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}" {% if lesson.is_read %}disabled{% endif %}>
+                onclick="updatechecked(this), updateChapterCheckbox('{{ chapter.id }}')" data-lesson-id="{{ lesson.id }}" {% if lesson.is_read %}disabled{% endif %}>
                 Mark as Read
                 </button>
                 {% endif %}
@@ -173,6 +175,10 @@
     // Fetch the completed lessons count via AJAX
     const courseId = parseInt('{{ course.pk }}');
     console.log('Course ID:', courseId);
+    const lessonIdsDiv = document.getElementById('lessonIds');
+    const completedLessonIds = JSON.parse(lessonIdsDiv.getAttribute('data-lesson-ids'));
+
+    console.log('Completed Lesson IDs:', completedLessonIds);
     //check the respective lessonradiobuttons if that lesson is marked as read/completed
     const lessonId = button.getAttribute('data-lesson-id'); // Get the lesson ID from the data attribute
     const lessonCheckbox = document.querySelector(`#lessonRadio${lessonId}`);
@@ -195,7 +201,7 @@
    .then(data => {
     if (data.completed_lessons_count !== undefined) {
       const completedLessons = data.completed_lessons_count;
-      console.log("completed_lesson_count: ", completedLessons)
+      //console.log("completed_lesson_count: ", completedLessons)
       updateProgress(completedLessons);
       console.log("JSON Response:", data);
     }
@@ -264,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data.message); // Log the response message
-                // Disable the button after marking as complete
+                // disable the button
                 markLessonButton.disabled = true;
                 window.location.reload();
             })
@@ -289,6 +295,22 @@ document.addEventListener('DOMContentLoaded', function () {
         {% endfor %}
         {% endfor %}
     ];
+
+    {% comment %} function updateChapterCheckbox(chapterId) {
+        const chapterCheckbox = document.querySelector(`input[data-chapter-id="${chapterId}"]`);
+        const lessonCheckboxes = document.querySelectorAll(`input[data-lesson-chapter-id="${chapterId}"]`);
+    
+        let allChecked = true;
+    
+        lessonCheckboxes.forEach(lessonCheckbox => {
+            if (!lessonCheckbox.checked) {
+                allChecked = false;
+            }
+        });
+    
+        chapterCheckbox.checked = allChecked;
+    } {% endcomment %}
+    
     
 </script>
 {% endblock main_content %}
