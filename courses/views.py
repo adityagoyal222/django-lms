@@ -17,6 +17,8 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from .models import Lesson
 import json
+from django.http import JsonResponse
+from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
 # Create your views here.
@@ -106,7 +108,13 @@ class CourseDetail(generic.DetailView):
             completion_percentage = round((completed_lessons / total_lessons) * 100)
             print("Completed Lessons:", completed_lessons)
             print("Completion Percentage:", completion_percentage)
-     
+
+            # Access and print the lesson IDs directly
+            completed_lessons1 = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course)
+            completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
+            print("Lesson IDs completed:", completed_lesson_ids)
+
+                
             completed_quizzes = self.request.user.completed_quizzes(course)
           
              
@@ -134,6 +142,9 @@ class CourseDetail(generic.DetailView):
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        # context['course_id'] = course.pk
+        context['completed_lesson_ids'] = completed_lesson_ids
+        context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
         context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
         return context
@@ -242,13 +253,14 @@ def get_completed_lessons_count(request, course_id):
         completed_lessons_count = request.user.completed_lessons.filter(
             lesson__chapter__course=course
         ).count()
-        return JsonResponse({'completed_lessons_count': completed_lessons_count})
+        # Access and print the lesson IDs directly
+        completed_lessons1 = CompletedLesson.objects.filter(user=request.user, lesson__chapter__course=course)
+        completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
+        print("Lesson IDs completed:", completed_lesson_ids)
+        return JsonResponse({'completed_lessons_ids': completed_lesson_ids})
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
         
-
-from django.http import JsonResponse
-from .models import CompletedLesson, Course
 
 def mark_lesson_as_complete(request):
     if request.method != 'POST':
