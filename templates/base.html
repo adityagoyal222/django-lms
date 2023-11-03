@@ -28,6 +28,9 @@
             {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
             <img width="300" height="300" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
         </div>
+        <div class="items-center absolute">
+            <button class="bg-gray-100 p-2 outline-none border-0 rounded-lg" onclick="togglePopup()">Click Me</button>
+        </div>
         <div class="items-end mx-auto justify-end flex flex-row m-2">
         <div class="flex flex-row p-2 space-x-4 font-bold">
             <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
@@ -346,7 +349,18 @@
         </div>
         {% endif %}
 
-
+        <div id="popup" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-auto">
+            <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
+                <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
+                <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
+                <p>Click the "Generate Certificate" button to access your Certificate.</p>
+                <div class="flex mx-auto space-x-2 mt-[120px]">
+                    <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Generate Certificate</button>
+                    <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
+                </div>
+            </div>
+        </div>
+                
     
         
     <div class="content">
@@ -409,45 +423,7 @@
     // Call the initialize function when the page loads
     window.addEventListener('load', initializeChatbotVisibility);
 
-    {% comment %} function sendText() {
-        // Get the chat text from the input field
-        const chattext = document.getElementById('chattext').value;
-        if (chattext.trim() === '') {
-            return; // Don't send empty messages
-        }
-
-        // Clear the input field after sending the message
-        document.getElementById('chattext').value = '';
-
-        // Get the session ID from your Django backend and store it in a variable
-        const sessionId = "{{ request.session.session_key }}";
-
-        // Make an HTTP POST request to your Django view to get the chatbot response
-        fetch("{% url 'chattext'%}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': "{{ csrf_token }}",
-                'X-SESSION-ID': sessionId,  // Pass the session ID in the request headers
-            },
-            body: new URLSearchParams({ 'chattext': chattext }) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response data and create a new paragraph element for the chatbot response
-            const botMessage = document.createElement('p');
-            botMessage.classList.add('user-message', 'bg-gray-200', 'shadow-lg', 'p-2', 'w-[80%]', 'flex', 'mx-auto', 'right-0', 'text-black', 'items-end', 'justify-end');
-            botMessage.textContent = data.response;
-            const chatbotBody = document.getElementById('chatbot-body');
-            chatbotBody.appendChild(botMessage);
-
-            // Scroll to the bottom to show the latest messages
-            chatbotBody.scrollTop = chatbotBody.scrollHeight;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    } {% endcomment %}
+    
     document.addEventListener("DOMContentLoaded", function () {
         const dropdownButton = document.getElementById("drop-down");
         const dropdownMenu = document.getElementById("dropdown-menu");
@@ -489,6 +465,23 @@
             }
         });
     }
+
+    // Check if the user has completed the course and hasn't seen the pop-up
+{% comment %} if (completion_percentage >= 100 && !userHasSeenPopup) { {% endcomment %}
+function togglePopup() {
+    const popup = document.getElementById('popup');
+    const isOpen = popup.style.display === 'block';
+
+    if (isOpen) {
+        popup.style.display = 'none'; // Close the popup
+    } else {
+        popup.style.display = 'block'; // Open the popup
+    }
+}
+
+// Call togglePopup to toggle the popup when needed
+
+
     
 </script>
 </html>

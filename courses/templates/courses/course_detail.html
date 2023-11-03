@@ -294,24 +294,35 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     function updateChapterCheckbox(chapterId) {
-        // Get all the lesson checkboxes
-        const lessonCheckboxes = document.querySelectorAll('.lessonRadio');
-
+        // Get all the lesson checkboxes for the specified chapter
+        const lessonCheckboxes = document.querySelectorAll(`input[data-lesson-chapter-id="${chapterId}"]`);
+    
         // Attach an event listener to each lesson checkbox
         lessonCheckboxes.forEach(lessonCheckbox => {
-        lessonCheckbox.addEventListener('change', function () {
-            const chapterId = lessonCheckbox.getAttribute('data-lesson-chapter-id');
-            const chapterCheckbox = document.querySelector(`[data-chapter-id="${chapterId}"]`);
-        
-            // Check or uncheck the chapter checkbox based on the state of lesson checkboxes
-            const lessonCheckboxesInChapter = document.querySelectorAll(`[data-lesson-chapter-id="${chapterId}"]`);
-            const allLessonCheckboxesChecked = [...lessonCheckboxesInChapter].every(checkbox => checkbox.checked);
-
-            chapterCheckbox.checked = allLessonCheckboxesChecked;
-    });
-});
-
+            lessonCheckbox.addEventListener('change', function () {
+                // Check or uncheck the chapter checkbox based on the state of lesson checkboxes
+                const allLessonCheckboxesChecked = [...lessonCheckboxesInChapter].every(checkbox => checkbox.checked);
+    
+                // Get the chapter checkbox
+                const chapterCheckbox = document.querySelector(`input[data-chapter-id="${chapter.id}"]`);
+    
+                // Set the state of the chapter checkbox
+                chapterCheckbox.checked = allLessonCheckboxesChecked;
+            });
+        });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Get a list of chapter IDs (you can retrieve these from your template)
+        const chapterIds = [{{ completed_chapter_ids|join:', ' }}]; // Replace with actual chapter IDs
+        console.log("Chapter IDs: ",chapterIds)
+    
+        // Initialize chapter checkboxes for each chapter
+        chapterIds.forEach(chapterId => {
+            updateChapterCheckbox(chapterId);
+        });
+    });
     
     
 </script>
