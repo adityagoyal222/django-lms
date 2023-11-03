@@ -16,7 +16,7 @@
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
 <p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
 <p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
-<div id="lessonIds" data-lesson-ids="{{ completed_lesson_ids_json|safe }}"></div>
+{% comment %} <div id="lessonIds" class="text-cyan-950 font-semibold m-2 p-2" data-lesson-ids="{{ completed_lesson_ids_json|safe }}"><p>Completer Lesson IDs: {{completed_lesson_ids}}</p></div> {% endcomment %}
 
 
 
@@ -53,7 +53,7 @@
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                onclick="updatechecked(this), updateChapterCheckbox('{{ chapter.id }}')" data-lesson-id="{{ lesson.id }}" {% if lesson.is_read %}disabled{% endif %}>
+                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}">
                 Mark as Read
                 </button>
                 {% endif %}
@@ -82,7 +82,7 @@
                 class="bg-red-600 mt-[30px] text-white hover:bg-red-500 p-2 relative rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
         {% else %}
             <a href="{% url 'courses:enroll' pk=course.pk %}"
-                class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Enroll</a>
+                class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 hover:outline-none p-2 rounded-md text-md font-extrabold hover:no-underline">Enroll</a>
         {% endif %}
     {% endif %}
     {% if course.teacher.id == user.id or user in course.students.all %}
@@ -166,7 +166,7 @@
   }
      // Initialize the progress based on the number of lessons
      const totalLessons = {{ total_lessons }};
-     console.log("Total Lessons:", total_lessons)
+     console.log("Total Lessons:", totalLessons)
      const progressBar = document.getElementById('progressBar');
      const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
   
@@ -176,7 +176,10 @@
     const courseId = parseInt('{{ course.pk }}');
     console.log('Course ID:', courseId);
     const lessonIdsDiv = document.getElementById('lessonIds');
-    const completedLessonIds = JSON.parse(lessonIdsDiv.getAttribute('data-lesson-ids'));
+    const completedLessonIds = JSON.parse(lessonIdsDiv.getAttribute('data-lesson-id'));
+    console.log(lessonIds)
+    console.log(completedLessonIds)
+
 
     console.log('Completed Lesson IDs:', completedLessonIds);
     //check the respective lessonradiobuttons if that lesson is marked as read/completed
@@ -201,9 +204,9 @@
    .then(data => {
     if (data.completed_lessons_count !== undefined) {
       const completedLessons = data.completed_lessons_count;
-      //console.log("completed_lesson_count: ", completedLessons)
+      console.log("completed_lesson_counttt: ", completedLessons)
       updateProgress(completedLessons);
-      console.log("JSON Response:", data);
+      //console.log("JSON Response:", data);
     }
    })
    .catch(error => {
@@ -225,13 +228,7 @@
           completedLessons += 1;
         }
       }
- 
-   // Update the checked state of checkboxes for completed lessons
-     completedLessons.forEach(lessonId => {
-       const lessonCheckbox = document.querySelector(`#lessonRadio${lessonId}`);
-       if (lessonCheckbox) {
-         lessonCheckbox.checked = true;
-         lessonCheckbox.disabled = true;
+
  
          // Disable the corresponding "Mark as Read" button
          const lessonButton = document.querySelector(`#markAsReadButton_${lessonId}`);
@@ -239,8 +236,8 @@
            lessonButton.disabled = true;
          }
        }
-   });
- }
+ 
+ 
  }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -296,20 +293,25 @@ document.addEventListener('DOMContentLoaded', function () {
         {% endfor %}
     ];
 
-    {% comment %} function updateChapterCheckbox(chapterId) {
-        const chapterCheckbox = document.querySelector(`input[data-chapter-id="${chapterId}"]`);
-        const lessonCheckboxes = document.querySelectorAll(`input[data-lesson-chapter-id="${chapterId}"]`);
-    
-        let allChecked = true;
-    
+    function updateChapterCheckbox(chapterId) {
+        // Get all the lesson checkboxes
+        const lessonCheckboxes = document.querySelectorAll('.lessonRadio');
+
+        // Attach an event listener to each lesson checkbox
         lessonCheckboxes.forEach(lessonCheckbox => {
-            if (!lessonCheckbox.checked) {
-                allChecked = false;
-            }
-        });
-    
-        chapterCheckbox.checked = allChecked;
-    } {% endcomment %}
+        lessonCheckbox.addEventListener('change', function () {
+            const chapterId = lessonCheckbox.getAttribute('data-lesson-chapter-id');
+            const chapterCheckbox = document.querySelector(`[data-chapter-id="${chapterId}"]`);
+        
+            // Check or uncheck the chapter checkbox based on the state of lesson checkboxes
+            const lessonCheckboxesInChapter = document.querySelectorAll(`[data-lesson-chapter-id="${chapterId}"]`);
+            const allLessonCheckboxesChecked = [...lessonCheckboxesInChapter].every(checkbox => checkbox.checked);
+
+            chapterCheckbox.checked = allLessonCheckboxesChecked;
+    });
+});
+
+    }
     
     
 </script>
