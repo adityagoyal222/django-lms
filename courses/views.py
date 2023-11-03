@@ -17,6 +17,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from .models import Lesson
 import json
+from django.views import View
 from django.http import JsonResponse
 from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
@@ -107,7 +108,6 @@ class CourseDetail(generic.DetailView):
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
             completion_percentage = round((completed_lessons / total_lessons) * 100)
             print("Completed Lessons:", completed_lessons)
-            print("Completion Percentage:", completion_percentage)
 
             # Access and print the lesson IDs directly
             completed_lessons1 = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course)
@@ -119,6 +119,7 @@ class CourseDetail(generic.DetailView):
           
              
             completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+            print("Completion Percentage:", completion_percentage)
         else:
             completed_lessons = 0
             completed_quizzes = 0
@@ -256,10 +257,30 @@ def get_completed_lessons_count(request, course_id):
         # Access and print the lesson IDs directly
         completed_lessons1 = CompletedLesson.objects.filter(user=request.user, lesson__chapter__course=course)
         completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
-        print("Lesson IDs completed:", completed_lesson_ids)
-        return JsonResponse({'completed_lessons_ids': completed_lesson_ids})
+        print("Lesson IDss completed:", completed_lesson_ids)
+        for i in completed_lesson_ids:
+            # count
+            print("Lesson: ", i)
+        print(completed_lessons1.count())
+        completed_lesson_count = completed_lessons1.count()
+        context = {
+            'completed_lessons_count': completed_lesson_count,
+            'completed_lesson_ids': completed_lesson_ids,
+        }
+        print("completed_lessons_count:", completed_lesson_count)
+        return JsonResponse(context)
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
+# class CompletedLessonCountView(View):
+#     def get(self, request, *args, **kwargs):
+#         course_pk = self.kwargs['pk']  # Access the 'pk' parameter from the URL
+#         # Your logic to calculate completed lesson count
+#         course = get_object_or_404(Course, pk=course_pk)
+#         completed_lessons_count = request.user.completed_lessons.filter(
+#             lesson__chapter__course=course
+#         ).count()
+#         data = {'completed_lessons_count': completed_lessons_count}
+#         return JsonResponse(data)
         
 
 def mark_lesson_as_complete(request):
@@ -297,6 +318,7 @@ def mark_lesson_as_complete(request):
     completed_lessons = user.completed_lessons.filter(lesson__chapter__course=course).count()
     completed_quizzes = user.completed_quizzes(course)
     completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+    print("completed quizes: ", completed_quizzes)
 
     # Update the progress bar or any other elements as needed
 

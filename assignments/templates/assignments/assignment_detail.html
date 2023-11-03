@@ -15,8 +15,8 @@
         
         <p class="font-extralight">Description: {{assignment.assignment_description}}</p>
         {% if user.user_type == 2 %}
-            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md hover:no-underline text-md font-extrabold ">Update</a>
-            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a>
+            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 p-2 rounded-md hover:no-underline text-md font-extrabold ">Update</a>
+            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="bg-red-700 m-2 text-white hover:bg-red-600 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a>
 
             <div class="submissions">
             <h3  class="font-sans font-semibold text-4xl">Submissions</h3>

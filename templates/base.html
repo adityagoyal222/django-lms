@@ -174,7 +174,8 @@
                                 <li class="chapter-item pb-3 border-b text-cyan-950 hover:shadow-md p-2">
                                     <div class="flex flex-row space-x-2">
                                         {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
-                                        <input type="checkbox" data-chapter-id="{{ chapter.id }}" id="item1" name="items" class="chapterCheckbox text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                        <input type="checkbox" data-chapter-id="{{ chapter.id }}" id="item1" name="items" class="chapterCheckbox text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" 
+                                        />
                                             <button class="items-center ml-2 text-sm w-[80%] font-sans text-cyan-950 font-normal hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
                                                 {{ chapter.chapter_name }}
                                             </button>
@@ -219,12 +220,12 @@
 
             {% else %}
                 <a href="{% url 'courses:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Course</a>
-                <a href="{% url 'courses:create_chapter' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Section</a>
+                <a href="{% url 'courses:create_chapter' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Chapter</a>
                 <a href="{% url 'courses:create_lesson' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Lesson</a>
                 <a href="{% url 'assignments:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Assignment</a>
                 <a href="{% url 'assignments:create' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #052635;font-size: 20px;"></i> Create New Resource</a>
-                {% comment %} <a href="{% url 'assignments:create' %}" class="text-gray-400"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a> {% endcomment %}
-                <span class="sidemenu text-cyan-950 font-extrabold"><h5 id="side-head" class="text-cyan-950"><i class="fa fa-list courses-icon text-cyan-950" aria-hidden="true"></i>Your Courses</h5></span>
+                <a href="{% url 'assignments:create_quiz' %}" class="text-cyan-950 hover:text-yellow-500 hover:cursor-pointer hover:no-underline hover:shadow-md p-2"><i class="fa fa-plus-circle" aria-hidden="true" style="color: #777777;font-size: 20px;"></i> Create New Quiz</a>
+                <span class="sidemenu text-cyan-950 font-extrabold"><h5 id="side-head" class="text-cyan-950"><i class="fa fa-list courses-icon text-cyan-950" aria-hidden="true" style="color: #052635;font-size: 20px;"></i>Your Courses</h5></span>
                 {% for course in list_courses %}
                     
                     {% if user.id == course.teacher.id %}
