@@ -96,6 +96,8 @@ class CourseDetail(generic.DetailView):
                 'quizzes': quizzes,
             }
             
+
+            
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
 
@@ -114,6 +116,10 @@ class CourseDetail(generic.DetailView):
             completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
             print("Lesson IDs completed:", completed_lesson_ids)
 
+            # can i get the chapter ids
+            completed_chapter_ids = [completed_lesson.lesson.chapter.id for completed_lesson in completed_lessons1]
+            print("Chapter IDs completed:", completed_chapter_ids)
+
                 
             completed_quizzes = self.request.user.completed_quizzes(course)
           
@@ -127,6 +133,7 @@ class CourseDetail(generic.DetailView):
         
         if completion_percentage >= 100:
             #this is how i choose to update to the db that a user has completed a course
+            # popup a congratulations window with instructions to generate/get your certificate
             # Check if the user has already completed the course
             if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
@@ -148,6 +155,7 @@ class CourseDetail(generic.DetailView):
         context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
         context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
+        context['completed_chapter_ids'] = completed_chapter_ids
         return context
 
 
