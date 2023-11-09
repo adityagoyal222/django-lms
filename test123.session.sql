@@ -1,2 +1,2 @@
 
-DELETE FROM assignments_quizsubmission WHERE score = 0;
+DROP TABLE certificates;
