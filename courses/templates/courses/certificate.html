@@ -118,6 +118,13 @@
     <script>
       document.getElementById('download-pdf').addEventListener('click', function () {
         const elementToConvert = document.querySelector('.course-professional');
+
+        // Set the page orientation to landscape
+        html2pdf().set({
+          orientation: 'landscape'
+        });
+
+        // Convert the element to PDF and save it
         html2pdf().from(elementToConvert).save('webpage.pdf');
     });
     

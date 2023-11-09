@@ -155,6 +155,16 @@
   </div>
 {% endif %}
 
+<div id="congratulationsPopup" class="flex fixed inset-0 items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg p-4 max-w-md">
+      <span class="float-right cursor-pointer" id="closePopup" style="cursor: pointer;">&times;</span>
+      <p class="text-xl font-bold">Congratulations!</p>
+      <p class="text-lg">You have completed the course.</p>
+  </div>
+</div>
+
+
+
 <script>
   function getCookie(name) {
     var cookieValue = null;
@@ -292,6 +302,31 @@ document.addEventListener('DOMContentLoaded', function () {
         {% endfor %}
     ];
     
+</script>
+
+<script>
+  // Check the completion percentage
+  var completionPercentage = {{ completion_percentage }};
+  console.log("Completion Percentage:", completionPercentage);
+  
+  // Show the congratulations popup if completion percentage is 100
+  if (completionPercentage === 100) {
+      var popup = document.getElementById("congratulationsPopup");
+      popup.classList.remove("hidden");
+
+      // Close the popup when the close button is clicked
+      var closePopup = document.getElementById("closePopup");
+      closePopup.onclick = function () {
+          popup.classList.add("hidden");
+      };
+
+      // Close the popup when the user clicks outside of it
+      window.onclick = function (event) {
+          if (event.target === popup) {
+              popup.classList.add("hidden");
+          }
+      }; 
+  }
 </script>
 
 <!-- Include your JavaScript file that uses lessonData -->
