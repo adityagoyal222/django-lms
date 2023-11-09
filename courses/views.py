@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse
+from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse, Certificate
 from assignments.models import Assignment, Quiz
 from resources.models import Resource
 from .models import CompletedLesson
@@ -23,6 +23,9 @@ from django.views import View
 from django.http import JsonResponse
 from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
+import mammoth
+from django.core.files.base import ContentFile
+import io
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -61,7 +64,7 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
 class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     form_class = CreateLessonForm
     template_name = 'courses/create_lesson.html'
-    success_url = '/all/'
+  
     
     def get_from_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -70,7 +73,24 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         user_object = get_object_or_404(User, username=self.request.user.username)
         form.instance.teacher = user_object
+        word_file = form.cleaned_data['word_file']
+
+        if word_file:
+            if hasattr(word_file, 'read'):
+                # File is in memory, read its content
+                content = word_file.read()
+                # Perform the Word to Markdown conversion
+                result = mammoth.convert_to_markdown(io.BytesIO(content))
+                form.instance.lesson_content = result.value
+            else:
+                # File is on disk, perform conversion as before
+                with open(word_file.path, 'rb') as docx_file:
+                    result = mammoth.convert_to_markdown(docx_file)
+                    form.instance.lesson_content = result.value
+
         return super().form_valid(form)
+    def get_success_url(self) -> str:
+        return reverse('courses:list')
     
 class CourseDetail(generic.DetailView):
     model = Course
@@ -288,28 +308,47 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
         
 def certificate_view(request, course_id):
     user = request.user
-
-
-    first_name = user.first_name
-    last_name = user.last_name
-    full_name = first_name + ' ' + last_name
     course = Course.objects.get(pk=course_id)
-    course_name = course.course_name
-    issuer = "ABYA Africa"
-    now = datetime.datetime.now()
-    unixtime = calendar.timegm(now.utctimetuple())
-    certificate_response = {
-        "name": full_name,
-        "course": course_name,
-        "issuer": issuer,
-        "issuer_date": unixtime
-          }
-    if all(value is not None for value in certificate_response.values()):
-        response = send_certificate_request(certificate_response["name"], certificate_response["issuer"], certificate_response["issuer_date"])
-        print(response)
-        return render(request, 'courses/certificate.html', {'context': response})
+
+    existing_certificate = Certificate.objects.get(user=user, course=course)
+    if existing_certificate:
+        # Certificate already exists, return it
+        name = existing_certificate.name
+        issuer_date = existing_certificate.issued_at
+        course = existing_certificate.course
+        issuer = existing_certificate.issuer
+        certificate_id = existing_certificate.certificate_id
+        context = {
+            "name": name,
+            "issuer_date": issuer_date,
+            "course": course,
+            "issuer": issuer,
+            "certificate_id": certificate_id
+            }
+        return render(request, 'courses/certificate.html', {'context': context})
     else:
-        return render(request, 'courses/certificate.html')
+        first_name = user.first_name
+        last_name = user.last_name
+        full_name = first_name + ' ' + last_name
+        course_name = course.course_name
+        issuer = "ABYA Africa"
+        now = datetime.datetime.now()
+        unixtime = calendar.timegm(now.utctimetuple())
+        certificate_response = {
+            "name": full_name,
+            "course": course_name,
+            "issuer": issuer,
+            "issuer_date": unixtime
+            }
+        if all(value is not None for value in certificate_response.values()):
+            certificate_data = send_certificate_request(certificate_response["name"], certificate_response["issuer"], certificate_response["issuer_date"])
+            
+             # Store the certificate in the database
+            new_certificate = Certificate(user=user, course=course, name=certificate_data['name'], issuer=certificate_data["issuer"], issued_at=certificate_data["issue_date"], certificate_id=certificate_data["certificate_id"])
+            new_certificate.save()
+            return render(request, 'courses/certificate.html', {'context': certificate_data})
+        else:
+            return render(request, 'courses/certificate.html')
 
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:

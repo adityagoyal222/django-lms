@@ -2,6 +2,8 @@
 from django.urls import re_path, path
 from courses import views
 
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "courses"
 
@@ -21,3 +23,6 @@ urlpatterns = [
     path('mark_lesson_as_complete/', views.mark_lesson_as_complete, name='mark_lesson_as_complete'),
     path('certificate/<int:course_id>/', views.certificate_view, name='certificate'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
