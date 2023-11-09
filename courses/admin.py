@@ -9,3 +9,5 @@ class GroupMemberInline(admin.TabularInline):
 admin.site.register(models.Course)
 admin.site.register(models.Chapter)
 admin.site.register(models.Lesson)
+admin.site.register(models.CompletedLesson)
+admin.site.register(models.CompletedCourse)
