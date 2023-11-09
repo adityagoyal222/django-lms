@@ -17,6 +17,9 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from .models import Lesson
 import json
+from django.views import View
+from django.http import JsonResponse
+from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 
 # Create your views here.
@@ -79,12 +82,21 @@ class CourseDetail(generic.DetailView):
         # chapters_with_lessons = {}
         
         # Create a dictionary to store chapters and their related lessons
-        chapters_with_lessons = {}
+        chapters_with_lessons = []
+        chapters_with_lessons_and_quizzes = {}
         
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
-            chapters_with_lessons[chapter] = lessons
+            chapters_with_lessons.append((chapter, lessons))
+            
+            quizzes = Quiz.objects.filter(chapter=chapter)
+            chapters_with_lessons_and_quizzes[chapter] = {
+                'lessons': lessons,
+                'quizzes': quizzes,
+            }
+            
+
             
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
@@ -96,8 +108,23 @@ class CourseDetail(generic.DetailView):
         # Get the total number of completed lessons for the user in that course
         if self.request.user.is_authenticated:
             completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
-            completion_percentage = (completed_lessons / total_lessons) * 100
+            completion_percentage = round((completed_lessons / total_lessons) * 100)
             print("Completed Lessons:", completed_lessons)
+
+            # Access and print the lesson IDs directly
+            completed_lessons1 = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course)
+            completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
+            print("Lesson IDs completed:", completed_lesson_ids)
+
+            # can i get the chapter ids
+            completed_chapter_ids = [completed_lesson.lesson.chapter.id for completed_lesson in completed_lessons1]
+            print("Chapter IDs completed:", completed_chapter_ids)
+
+                
+            completed_quizzes = self.request.user.completed_quizzes(course)
+          
+             
+            completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
             print("Completion Percentage:", completion_percentage)
         else:
             completed_lessons = 0
@@ -106,6 +133,7 @@ class CourseDetail(generic.DetailView):
         
         if completion_percentage >= 100:
             #this is how i choose to update to the db that a user has completed a course
+            # popup a congratulations window with instructions to generate/get your certificate
             # Check if the user has already completed the course
             if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
@@ -116,12 +144,18 @@ class CourseDetail(generic.DetailView):
         context = super(CourseDetail, self).get_context_data(**kwargs)
         context['assignments'] = assignments
         context['resources'] = resources
-        context['chapters_with_lessons'] = chapters_with_lessons
+        context['chapters_with_lessons'] = chapters_with_lessons 
+        # return chapter name and lesson name
+        context['chapters_with_lessons_and_quizzes'] = chapters_with_lessons_and_quizzes
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        # context['course_id'] = course.pk
+        context['completed_lesson_ids'] = completed_lesson_ids
+        context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
         context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
+        context['completed_chapter_ids'] = completed_chapter_ids
         return context
 
 
@@ -228,24 +262,38 @@ def get_completed_lessons_count(request, course_id):
         completed_lessons_count = request.user.completed_lessons.filter(
             lesson__chapter__course=course
         ).count()
-        return JsonResponse({'completed_lessons_count': completed_lessons_count})
+        # Access and print the lesson IDs directly
+        completed_lessons1 = CompletedLesson.objects.filter(user=request.user, lesson__chapter__course=course)
+        completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
+        print("Lesson IDss completed:", completed_lesson_ids)
+        for i in completed_lesson_ids:
+            # count
+            print("Lesson: ", i)
+        print(completed_lessons1.count())
+        completed_lesson_count = completed_lessons1.count()
+        context = {
+            'completed_lessons_count': completed_lesson_count,
+            'completed_lesson_ids': completed_lesson_ids,
+        }
+        print("completed_lessons_count:", completed_lesson_count)
+        return JsonResponse(context)
     else:
         return JsonResponse({'message': 'Invalid request method.'}, status=400)
+# class CompletedLessonCountView(View):
+#     def get(self, request, *args, **kwargs):
+#         course_pk = self.kwargs['pk']  # Access the 'pk' parameter from the URL
+#         # Your logic to calculate completed lesson count
+#         course = get_object_or_404(Course, pk=course_pk)
+#         completed_lessons_count = request.user.completed_lessons.filter(
+#             lesson__chapter__course=course
+#         ).count()
+#         data = {'completed_lessons_count': completed_lessons_count}
+#         return JsonResponse(data)
         
 
 def mark_lesson_as_complete(request):
-    """Marks a lesson as complete for the current user.
-
-    Args:
-        request: The HTTP request.
-
-    Returns:
-        A JSON response indicating whether the lesson was marked as complete
-        successfully.
-    """
-
     if request.method != 'POST':
-        return JsonResponse({'message': 'Invalid request.'}, status=400)
+        return JsonResponse({'message': 'Invalid request method.'}, status=400)
 
     try:
         data = json.loads(request.body.decode('utf-8'))
@@ -261,11 +309,26 @@ def mark_lesson_as_complete(request):
     except Lesson.DoesNotExist:
         return JsonResponse({'message': 'Lesson not found.'}, status=404)
 
-    if CompletedLesson.objects.filter(user=request.user, lesson=lesson).exists():
+    user = request.user
+
+    # Check if the lesson is already marked as complete for the user
+    if CompletedLesson.objects.filter(user=user, lesson=lesson).exists():
         return JsonResponse({'message': 'Lesson is already marked as complete.'}, status=200)
 
-    completed_lesson = CompletedLesson(user=request.user, lesson=lesson)
+    # Mark the lesson as complete for the user
+    completed_lesson = CompletedLesson(user=user, lesson=lesson)
     completed_lesson.save()
 
-    return JsonResponse({'message': 'Lesson marked as complete successfully.'}, status=200)
+    # Calculate the completion percentage for the course
+    course = lesson.chapter.course
+    total_lessons = Lesson.objects.filter(chapter__course=course).count()
+    total_quizzes = course.total_quizzes()
+    completed_lessons = user.completed_lessons.filter(lesson__chapter__course=course).count()
+    completed_quizzes = user.completed_quizzes(course)
+    completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+    print("completed quizes: ", completed_quizzes)
+
+    # Update the progress bar or any other elements as needed
+
+    return JsonResponse({'message': 'Lesson marked as complete successfully.', 'completed_lessons_count': completed_lessons, 'completion_percentage': completion_percentage}, status=200)
 
