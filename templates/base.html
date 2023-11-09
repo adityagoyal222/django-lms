@@ -28,9 +28,9 @@
             {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
             <img width="300" height="300" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
         </div>
-        <div class="items-center absolute">
+        {% comment %} <div class="items-center absolute">
             <button class="bg-gray-100 p-2 outline-none border-0 rounded-lg" onclick="togglePopup()">Click Me</button>
-        </div>
+        </div> {% endcomment %}
         <div class="items-end mx-auto justify-end flex flex-row m-2">
         <div class="flex flex-row p-2 space-x-4 font-bold">
             <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
@@ -349,7 +349,7 @@
         </div>
         {% endif %}
 
-        <div id="popup" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-auto">
+        {% comment %} <div id="popup" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-auto">
             <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
                 <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
                 <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
@@ -360,7 +360,7 @@
                 </div>
             </div>
         </div>
-                
+                 {% endcomment %}
     
         
     <div class="content">
@@ -468,7 +468,7 @@
 
     // Check if the user has completed the course and hasn't seen the pop-up
 {% comment %} if (completion_percentage >= 100 && !userHasSeenPopup) { {% endcomment %}
-function togglePopup() {
+{% comment %} function togglePopup() {
     const popup = document.getElementById('popup');
     const isOpen = popup.style.display === 'block';
 
@@ -477,7 +477,7 @@ function togglePopup() {
     } else {
         popup.style.display = 'block'; // Open the popup
     }
-}
+} {% endcomment %}
 
 // Call togglePopup to toggle the popup when needed
 

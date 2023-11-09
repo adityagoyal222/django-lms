@@ -782,6 +782,10 @@ video {
   margin-top: 2rem;
 }
 
+.mt-\[120px\] {
+  margin-top: 120px;
+}
+
 .mt-\[140px\] {
   margin-top: 140px;
 }
@@ -798,48 +802,16 @@ video {
   margin-top: 30px;
 }
 
+.mt-\[40\%\] {
+  margin-top: 40%;
+}
+
 .mt-\[50px\] {
   margin-top: 50px;
 }
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-\[50\%\] {
-  margin-top: 50%;
-}
-
-.mt-\[400px\] {
-  margin-top: 400px;
-}
-
-.mt-\[10px\] {
-  margin-top: 10px;
-}
-
-.mt-\[20px\] {
-  margin-top: 20px;
-}
-
-.mt-\[40px\] {
-  margin-top: 40px;
-}
-
-.mt-\[60px\] {
-  margin-top: 60px;
-}
-
-.mt-\[100px\] {
-  margin-top: 100px;
-}
-
-.mt-\[120px\] {
-  margin-top: 120px;
-}
-
-.mt-\[40\%\] {
-  margin-top: 40%;
 }
 
 .block {
@@ -918,6 +890,10 @@ video {
   height: 35px;
 }
 
+.h-\[40\%\] {
+  height: 40%;
+}
+
 .h-\[400px\] {
   height: 400px;
 }
@@ -956,22 +932,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-\[30\%\] {
-  height: 30%;
-}
-
-.h-\[40\%\] {
-  height: 40%;
-}
-
-.h-\[44\%\] {
-  height: 44%;
-}
-
-.h-\[50\%\] {
-  height: 50%;
 }
 
 .min-h-screen {
@@ -1026,6 +986,10 @@ video {
   width: 220px;
 }
 
+.w-\[30\%\] {
+  width: 30%;
+}
+
 .w-\[35px\] {
   width: 35px;
 }
@@ -1064,18 +1028,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-96 {
-  width: 24rem;
-}
-
-.w-\[40\%\] {
-  width: 40%;
-}
-
-.w-\[30\%\] {
-  width: 30%;
 }
 
 .max-w-2xl {
@@ -1279,12 +1231,12 @@ video {
   border-width: 1px;
 }
 
-.border-2 {
-  border-width: 2px;
-}
-
 .border-0 {
   border-width: 0px;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-b {
@@ -1414,11 +1366,6 @@ video {
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
-.bg-blue-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-10 {
   --tw-bg-opacity: 0.1;
 }
@@ -1437,14 +1384,6 @@ video {
 
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
-}
-
-.bg-opacity-25 {
-  --tw-bg-opacity: 0.25;
-}
-
-.bg-opacity-50 {
-  --tw-bg-opacity: 0.5;
 }
 
 .bg-gradient-to-r {
@@ -1947,16 +1886,6 @@ video {
 .hover\:bg-yellow-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-blue-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-yellow-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 224 71 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-opacity-60:hover {

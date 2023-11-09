@@ -96,6 +96,8 @@ class CourseDetail(generic.DetailView):
                 'quizzes': quizzes,
             }
             
+
+            
         assignments = Assignment.objects.filter(course=self.kwargs['pk'])
         resources = Resource.objects.filter(course=self.kwargs['pk'])
 
