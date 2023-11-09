@@ -1,4 +1,4 @@
-#!/home/machar/lms_project/django-lms/virtualenv/bin/python
+#!/home/adoyo/Documents/django-lms/virtualenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
