@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from users.models import User
 from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse, Certificate
 from assignments.models import Assignment, Quiz
-from resources.models import Resource
+from resources.models import Resource, VideoLesson, VideoProgress
 from .models import CompletedLesson
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -24,6 +24,7 @@ from django.http import JsonResponse
 from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 import mammoth
+from django.views.decorators.csrf import csrf_protect
 from django.core.files.base import ContentFile
 import io
 
@@ -426,3 +427,20 @@ def mark_lesson_as_complete(request):
 
     return JsonResponse({'message': 'Lesson marked as complete successfully.', 'completed_lessons_count': completed_lessons, 'completion_percentage': completion_percentage}, status=200)
 
+
+@csrf_protect
+def update_video_progress(request):
+    if request.method == 'POST':
+        video_id = request.POST.get('video_id')
+        progress = request.POST.get('progress')
+        video_lesson = VideoLesson.objects.get(video_lesson_id=video_id)    
+        # Find the VideoProgress object for the specified video_id and update the progress
+        video_progress, created = VideoProgress.objects.get_or_create(video_lesson=video_lesson, user=request.user)
+        video_progress.progress = progress
+        if float(progress) == 75:
+            video_progress.status = True
+        video_progress.save()
+        
+        return JsonResponse({'message': 'Video progress updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)

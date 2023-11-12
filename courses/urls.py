@@ -22,6 +22,7 @@ urlpatterns = [
     # path('completed_lesson_count/<int:pk>/', views.CourseDetail.as_view(), name='completed_lesson_count'),
     path('mark_lesson_as_complete/', views.mark_lesson_as_complete, name='mark_lesson_as_complete'),
     path('certificate/<int:course_id>/', views.certificate_view, name='certificate'),
+    path('update_video_progress/', views.update_video_progress, name='update_video_progress'),
 ]
 
 if settings.DEBUG:

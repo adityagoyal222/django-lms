@@ -78,6 +78,7 @@ class QuestionTextAndChoicesWidget(forms.MultiWidget):
         if value:
             return [None, value]
         return [None, None]
+
 class QuizAnswerForm(forms.Form):
     def __init__(self, *args, **kwargs):
         quiz_id = kwargs.pop('quiz_id')

@@ -422,7 +422,7 @@ function updateLessonProgress(lessonId) {
           // Send an AJAX POST request to update the progress
           const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
 
-          fetch('/resources/update_video_progress/', {
+          fetch('/courses/update_video_progress/', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',
