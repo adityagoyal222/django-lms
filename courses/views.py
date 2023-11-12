@@ -128,6 +128,10 @@ class CourseDetail(generic.DetailView):
             # Create a list to store chapter information including completion status
             chapters_with_completion = []
 
+            # create a list of completed courses
+            completed_courses = []
+            
+
             # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
             for chapter in chapters:
                 lessons = Lesson.objects.filter(chapter=chapter)
@@ -144,10 +148,28 @@ class CourseDetail(generic.DetailView):
                 if is_completed:
                     chapters_with_completion.append(chapter_info)
 
+            # Check if the total number of chapters equals the number of completed chapters for each course
+            total_chapters = Chapter.objects.filter(course=course).count()
+
+            completed_chapters_count = sum(1 for chapter_info in chapters_with_completion if chapter_info['is_completed'])
+            print(f"Course: {course}, Total Chapters: {total_chapters}, Completed Chapters: {completed_chapters_count}")
+
+            if total_chapters == completed_chapters_count:
+                completed_courses.append(course)
+
+            print("Completed Courses:", completed_courses)
+                   
+
             print("Chapters with completion:", chapters_with_completion)
                 
             completed_quizzes = self.request.user.completed_quizzes(course)
-          
+
+            # calculate if a course is complete or not if the total_lessons + total_quizes == the sum of completed lessons + completed quizes          
+            if total_lessons + total_quizzes == completed_lessons + completed_quizzes:
+                completion_status = True
+            else:
+                completion_status = False
+            print("Completion Status:", completion_status)
              
             completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
             print("Completion Percentage:", completion_percentage)
@@ -184,7 +206,8 @@ class CourseDetail(generic.DetailView):
         # lesson_count
         context['lesson_count'] = lesson_count
         context['chapters_with_completion'] = chapters_with_completion
-
+        context['completion_status'] = completion_status
+        context['completed_courses'] = completed_courses
         return context
 
 
