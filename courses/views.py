@@ -88,13 +88,18 @@ class CourseDetail(generic.DetailView):
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
+            # get the count of lessons that exist in each chapter
+            lesson_count = lessons.count()
             chapters_with_lessons.append((chapter, lessons))
             
             quizzes = Quiz.objects.filter(chapter=chapter)
             chapters_with_lessons_and_quizzes[chapter] = {
                 'lessons': lessons,
                 'quizzes': quizzes,
+                'lesson_count': lesson_count,
             }
+
+            print("Lesson Count: ", lesson_count)
             
 
             
@@ -120,6 +125,26 @@ class CourseDetail(generic.DetailView):
             completed_chapter_ids = [completed_lesson.lesson.chapter.id for completed_lesson in completed_lessons1]
             print("Chapter IDs completed:", completed_chapter_ids)
 
+            # Create a list to store chapter information including completion status
+            chapters_with_completion = []
+
+            # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
+            for chapter in chapters:
+                lessons = Lesson.objects.filter(chapter=chapter)
+                lesson_count = lessons.count()
+
+                is_completed = chapter.id in completed_chapter_ids and completed_chapter_ids.count(chapter.id) == lesson_count
+
+                chapter_info = {
+                    'chapter_id': chapter.id,
+                    'lessons': lessons,
+                    'is_completed': is_completed,
+                }
+
+                if is_completed:
+                    chapters_with_completion.append(chapter_info)
+
+            print("Chapters with completion:", chapters_with_completion)
                 
             completed_quizzes = self.request.user.completed_quizzes(course)
           
@@ -156,6 +181,10 @@ class CourseDetail(generic.DetailView):
         context['completed_quizzes'] = completed_quizzes
         context['completion_percentage'] = completion_percentage
         context['completed_chapter_ids'] = completed_chapter_ids
+        # lesson_count
+        context['lesson_count'] = lesson_count
+        context['chapters_with_completion'] = chapters_with_completion
+
         return context
 
 

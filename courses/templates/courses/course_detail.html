@@ -36,14 +36,12 @@
         {% for lesson in content.lessons %}
         
         {% if lesson.video %}
-        <p class="text-gray-700">Watch this</p>
+        <p class="text-gray-700 text-2xl">Watch this</p>
         <div class="mt-2">
             <div class="lesson-video-container">
-            <div id="text-gray-700"> {{ lesson.video }}</div>
-            <div id="player{{ lesson.id }}"></div>
-            </div>
-            
-            
+                <div id="text-red-700"> {{ lesson.video }}</div>
+                <div id="player{{ lesson.id }}"></div>
+            </div>   
         </div>
         {% endif %}
 
@@ -52,8 +50,8 @@
             <div class="mt-2 text-gray-700">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
-                <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}">
+                <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer {% if lesson.id in completed_lesson_ids %}cursor-not-allowed opacity-20 hover:cursor-not-allowed hover:bg-gray-500{% endif %}"
+                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}" {% if lesson.id in completed_lesson_ids %}disabled{% endif %}>
                 Mark as Read
                 </button>
                 {% endif %}
@@ -127,8 +125,7 @@
                     <p class="mb-1">
                         Submission: {{ resource.resource_file.name }}
                         <a href="{{ resource.resource_file.url }}"
-                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline"
-                            download>Download</a>
+                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline">Download</a>
                     </p>
                     {% if user.id == course.teacher.id %}
                         <small><a href="{% url 'resources:delete' pk=resource.pk %}"
