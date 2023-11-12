@@ -934,6 +934,10 @@ video {
   height: 100vh;
 }
 
+.h-\[950px\] {
+  height: 950px;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1701,6 +1705,16 @@ video {
 .text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
+}
+
+.text-red-300 {
+  --tw-text-opacity: 1;
+  color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+
+.text-red-900 {
+  --tw-text-opacity: 1;
+  color: rgb(127 29 29 / var(--tw-text-opacity));
 }
 
 .underline {
