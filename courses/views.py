@@ -147,7 +147,13 @@ class CourseDetail(generic.DetailView):
             print("Chapters with completion:", chapters_with_completion)
                 
             completed_quizzes = self.request.user.completed_quizzes(course)
-          
+
+            # calculate if a course is complete or not if the total_lessons + total_quizes == the sum of completed lessons + completed quizes          
+            if total_lessons + total_quizzes == completed_lessons + completed_quizzes:
+                completion_status = True
+            else:
+                completion_status = False
+            print("Completion Status:", completion_status)
              
             completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
             print("Completion Percentage:", completion_percentage)
@@ -184,7 +190,7 @@ class CourseDetail(generic.DetailView):
         # lesson_count
         context['lesson_count'] = lesson_count
         context['chapters_with_completion'] = chapters_with_completion
-
+        context['completion_status'] = completion_status
         return context
 
 

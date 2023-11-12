@@ -157,7 +157,11 @@
                     {% if user in course.students.all %}
                         <li class="course-item pb-4 border-b text-cyan-950">
                             <div class="flex flex-row space-x-2">
-                                <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" 
+                                {% if completion_status %}
+                                    checked
+                                {% endif %}
+                                />
                                 <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold items-center hover:text-yellow-400 hover:no-underline text-lg">{{ course }}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-6 w-6 text-cyan-950 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
