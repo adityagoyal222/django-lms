@@ -36,14 +36,12 @@
         {% for lesson in content.lessons %}
         
         {% if lesson.video %}
-        <p class="text-gray-700">Watch this</p>
+        <p class="text-gray-700 text-2xl">Watch this</p>
         <div class="mt-2">
             <div class="lesson-video-container">
-            <div id="text-gray-700"> {{ lesson.video }}</div>
-            <div id="player{{ lesson.id }}"></div>
-            </div>
-            
-            
+                <div id="text-red-700"> {{ lesson.video }}</div>
+                <div id="player{{ lesson.id }}"></div>
+            </div>   
         </div>
         {% endif %}
 
@@ -127,8 +125,7 @@
                     <p class="mb-1">
                         Submission: {{ resource.resource_file.name }}
                         <a href="{{ resource.resource_file.url }}"
-                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline"
-                            download>Download</a>
+                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline">Download</a>
                     </p>
                     {% if user.id == course.teacher.id %}
                         <small><a href="{% url 'resources:delete' pk=resource.pk %}"
