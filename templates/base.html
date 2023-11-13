@@ -138,7 +138,7 @@
         <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
             <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
             <div class="bg-white w-[90%] mx-auto h-2 rounded-md progress">
-                <div class="bg-yellow-500 progress-bar" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%; height: auto" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             {% if completion_percentage >= 100 %}
@@ -369,7 +369,7 @@
                 <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
                 <p>Click the "Generate Certificate" button to access your Certificate.</p>
                 <div class="flex mx-auto space-x-2 mt-[120px]">
-                    <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Generate Certificate</button>
+                    <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Claim Certificate</button>
                     <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
                 </div>
             </div>
