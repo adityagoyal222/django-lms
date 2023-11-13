@@ -676,10 +676,6 @@ video {
   margin: 0.75rem;
 }
 
-.m-\[150px\] {
-  margin: 150px;
-}
-
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -932,6 +928,10 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-1 {
+  height: 0.25rem;
 }
 
 .min-h-screen {
@@ -1681,6 +1681,11 @@ video {
 .text-red-700 {
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity));
+}
+
+.text-red-900 {
+  --tw-text-opacity: 1;
+  color: rgb(127 29 29 / var(--tw-text-opacity));
 }
 
 .text-white {
