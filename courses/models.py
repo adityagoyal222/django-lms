@@ -30,7 +30,7 @@ class Chapter(models.Model):
     def __str__(self):
         return self.chapter_name
     class Meta:
-        ordering = ['created_at']
+        ordering = ['chapter_name']
 
 class Lesson(models.Model):
     lesson_name = models.CharField(max_length=200)

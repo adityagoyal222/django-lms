@@ -91,25 +91,25 @@
             {% if user.user_type == 1 and user.is_authenticated %}
             <!-- New section for completed courses -->
             <h3 class="font-sans text-2xl text-cyan-950 mt-5">My Achievements</h3>
-            {% for course in completed_courses %}
+            {% comment %} {% for course in completed_courses %} {% endcomment %}
             <div class="bg-green-500 m-2 shadow-md rounded-md" style="width: 20rem">
                 <div class="card-image">
                   <!-- Place your image here -->
                   <img src="{% static 'django_lms/images/achievement_image.jpg' %}" alt="Achievement Image" class="w-full h-50 object-cover rounded-t-md" />
                 </div>
                 <div class="card-body p-4">
-                    {% comment %} {% for completed_course in completed_courses %} {% endcomment %}
+                    {% for completed_course in completed_courses %}
                         <h5 class="card-title text-red-900">{{ course.course_name }}</h5>
                         <p>Debug: {{ course }}</p>
-                    {% comment %} {% endfor %} {% endcomment %}
+                    {% endfor %}
                   <p class="card-text">
                     Congratulations! You have successfully completed this course.
                   </p>
                   <!-- Additional details or buttons can be added here -->
-                  <a href="{% url 'courses:detail' pk=course.pk %}" class="text-blue-500 hover:underline">View Course</a>
+                  {% comment %} <a href="{% url 'courses:detail' pk=course.pk %}" class="text-blue-500 hover:underline">View Course</a> {% endcomment %}
                 </div>
             </div>
-        {% endfor %}
+        {% comment %} {% endfor %} {% endcomment %}
         {% endif %}
             {% endif %}
         {% else %}
