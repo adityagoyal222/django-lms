@@ -1,4 +1,6 @@
 from typing import Any, Dict
+from django.forms.models import BaseModelForm
+from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
@@ -10,6 +12,7 @@ from django.utils import timezone
 import os
 from django.conf import settings
 from django.forms import modelformset_factory
+from django.db import transaction, IntegrityError
 
 # from django.contrib import messages
 from django.views import generic
@@ -284,10 +287,19 @@ class QuizAnswerView(LoginRequiredMixin,generic.FormView):
     def form_valid(self, form):
         quiz = self.get_quiz()
         score = self.calculate_score(form)
-        submission = quiz.quizsubmission_set.create(
-            student=self.request.user,
-            score=score
-        )
+        try:
+            # Try to create a new QuizSubmission instance
+            with transaction.atomic():
+                submission = quiz.quizsubmission_set.create(
+                    student=self.request.user,
+                    score=score
+                )
+        except IntegrityError:
+            # If IntegrityError occurs, it means the combination (user, quiz) already exists
+            # Retrieve the existing instance and update the score
+            submission = QuizSubmission.objects.get(student=self.request.user, quiz=quiz)
+            submission.score = score
+            submission.save()
         self.kwargs['submission_id'] = submission.id
         return super().form_valid(form)
     

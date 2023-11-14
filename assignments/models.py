@@ -20,7 +20,6 @@ class Assignment(models.Model):
 
     def get_absolute_url(self):
         return reverse('assignments:detail', kwargs={'pk': self.pk})
-from django.db import models
 
 class Quiz(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -54,6 +53,9 @@ class QuizSubmission(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.quiz.quiz_title} - Score: {self.score}"
+    class Meta:
+        unique_together = ('student', 'quiz')
+    
 class SubmitAssignment(models.Model):
     author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200, blank=False)

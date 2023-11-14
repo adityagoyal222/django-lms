@@ -8,7 +8,7 @@
 {% endblock title_name %}
 
 {% block main_content %}
-<div class="mt-[50px] max-w-[75%] text-cyan-950 h-[830px] overflow-y-auto relative">
+<div class="ml-[50px] max-w-[75%] text-cyan-950 h-[830px] overflow-y-auto relative">
     <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }}</h1>
     <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
@@ -322,5 +322,147 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     
+    
 </script>
+
+<script>
+  // Check the completion percentage
+  var completionPercentage = {{ completion_percentage }};
+  console.log("Completion Percentage:", completionPercentage);
+  
+  // Show the congratulations popup if completion percentage is 100
+  if (completionPercentage === 100) {
+      var popup = document.getElementById("congratulationsPopup");
+      popup.classList.remove("hidden");
+
+      // Close the popup when the close button is clicked
+      var closePopup = document.getElementById("closePopup");
+      closePopup.onclick = function () {
+          popup.classList.add("hidden");
+      };
+
+      // Close the popup when the user clicks outside of it
+      window.onclick = function (event) {
+          if (event.target === popup) {
+              popup.classList.add("hidden");
+          }
+      }; 
+  }
+</script>
+
+<!-- Include your JavaScript file that uses lessonData -->
+{% comment %} <script src="https://www.youtube.com/iframe_api"></script> {% endcomment %}
+{% comment %} <script src="{% static 'js/player.js' %}"></script>
+function onYouTubeIframeAPIReady() {
+    initializeYouTubePlayers();
+    console.log("Youtube API Ready");
+    console.log(players);
+}
+<script src="https://www.youtube.com/iframe_api"></script> {% endcomment %}
+<script>
+  console.log("Before loading YouTube API");
+
+  // Load YouTube API
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  function onYouTubeIframeAPIReady() {
+      console.log("YouTube API Ready");
+
+      // Define lessonData as a JavaScript variable and populate it with data from Django template
+      var lessonData = [
+          {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+          {% for lesson in content.lessons %}
+          {
+              id: '{{ lesson.id }}',
+              height: '360', // Set the desired video height
+              width: '640',  // Set the desired video width
+              videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+          },
+          {% endfor %}
+          {% endfor %}
+      ];
+
+      console.log("Lesson Data:", lessonData);
+
+      var players = {}; // This object will store all of the YouTube players
+      // Function to initialize YouTube players
+      function initializeYouTubePlayers() {
+        for (var i = 0; i < lessonData.length; i++) {
+            var lesson = lessonData[i];
+            players[lesson.id] = new YT.Player('player' + lesson.id, {
+                height: lesson.height,
+                width: lesson.width,
+                videoId: lesson.videoId,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+    }
+    console.log("Players:", players);
+    console.log("Before initializeYouTubePlayers");
+    initializeYouTubePlayers();
+    console.log("After initializeYouTubePlayers");
+    console.log("Players object:", players);
+
+    // Function to update progress for a specific lesson's video
+function updateLessonProgress(lessonId) {
+  const player = players[lessonId];
+  if (player) {
+      const currentTime = player.getCurrentTime();
+      const duration = player.getDuration();
+      const percentage = (currentTime / duration) * 100;
+
+      // Check if the percentage is 70% or 100% before making the request
+      if (percentage === 70 || percentage === 100) {
+          // Send an AJAX POST request to update the progress
+          const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+          fetch('/courses/update_video_progress/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'X-CSRFToken': csrfToken,
+              },
+              body: `lesson_id=${lessonId}&progress=${percentage}`,
+          })
+              .then((response) => response.json())
+              .then((data) => {
+                  console.log(data.message); // Log the response message
+              })
+              .catch((error) => {
+                  console.error('Error:', error);
+              });
+      }
+  }
+}
+
+// Function to handle when a lesson's video player is ready
+function onPlayerReady(event) {
+// event.target.playVideo();
+  const lessonId = event.target.getVideoData().video_id;
+  startProgressTracking(lessonId);
+}
+
+// Function to start progress tracking for a specific lesson's video
+function startProgressTracking(lessonId) {
+  const progressInterval = setInterval(() => {
+      updateLessonProgress(lessonId);
+  }, 10000); // Update progress every 10 seconds (adjust as needed)
+}
+
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED) {
+      const lessonId = event.target.getVideoData().video_id;
+      clearInterval(progressInterval); // Stop progress tracking when the video ends
+      updateLessonProgress(lessonId); // Ensure progress is 100% when the video ends
+  }
+}
+  }
+  </script>
+  
 {% endblock main_content %}

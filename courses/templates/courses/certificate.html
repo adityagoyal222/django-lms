@@ -1,0 +1,135 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400|Cinzel:700|Manrope:400|Poppins:400|Alex+Brush:400|Inter:700" rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'django_lms/css/global_cert.css' %}" />
+    <link rel="stylesheet" href="{% static 'django_lms/css/style_cert.css' %}" />
+  </head>
+  <body>
+    <div class="course-professional">
+      <div class="overlap-wrapper">
+        <div class="overlap">
+          <img class="whatsapp-image" src="{% static 'django_lms/images/whatsapp-image-2023-09-28-at-9-16-1.png' %}" />
+          <div class="group">
+            <div class="overlap-group">
+              <div class="rectangle"></div>
+              <div class="div"></div>
+              <img class="img" src="{% static 'django_lms/images/rectangle-423.svg' %}" />
+              <img class="rectangle-2" src="{% static 'django_lms/images/rectangle-424.svg' %}" />
+              <div class="ellipse-wrapper"><div class="ellipse"></div></div>
+              <div class="div-wrapper"><div class="ellipse"></div></div>
+              <div class="group-2"><div class="ellipse"></div></div>
+              <div class="group-3"><div class="ellipse"></div></div>
+            </div>
+          </div>
+          <img class="group-4" src="{% static 'django_lms/images/group-329.png' %}"/>
+          <div class="group-5">
+            <div class="overlap-2">
+              <div class="overlap-3">
+              
+                <div class="text-wrapper">{{ context.issue_date }}</div>
+                <div class="overlap-group-wrapper">
+                  <div class="overlap-4">
+                    <div class="group-6">
+                      <div class="overlap-group-2">
+                        <div class="ellipse-2"></div>
+                        <div class="ellipse-3"></div>
+                        <div class="ellipse-4"></div>
+                        <div class="text-wrapper-2">Verified Certificate</div>
+                        <img class="element" src="{% static 'django_lms/images/2023.png' %}" />
+                      </div>
+                    </div>
+                    <div class="group-7">
+                      <img class="star" src="{% static 'django_lms/images/star-6.svg' %}" />
+                      <img class="star-2" src="{% static 'django_lms/images/star-6.svg' %}" />
+                      <img class="star-3" src="{% static 'django_lms/images/star-7.svg' %}"/>
+                      <img class="star-4" src="{% static 'django_lms/images/star-6.svg' %}"/>
+                      <img class="star-5" src="{% static 'django_lms/images/star-7.svg' %}"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="overlap-5">
+                <div class="certificate-of">CERTIFICATE<br />OF ACHIEVEMENT</div>
+                <div class="text-wrapper-3">Certificate is awarded to</div>
+                <div class="group-8">
+                  <div class="overlap-group-3">
+                    <div class="text-wrapper-4">For successfully completing</div>
+                    <div class="decentralization">DECENTRALIZATION USING BLOCKCHAIN</div>
+                  </div>
+                </div>
+                <div class="text-wrapper-5">{{ context.name }}</div>
+                <img class="group-9" src="{% static 'django_lms/images/group-323.png' %}"/>
+                <div class="group-10">
+                  <div class="group-11">
+                    <div class="overlap-6">
+                      <div class="overlap-group-4">
+                        <div class="text-wrapper-6">Paul McOlaka</div>
+                        <img class="vector" src="{% static 'django_lms/images/vector-200.svg' %}"/>
+                        <img class="vector-2" src="{% static 'django_lms/images/vector-202.svg' %}" />
+                      </div>
+                      <div class="text-wrapper-7">Executive Director</div>
+                    </div>
+                  </div>
+                  <div class="group-12">
+                    <div class="overlap-7">
+                      <div class="overlap-8">
+                        <p class="p">Director Strategy and Quality Assurance</p>
+                        <div class="text-wrapper-8">Dr. Julian Rowa</div>
+                        <img class="vector-3" src="{% static 'django_lms/images/vector-203.svg' %}" />
+                      </div>
+                      <div class="overlap-9">
+                        <img class="vector-4" src="{% static 'django_lms/images/vector-201.svg' %}" />
+                        <img class="vector-5" src="{% static 'django_lms/images/vector-204.svg' %}" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="group-wrapper">
+                <div class="group-13">
+                  <img class="star" src="{% static 'django_lms/images/star-6-1.svg' %}" />
+                  <img class="star-2" src="{% static 'django_lms/images/star-6-1.svg' %}" />
+                  <img class="star-3" src="{% static 'django_lms/images/star-7-1.svg' %}" />
+                  <img class="star-4" src="{% static 'django_lms/images/star-6-1.svg' %}" />
+                  <img class="star-5" src="{% static 'django_lms/images/star-7-1.svg' %}" />
+                </div>
+              </div>
+            </div>
+            <p class="text-wrapper-9">Certificate ID: {{ context.certificate_id }}</p>
+            <img class="logo" src="{% static 'django_lms/images/logo-1.png' %}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button id="download-pdf" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+        Download as PDF
+      </button>
+      <button id="download-jpeg" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Download as JPEG
+      </button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+      document.getElementById('download-pdf').addEventListener('click', function () {
+        const elementToConvert = document.querySelector('.course-professional');
+
+        // Set the page orientation to landscape
+        html2pdf().set({
+          orientation: 'landscape'
+        });
+
+        // Convert the element to PDF and save it
+        html2pdf().from(elementToConvert).save('webpage.pdf');
+    });
+    
+      </script>
+      
+  </body>
+
+</html>
