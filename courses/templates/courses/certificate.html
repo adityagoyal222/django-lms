@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'django_lms/css/style_cert.css' %}" />
   </head>
   <body class="mx-auto flex items-center justify-center flex-col mt-[100px] p-2">
-    <div class="course-professional">
+    <div  class="course-professional" id="certificate">
       <div class="overlap-wrapper">
         <div class="overlap">
           <img class="whatsapp-image" src="{% static 'django_lms/images/whatsapp-image-2023-09-28-at-9-16-1.png' %}" />
@@ -64,7 +64,7 @@
                     <div class="decentralization">DECENTRALIZATION USING BLOCKCHAIN</div>
                   </div>
                 </div>
-                <div class="text-wrapper-5">{{ context.name }}</div>
+                <div class="text-wrapper-5 flex mx-auto items-center justify-center">{{ context.name }}</div>
                 <img class="group-9" src="{% static 'django_lms/images/group-323.png' %}"/>
                 <div class="group-10">
                   <div class="group-11">
@@ -102,7 +102,8 @@
                 </div>
               </div>
             </div>
-            <p class="text-wrapper-9">Certificate ID: {{ context.certificate_id }}</p>
+            <p class="text-wrapper-9 flex mx-auto flex-col items-center justify-center w-full">Certificate ID: <span>{{ context.certificate_id }}</span></p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data=http://0.0.0.0:8080/verify-certificate/?certificate_id={{ context.certificate_id|urlize }}" alt="QR Code" class="h-[80px] relative mt-[580px] ml-[800px]">
             <img class="logo" src="{% static 'django_lms/images/logo-1.png' %}" />
           </div>
         </div>
@@ -117,19 +118,58 @@
       </button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/js/jspdf/2.5.1/jspdf.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta3/html2canvas.min.js"></script>
     <script>
       document.getElementById('download-pdf').addEventListener('click', function () {
-        const elementToConvert = document.querySelector('.course-professional');
-
-        // Set the page orientation to landscape
-        html2pdf().set({
-          orientation: 'landscape'
-        });
-
-        // Convert the element to PDF and save it
-        html2pdf().from(elementToConvert).save('webpage.pdf');
-    });
+          const elementToConvert = document.querySelector('.course-professional');
+  
+          // Set the page orientation to landscape
+          const options = {
+              //margin: 1, // Optional: Adjust the margin as needed
+              image:{ type: 'jpeg', quality: 0.98 },
+              html2canvas:  { scale: 2, width: 1173},
+              jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+          };
+  
+          // Convert the element to PDF and save it
+          html2pdf().from(elementToConvert).set(options).save('webpage.pdf');
+      });
+      </script>
+      <script>
+        document.getElementById('download-jpeg').addEventListener('click', function () {
+            const elementToConvert = document.querySelector('.course-professional');
     
+            html2canvas(elementToConvert).then(canvas => {
+                // Convert canvas to JPEG image data URL
+                const imageDataURL = canvas.toDataURL('image/jpeg');
+    
+                // Create a link element and trigger a download
+                const link = document.createElement('a');
+                link.href = imageDataURL;
+                link.download = 'webpage.jpg';
+                link.click();
+            });
+        });
+    </script>
+  </script>
+      <script>
+        const downloadButton = document.getElementById('download-pdf2');
+        const divContent = document.querySelector('.course-professional');
+      
+        downloadButton.addEventListener('click', () => {
+          html2canvas(divContent).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+      
+            const doc = new jsPDF();
+            const imgWidth = doc.internal.pageSize.width;
+            const imgHeight = doc.internal.pageSize.height;
+            doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      
+            doc.save('course_professional.pdf');
+          });
+        });
       </script>
       
   </body>

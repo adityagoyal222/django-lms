@@ -33,3 +33,17 @@ def send_certificate_request(name, issuer, unixtime):
     else:
         # Handle the error and return an error response
         return {"error": f"API request failed with status code {response.status_code}"}
+
+def verify_certificate(certificate_id):
+    # Define the URL of the FastAPI endpoint
+    api_endpoint_url = 'http://0.0.0.0:8080/verify-certificate'
+
+    response = requests.post(api_endpoint_url, json={'certificate_id': certificate_id})
+
+    if response.status_code == 200:
+        # The response content is available in response.json()
+        certificate_response = response.json()
+        return certificate_response
+    else:
+        # Handle the error and return an error response
+        return {"error": f"API request failed with status code {response.status_code}"}
