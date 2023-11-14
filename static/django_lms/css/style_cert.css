@@ -605,13 +605,12 @@
 .course-professional .text-wrapper-9 {
   position: absolute;
   top: 685px;
-  left: 266px;
   transform: rotate(0deg);
   font-family: "Poppins", Helvetica;
   font-weight: 400;
   color: #fadb83b2;
   font-size: 16px;
-  text-align: center;
+  
   letter-spacing: 0;
   line-height: 19.2px;
   white-space: nowrap;

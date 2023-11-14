@@ -17,7 +17,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 import datetime
 import calendar
-from .cert_request import send_certificate_request
+from .cert_request import send_certificate_request, verify_certificate
 import json
 from django.views import View
 from django.http import JsonResponse
@@ -25,6 +25,7 @@ from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 import mammoth
 from django.views.decorators.csrf import csrf_protect
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 import io
 from django.db import IntegrityError
@@ -243,7 +244,8 @@ class CourseDetail(generic.DetailView):
             # lesson_count
             context['lesson_count'] = lesson_count
             context['chapters_with_completion'] = chapters_with_completion
-
+            context['completion_status'] = completion_status
+            context['completed_courses'] = completed_courses
         return context
 
 
@@ -372,8 +374,7 @@ def certificate_view(request, course_id):
             "certificate_id": certificate_id
         }
         return render(request, 'courses/certificate.html', {'context': context})
-    except Certificate.DoesNotExist:
-        # Certificate does not exist, generate a new one
+    except ObjectDoesNotExist:
         first_name = user.first_name
         last_name = user.last_name
         full_name = first_name + ' ' + last_name
@@ -394,10 +395,20 @@ def certificate_view(request, course_id):
             # Store the certificate in the database
             new_certificate = Certificate(user=user, course=course, name=certificate_data['name'], issuer=certificate_data["issuer"], issued_at=certificate_data["issue_date"], certificate_id=certificate_data["certificate_id"])
             new_certificate.save()
+            
             return render(request, 'courses/certificate.html', {'context': certificate_data})
         else:
             return render(request, 'courses/certificate.html')
 
+def verify_certificate(request):
+    certificate_id = request.POST.get('certificate_id')
+
+    if certificate_id:
+        certificate_response = verify_certificate(certificate_id)
+        return certificate_response
+    else:
+        return JsonResponse({"error": "Invalid request. Certificate ID is missing."}, status=400)
+    
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
         course = get_object_or_404(Course, pk=course_id)
