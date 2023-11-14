@@ -27,6 +27,8 @@ import mammoth
 from django.views.decorators.csrf import csrf_protect
 from django.core.files.base import ContentFile
 import io
+from django.db import IntegrityError
+from django.http import Http404
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -97,7 +99,12 @@ class CourseDetail(generic.DetailView):
     model = Course
     
     def get_context_data(self, **kwargs):
-        course = Course.objects.get(pk=self.kwargs['pk']) 
+        try:
+            course = get_object_or_404(Course, pk=self.kwargs['pk'])
+        except Http404:
+            # Handle the case where the course does not exist
+            messages.error(self.request, 'Course not found.')
+            return HttpResponseRedirect(reverse('courses:list')) 
         
         # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
@@ -209,8 +216,12 @@ class CourseDetail(generic.DetailView):
             # Check if the user has already completed the course
             if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
-                completedcourse = CompletedCourse(user=self.request.user, course=course)
-                completedcourse.save()
+                try:
+                    completedcourse = CompletedCourse(user=self.request.user, course=course)
+                    completedcourse.save()
+                except IntegrityError:
+                    # Handle the case where the user has already completed the course
+                    messages.warning(self.request, 'You have already completed this course.')
             
 
         context = super(CourseDetail, self).get_context_data(**kwargs)
@@ -238,6 +249,17 @@ class CourseDetail(generic.DetailView):
 
 class ListCourse(generic.ListView):
     model = Course
+    template_name = 'courses/course_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course_list = Course.objects.all()
+
+        if not course_list:
+            messages.info(self.request, 'No courses available at the moment.')
+
+        return context
+
 
 class EnrollCourse(LoginRequiredMixin, generic.RedirectView):
 
@@ -334,14 +356,12 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
         
 def certificate_view(request, course_id):
     user = request.user
-    course = Course.objects.get(pk=course_id)
+    course = get_object_or_404(Course, pk=course_id)
 
-    existing_certificate = Certificate.objects.get(user=user, course=course)
-    if existing_certificate:
-        # Certificate already exists, return it
+    try:
+        existing_certificate = Certificate.objects.get(user=user, course=course)
         name = existing_certificate.name
         issuer_date = existing_certificate.issued_at
-        course = existing_certificate.course
         issuer = existing_certificate.issuer
         certificate_id = existing_certificate.certificate_id
         context = {
@@ -350,9 +370,10 @@ def certificate_view(request, course_id):
             "course": course,
             "issuer": issuer,
             "certificate_id": certificate_id
-            }
+        }
         return render(request, 'courses/certificate.html', {'context': context})
-    else:
+    except Certificate.DoesNotExist:
+        # Certificate does not exist, generate a new one
         first_name = user.first_name
         last_name = user.last_name
         full_name = first_name + ' ' + last_name
@@ -365,11 +386,12 @@ def certificate_view(request, course_id):
             "course": course_name,
             "issuer": issuer,
             "issuer_date": unixtime
-            }
+        }
+
         if all(value is not None for value in certificate_response.values()):
             certificate_data = send_certificate_request(certificate_response["name"], certificate_response["issuer"], certificate_response["issuer_date"])
-            
-             # Store the certificate in the database
+
+            # Store the certificate in the database
             new_certificate = Certificate(user=user, course=course, name=certificate_data['name'], issuer=certificate_data["issuer"], issued_at=certificate_data["issue_date"], certificate_id=certificate_data["certificate_id"])
             new_certificate.save()
             return render(request, 'courses/certificate.html', {'context': certificate_data})

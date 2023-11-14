@@ -1,16 +1,17 @@
 {% load static %}
+{% load static tailwind_tags %}
 
 <!DOCTYPE html>
 <html>
   <head>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
-    
+    {% tailwind_css %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400|Cinzel:700|Manrope:400|Poppins:400|Alex+Brush:400|Inter:700" rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'django_lms/css/global_cert.css' %}" />
     <link rel="stylesheet" href="{% static 'django_lms/css/style_cert.css' %}" />
   </head>
-  <body>
+  <body class="mx-auto flex items-center justify-center flex-col mt-[100px] p-2">
     <div class="course-professional">
       <div class="overlap-wrapper">
         <div class="overlap">
@@ -107,13 +108,14 @@
         </div>
       </div>
     </div>
-    <div>
-      <button id="download-pdf" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded">
+    <div class="mt-5 space-x-5">
+      <button id="download-pdf" class="bg-cyan-950 hover:bg-yellow-500 p-3 text-white font-bold rounded-md">
         Download as PDF
       </button>
-      <button id="download-jpeg" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+      <button id="download-jpeg" class="bg-cyan-950 hover:bg-yellow-500 text-white font-bold p-3 rounded-md">
         Download as JPEG
       </button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script>
       document.getElementById('download-pdf').addEventListener('click', function () {
