@@ -17,7 +17,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 import datetime
 import calendar
-from .cert_request import send_certificate_request
+from .cert_request import send_certificate_request, verify_certificate
 import json
 from django.views import View
 from django.http import JsonResponse
@@ -25,6 +25,7 @@ from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
 import mammoth
 from django.views.decorators.csrf import csrf_protect
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 import io
 
@@ -152,7 +153,7 @@ class CourseDetail(generic.DetailView):
 
                 # Create a list to store chapter information including completion status
                 chapters_with_completion = []
-
+                completed_courses=[]
                 # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
                 for chapter in chapters:
                     lessons = Lesson.objects.filter(chapter=chapter)
@@ -168,10 +169,23 @@ class CourseDetail(generic.DetailView):
 
                     if is_completed:
                         chapters_with_completion.append(chapter_info)
+                
+                total_chapters =Chapter.objects.filter(course=course).count()
+                completed_chapters_count = sum(1 for chapter_info in chapters_with_completion if chapter_info['is_completed'])
+                print("Completed Chapters Count:", completed_chapters_count)
+
+                if total_chapters == completed_chapters_count:
+                    completed_courses.append(course)
 
                 print("Chapters with completion:", chapters_with_completion)
                     
                 completed_quizzes = self.request.user.completed_quizzes(course)
+
+                if total_lessons + total_quizzes == completed_lessons + completed_quizzes:
+                    completion_status = True
+                else:
+                    completion_status = False
+                print("Completion Status:", completion_status)
             
                 
                 completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
@@ -214,7 +228,8 @@ class CourseDetail(generic.DetailView):
             # lesson_count
             context['lesson_count'] = lesson_count
             context['chapters_with_completion'] = chapters_with_completion
-
+            context['completion_status'] = completion_status
+            context['completed_courses'] = completed_courses
         return context
 
 
@@ -317,10 +332,8 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
 def certificate_view(request, course_id):
     user = request.user
     course = Course.objects.get(pk=course_id)
-
-    existing_certificate = Certificate.objects.get(user=user, course=course)
-    if existing_certificate:
-        # Certificate already exists, return it
+    try:
+        existing_certificate = Certificate.objects.get(user=user, course=course)
         name = existing_certificate.name
         issuer_date = existing_certificate.issued_at
         course = existing_certificate.course
@@ -334,7 +347,7 @@ def certificate_view(request, course_id):
             "certificate_id": certificate_id
             }
         return render(request, 'courses/certificate.html', {'context': context})
-    else:
+    except ObjectDoesNotExist:
         first_name = user.first_name
         last_name = user.last_name
         full_name = first_name + ' ' + last_name
@@ -354,10 +367,20 @@ def certificate_view(request, course_id):
              # Store the certificate in the database
             new_certificate = Certificate(user=user, course=course, name=certificate_data['name'], issuer=certificate_data["issuer"], issued_at=certificate_data["issue_date"], certificate_id=certificate_data["certificate_id"])
             new_certificate.save()
+            
             return render(request, 'courses/certificate.html', {'context': certificate_data})
         else:
             return render(request, 'courses/certificate.html')
 
+def verify_certificate(request):
+    certificate_id = request.POST.get('certificate_id')
+
+    if certificate_id:
+        certificate_response = verify_certificate(certificate_id)
+        return certificate_response
+    else:
+        return JsonResponse({"error": "Invalid request. Certificate ID is missing."}, status=400)
+    
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
         course = get_object_or_404(Course, pk=course_id)

@@ -47,7 +47,7 @@
 
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700">
+            <div class="mt-2 text-xl font-sans text-cyan-950">
                 {{ lesson.lesson_content|convert_markdown|safe }}
                 {% if user.user_type == 1 %}
                 <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer {% if lesson.id in completed_lesson_ids %}cursor-not-allowed opacity-20 hover:cursor-not-allowed hover:bg-gray-500{% endif %}"
@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>
+    /*
   // Check the completion percentage
   var completionPercentage = {{ completion_percentage }};
   console.log("Completion Percentage:", completionPercentage);
@@ -348,6 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
       }; 
   }
+  */
 </script>
 
 <!-- Include your JavaScript file that uses lessonData -->

@@ -138,7 +138,7 @@
         <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
             <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
             <div class="bg-white w-[90%] mx-auto h-2 rounded-md progress">
-                <div class="bg-yellow-500 progress-bar" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%; height: auto" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             {% if completion_percentage >= 100 %}
@@ -157,7 +157,11 @@
                     {% if user in course.students.all %}
                         <li class="course-item pb-4 border-b text-cyan-950">
                             <div class="flex flex-row space-x-2">
-                                <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full"
+                                {% if completion_status and course in completed_courses %}
+                                    checked
+                                {% endif %}
+                                />
                                 <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold items-center hover:text-yellow-400 hover:no-underline text-lg">{{ course }}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-6 w-6 text-cyan-950 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
@@ -358,19 +362,25 @@
             </div>
         </div>
         {% endif %}
-
-        {% comment %} <div id="popup" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-auto">
+       
+        <div id="popup" class="fixed z-50 inset-0 items-center justify-center bg-black bg-opacity-40 overflow-auto hidden">
             <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
                 <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
                 <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
                 <p>Click the "Generate Certificate" button to access your Certificate.</p>
                 <div class="flex mx-auto space-x-2 mt-[120px]">
-                    <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Generate Certificate</button>
+                    
+                     <a href="{% url 'courses:certificate' course_id=course.id %}">
+                        <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">
+                            Claim Certificate
+                        </button>
+                    </a> 
                     <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
                 </div>
             </div>
         </div>
-                 {% endcomment %}
+                 
+      
     
         
     <div class="content">
@@ -476,20 +486,31 @@
         });
     }
 
-    // Check if the user has completed the course and hasn't seen the pop-up
-{% comment %} if (completion_percentage >= 100 && !userHasSeenPopup) { {% endcomment %}
-{% comment %} function togglePopup() {
-    const popup = document.getElementById('popup');
-    const isOpen = popup.style.display === 'block';
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check completion status and percentage
+        var completionStatus = {% if completion_status %}true{% else %}false{% endif %};
+        var completionPercentage = {{ completion_percentage }};
 
-    if (isOpen) {
-        popup.style.display = 'none'; // Close the popup
-    } else {
-        popup.style.display = 'block'; // Open the popup
-    }
-} {% endcomment %}
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popup").style.display = "flex";
+        }
 
-// Call togglePopup to toggle the popup when needed
+        // Show the popup if completion status is true or completion percentage is 100
+        if (completionStatus || completionPercentage === 100) {
+            showPopup();
+        }
+
+        // Close the popup when clicking the "Close" button
+        document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("popup").style.display = "none";
+        });
+
+        // Add logic for "Generate Certificate" button if needed
+        document.getElementById("generateCertificate").addEventListener("click", function () {
+            // Add your logic to handle generating the certificate
+        });
+    });
 
 
     
