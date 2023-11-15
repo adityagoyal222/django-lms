@@ -69,12 +69,24 @@ function startProgressTracking(lessonId) {
     const progressInterval = setInterval(() => {
         updateLessonProgress(lessonId);
     }, 10000); // Update progress every 10 seconds (adjust as needed)
+
+    // Store the progressInterval in the players object
+    players[lessonId].progressInterval = progressInterval;
 }
 
+// Function to update progress for a specific lesson's video
+function updateLessonProgress(lessonId) {
+    const player = players[lessonId];
+    if (player) {
+        // ... (rest of your code remains the same)
+    }
+}
+
+// Function to handle player state changes
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.ENDED) {
         const lessonId = event.target.getVideoData().video_id;
-        clearInterval(progressInterval); // Stop progress tracking when the video ends
+        clearInterval(players[lessonId].progressInterval); // Stop progress tracking when the video ends
         updateLessonProgress(lessonId); // Ensure progress is 100% when the video ends
     }
 }

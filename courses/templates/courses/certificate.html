@@ -1,3 +1,4 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
 {% load static %}
 {% load static tailwind_tags %}
 
@@ -10,6 +11,11 @@
     <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400|Cinzel:700|Manrope:400|Poppins:400|Alex+Brush:400|Inter:700" rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'django_lms/css/global_cert.css' %}" />
     <link rel="stylesheet" href="{% static 'django_lms/css/style_cert.css' %}" />
+    {% comment %} {% block content %}
+    <header class="m-2 top-0">
+        <button class="bg-cyan-950 hover:bg-yellow-500 p-2 rounded-md text-gray-100" href="{% url 'detail' pk=context.course.pk %}">Back to Courses</button>
+    </header>
+    {% endblock %} {% endcomment %}
   </head>
   <body class="mx-auto flex items-center justify-center flex-col mt-[100px] p-2">
     <div  class="course-professional" id="certificate">

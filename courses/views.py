@@ -30,6 +30,7 @@ from django.core.files.base import ContentFile
 import io
 from django.db import IntegrityError
 from django.http import Http404
+from assignments import models
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -195,16 +196,37 @@ class CourseDetail(generic.DetailView):
 
             print("Chapters with completion:", chapters_with_completion)
                 
-            completed_quizzes = self.request.user.completed_quizzes(course)
+            # create a completed quiz ids list where once a quiz is completed its appended
+            completed_quizzes = []
+ 
+            # get the total number of quizzes for the course
+            total_quizzes = course.total_quizzes()
+            print("Total Quizzes:", total_quizzes)
+            # get the total number of completed quizzes for the user
+            completed_quizzes_count = len(completed_quizzes)
+            print("Completed Quizzes_count:", completed_quizzes_count)
+            # calculate the completion percentage
+            # completed_quizzes = self.request.user.completed_quizzes(course)
+
+            if total_quizzes == completed_quizzes_count:
+                pass
+            else:
+                 # Append Quiz instances or Quiz IDs to completed_quizzes
+                quizzes_not_completed = Quiz.objects.exclude(id__in=completed_quizzes)
+                completed_quizzes.extend(quizzes_not_completed.values_list('id', flat=True))
+            print("Completed Quizzes:", completed_quizzes)
+
+            completed_quizzes_count = len(completed_quizzes)
 
             # calculate if a course is complete or not if the total_lessons + total_quizes == the sum of completed lessons + completed quizes          
-            if total_lessons + total_quizzes == completed_lessons + completed_quizzes:
+            if total_lessons + total_quizzes == completed_lessons + completed_quizzes_count:
                 completion_status = True
             else:
                 completion_status = False
             print("Completion Status:", completion_status)
              
-            completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+            completion_percentage = round(((completed_lessons + completed_quizzes_count) / (total_lessons + total_quizzes)) * 100)
+            print("Completed Quizees Count:", completed_quizzes_count)
             print("Completion Percentage:", completion_percentage)
         else:
             completed_lessons = 0
@@ -234,11 +256,13 @@ class CourseDetail(generic.DetailView):
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        context['course_id'] = course.pk
         # context['course_id'] = course.pk
         if total_lessons > 0:
             context['completed_lesson_ids'] = completed_lesson_ids
             context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
             context['completed_quizzes'] = completed_quizzes
+            context['completed_quizzes_count'] = completed_quizzes_count
             context['completion_percentage'] = completion_percentage
             context['completed_chapter_ids'] = completed_chapter_ids
             # lesson_count
