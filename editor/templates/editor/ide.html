@@ -30,13 +30,27 @@
             {{ code }}
           {% endif %}
         </textarea> 
-          <div class="grid grid-cols-3 gap-2">
-            {% for language, label in form.fields.language.choices %}
-              <label class="flex items-center space-x-2">
-                <input type="radio" name="{{ form.language.name }}" value="{{ language }}" class="form-radio text-indigo-600">
-                <span class="text-gray-700">{{ label }}</span>
-              </label>
-            {% endfor %}
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-3 md:col-span-1 flex items-center space-x-2">
+            <label for="{{ form.language.id_for_label }}" class="text-gray-700">Language:</label>
+          </div>
+          
+          <div class="col-span-3 md:col-span-2 flex items-center space-x-2">
+            <div class="relative inline-block text-left">
+              <select name="{{ form.language.name }}" id="{{ form.language.id_for_label }}" class="form-select text-indigo-600 block w-full py-2.5 px-4 leading-5 rounded-md transition duration-150 ease-in-out sm:text-sm sm:leading-5 focus:outline-none focus:ring focus:border-blue-300">
+                {% for language, label in form.fields.language.choices %}
+                  <option value="{{ language }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg class="h-4 w-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M7 7l3-3 3 3m0 6l-3 3-3-3"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
           </div>
           <button type="submit" class="mt-4 px-4 py-2 bg-gray-800 text-white rounded font-semibold hover:bg-gray-600">Run Code</button>
         </form>
