@@ -32,14 +32,14 @@
         </textarea> 
         <div class="grid grid-cols-3 gap-2">
           <div class="col-span-3 md:col-span-1 flex items-center space-x-2">
-            <label for="{{ form.language.id_for_label }}" class="text-gray-700">Language:</label>
+            <label for="{{ form.language.id_for_label }}" class="text-cyan-950 ">Language:</label>
           </div>
           
           <div class="col-span-3 md:col-span-2 flex items-center space-x-2">
             <div class="relative inline-block text-left">
-              <select name="{{ form.language.name }}" id="{{ form.language.id_for_label }}" class="form-select text-indigo-600 block w-full py-2.5 px-4 leading-5 rounded-md transition duration-150 ease-in-out sm:text-sm sm:leading-5 focus:outline-none focus:ring focus:border-blue-300">
+              <select name="{{ form.language.name }}" id="{{ form.language.id_for_label }}" class="form-select text-white bg-gray-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 {% for language, label in form.fields.language.choices %}
-                  <option value="{{ language }}">{{ label }}</option>
+                  <option class="" value="{{ language }}">{{ label }}</option>
                 {% endfor %}
               </select>
               <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
