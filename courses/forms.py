@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from courses.models import Course, Lesson, Chapter
 from users.models import User
 from django.shortcuts import get_object_or_404
+from django import forms
 
 
 class CreateChapterForm(ModelForm):
@@ -18,9 +19,13 @@ class CreateChapterForm(ModelForm):
         # self.fields['chapter_quiz'].queryset = self.fields['chapter_quiz'].queryset.filter(course__teacher = new_user_object.id)
 
 class CreateLessonForm(ModelForm):
+    word_file = forms.FileField(
+        label='Upload Word File',
+        required=False,  # Set to False to make it optional
+    )
     class Meta:
         model = Lesson
-        fields = ('lesson_name', 'lesson_content', 'chapter')
+        fields = ('lesson_name', 'lesson_content', 'chapter', 'word_file')
         
         def __init__(self, *args, **kwargs):
             user = kwargs.pop('user')

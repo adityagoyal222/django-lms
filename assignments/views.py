@@ -1,4 +1,6 @@
 from typing import Any, Dict
+from django.forms.models import BaseModelForm
+from typing import Any, Dict
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import (LoginRequiredMixin,
@@ -10,6 +12,7 @@ from django.utils import timezone
 import os
 from django.conf import settings
 from django.forms import modelformset_factory
+from django.db import transaction, IntegrityError
 
 # from django.contrib import messages
 from django.views import generic
@@ -18,6 +21,9 @@ from users.models import User
 from assignments.models import Assignment, SubmitAssignment, Quiz, Question, Choice, QuizSubmission
 from assignments.forms import GradeAssignmentForm, CreateAssignmentForm, SubmitAssignmentForm, QuizForm, QuizAnswerForm, QuestionForm, ChoiceForm, SubmitQuizForm
 from courses.models import Course
+from django.contrib import messages
+from django.views.generic.edit import FormView
+from django.urls import resolve
 
 # Create your views here.    
 class CreateAssignment(LoginRequiredMixin, generic.CreateView):
@@ -256,7 +262,7 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
-class QuizAnswerView(LoginRequiredMixin,generic.FormView):
+class QuizAnswerView(LoginRequiredMixin, FormView):
     template_name = 'assignments/quiz_answer.html'
     form_class = QuizAnswerForm
 
@@ -275,24 +281,68 @@ class QuizAnswerView(LoginRequiredMixin,generic.FormView):
                 question_id = int(name.split('_')[1])
                 question = Question.objects.get(pk=question_id)
                 correct_choices = question.choice.filter(is_correct=True).values_list('id', flat=True)
-                print(f"Question ID: {question_id}, Selected Choice: {value}, Correct Choices: {list(correct_choices)}")
                 if str(value) in map(str, correct_choices):
                     score += 1
-                print(f"Current Score: {score}")
-        return score    
-    
+        return score
+
     def form_valid(self, form):
         quiz = self.get_quiz()
         score = self.calculate_score(form)
-        submission = quiz.quizsubmission_set.create(
-            student=self.request.user,
-            score=score
-        )
+        
+        try:
+            # Try to create a new QuizSubmission instance
+            with transaction.atomic():
+                submission = quiz.quizsubmission_set.create(
+                    student=self.request.user,
+                    score=score
+                )
+        except IntegrityError:
+            # If IntegrityError occurs, it means the combination (user, quiz) already exists
+            # Retrieve the existing instance and update the score
+            submission = QuizSubmission.objects.get(student=self.request.user, quiz=quiz)
+            submission.score = score
+            submission.save()
+
+        # Check if the score is >= 75%
+        total_questions = quiz.question_set.count()
+        if (score / total_questions) * 100 >= 75:
+            # If score is >= 75%, add the quiz ID to completed quizzes
+            completed_quizzes = self.request.session.get('completed_quizzes', [])
+            messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has passed this quiz.")
+            if quiz.id not in completed_quizzes:
+                completed_quizzes.append(quiz.id)
+                self.request.session['completed_quizzes'] = completed_quizzes
+                print("Completed Quizees:", completed_quizzes)
+        else:
+            messages.warning(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has failed this quiz.")
+
+        # Check if user has 3 or more attempts
+        remaining_attempts = 3 - quiz.quizsubmission_set.filter(student=self.request.user).count()
+        if remaining_attempts <= 0:
+            messages.warning(self.request, "You have used all your attempts for this quiz.")
+        else:
+            messages.info(self.request, f"You have {remaining_attempts} attempt(s) remaining for this quiz.")
+
         self.kwargs['submission_id'] = submission.id
+        # Include quiz_id in the context when calling get_context_data
+    # return super().form_valid(form, quiz_id=self.kwargs['quiz_id'])
+        quiz_id = self.kwargs.get('quiz_id')
+        print("Quiz ID:", quiz_id)
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id']])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Access quiz_id from the request object
+        quiz_id = resolve(self.request.path_info).kwargs.get('quiz_id')
+        context["quiz_id"] = quiz_id
+        return context
+    
+   
+    
+
 
 
 
