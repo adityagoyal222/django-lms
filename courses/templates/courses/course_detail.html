@@ -8,14 +8,14 @@
 {% endblock title_name %}
 
 {% block main_content %}
-<div class="mt-[50px] max-w-[75%] text-cyan-950 h-[830px] overflow-y-auto relative">
+<div class="ml-[50px] max-w-[72%] text-cyan-950 h-[830px] overflow-y-auto relative">
     <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }}</h1>
     <!-- Display the total number of lessons -->
 <p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
 <!-- Display the total number of completed lessons for the user -->
 <p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
 <p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
-<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes }}<span></p>
+<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes_count }}<span></p>
 {% comment %} <div id="lessonIds" class="text-cyan-950 font-semibold m-2 p-2" data-lesson-ids="{{ completed_lesson_ids_json|safe }}"><p>Completer Lesson IDs: {{completed_lesson_ids}}</p></div> {% endcomment %}
 
 
@@ -27,25 +27,30 @@
         {{ chapter.chapter_name }}
     </button>
     {% if content.quizzes %}
-    <a href="{% url 'assignments:submit_quiz' quiz_id=content.quizzes.0.id %}" class="text-blue-600 hover:underline">Take Quiz</a>
-    {% else %}
+    {% with quiz_id=content.quizzes.0.id %}
+        {% if quiz_id in completed_quizzes %}
+            <p class="text-gray-400">Quiz Completed</p>
+        {% else %}
+        <a href="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}" class="text-blue-600 hover:underline">Take Quiz</a>
+        {% endif %}
+    {% endwith %}
+{% else %}
     <p class="text-red-600">No Quiz</p>
-    {% endif %}
+{% endif %}
+
     
     <div id="{{ chapter.id }}" class="mt-2 hidden">
         {% for lesson in content.lessons %}
         
-        {% if lesson.video %}
-        <p class="text-gray-700">Watch this</p>
-        <div class="mt-2">
+        {% comment %} {% if lesson.video %}
+        <p class="text-gray-700 text-xl">Watch this</p>
+        <div class="m-4">
             <div class="lesson-video-container">
-            <div id="text-gray-700"> {{ lesson.video }}</div>
-            <div id="player{{ lesson.id }}"></div>
-            </div>
-            
-            
+                <div id="text-red-700 p-2"> {{ lesson.video }}</div>
+                <div id="player{{ lesson.id }}"></div>
+            </div>   
         </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
           {% if user.user_type == 1 %}
@@ -57,11 +62,20 @@
           {% endif %} 
           {% endif %}
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
-            <div class="mt-2 text-gray-700">
+            <div class="mt-2 text-xl font-sans text-cyan-950">
                 {{ lesson.lesson_content|convert_markdown|safe }}
+                {% if lesson.video %}
+            <p class="text-cyan-950 text-md">Watch this:</p>
+            <div class="m-4">
+                <div class="lesson-video-container">
+                    <div id="text-red-700" class="mb-2"> {{ lesson.video }}</div>
+                    <div id="player{{ lesson.id }}" class="rounded-xl"></div>
+                </div>   
+            </div>
+            {% endif %}
                 {% if user.user_type == 1 %}
-                <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer"
-                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}">
+                <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer {% if lesson.id in completed_lesson_ids %}cursor-not-allowed opacity-20 hover:cursor-not-allowed hover:bg-gray-500{% endif %}"
+                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}" {% if lesson.id in completed_lesson_ids %}disabled{% endif %}>
                 Mark as Read
                 </button>
                 {% endif %}
@@ -135,8 +149,7 @@
                     <p class="mb-1">
                         Submission: {{ resource.resource_file.name }}
                         <a href="{{ resource.resource_file.url }}"
-                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline"
-                            download>Download</a>
+                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline">Download</a>
                     </p>
                     {% if user.id == course.teacher.id %}
                         <small><a href="{% url 'resources:delete' pk=resource.pk %}"
@@ -333,5 +346,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     
+    
 </script>
+
+<!-- Include your JavaScript file that uses lessonData -->
+<script src="{% static 'js/player.js' %}"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+ <script>
+function onYouTubeIframeAPIReady() {
+    initializeYouTubePlayers();
+    console.log("Youtube API Ready");
+    console.log(players);
+}
+</script> 
+  
 {% endblock main_content %}
