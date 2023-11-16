@@ -58,7 +58,7 @@ merkletools==1.0.3
 mock==2.0.0
 morphys==1.0
 multidict==6.0.4
-mysqlclient==2.2.0
+#mysqlclient==2.2.0
 openai==0.27.8
 packaging==23.1
 pbr==5.11.1
@@ -98,9 +98,5 @@ virtualenv==20.24.2
 Werkzeug==2.2.3
 yarl==1.9.2
 djangorestframework
-openai==0.11.2
-python-dotenv==0.19.0
 
-
-#pymysql==1.0.2
 
