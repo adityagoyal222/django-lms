@@ -31,6 +31,7 @@ import io
 from django.db import IntegrityError
 from django.http import Http404
 from assignments import models
+from assignments.models import QuizSubmission, UserProfile
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -196,25 +197,20 @@ class CourseDetail(generic.DetailView):
 
             print("Chapters with completion:", chapters_with_completion)
                 
-            # create a completed quiz ids list where once a quiz is completed its appended
-            completed_quizzes = []
+            
  
             # get the total number of quizzes for the course
             total_quizzes = course.total_quizzes()
             print("Total Quizzes:", total_quizzes)
-            # get the total number of completed quizzes for the user
-            completed_quizzes_count = len(completed_quizzes)
-            print("Completed Quizzes_count:", completed_quizzes_count)
-            # calculate the completion percentage
-            # completed_quizzes = self.request.user.completed_quizzes(course)
 
-            if total_quizzes == completed_quizzes_count:
-                pass
-            else:
-                 # Append Quiz instances or Quiz IDs to completed_quizzes
-                quizzes_not_completed = Quiz.objects.exclude(id__in=completed_quizzes)
-                completed_quizzes.extend(quizzes_not_completed.values_list('id', flat=True))
-            print("Completed Quizzes:", completed_quizzes)
+
+            # Retrieve the UserProfile or create a new one if it doesn't exist
+            user_profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+
+            # Get the completed quiz IDs from the UserProfile
+            completed_quizzes = user_profile.completed_quizzes.values_list('id', flat=True)
+            completed_quizzes_ids = list(completed_quizzes)
+            print("Completed Quizzeddds:", completed_quizzes_ids)
 
             completed_quizzes_count = len(completed_quizzes)
 

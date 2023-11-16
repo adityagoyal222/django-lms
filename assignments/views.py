@@ -24,6 +24,7 @@ from courses.models import Course
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.urls import resolve
+from .models import QuizSubmission, UserProfile
 
 # Create your views here.    
 class CreateAssignment(LoginRequiredMixin, generic.CreateView):
@@ -303,16 +304,22 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
             submission.score = score
             submission.save()
 
+        # Retrieve the UserProfile or create a new one if it doesn't exist
+        user_profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+
         # Check if the score is >= 75%
         total_questions = quiz.question_set.count()
         if (score / total_questions) * 100 >= 75:
             # If score is >= 75%, add the quiz ID to completed quizzes
-            completed_quizzes = self.request.session.get('completed_quizzes', [])
-            messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has passed this quiz.")
-            if quiz.id not in completed_quizzes:
-                completed_quizzes.append(quiz.id)
-                self.request.session['completed_quizzes'] = completed_quizzes
-                print("Completed Quizees:", completed_quizzes)
+            # messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has passed this quiz.")
+            if quiz.id not in user_profile.completed_quizzes.all():
+                # If not, add the quiz ID to completed quizzes
+                quiz_id = self.kwargs.get('quiz_id')
+                user_profile.completed_quizzes.add(quiz.id)
+                messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You have passed this quiz.")
+                print("Completed Quizzeeees:", user_profile.completed_quizzes.all())
+                # get the quiz_ids in the completed_quizes field
+
         else:
             messages.warning(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has failed this quiz.")
 

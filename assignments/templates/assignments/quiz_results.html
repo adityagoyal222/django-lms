@@ -14,7 +14,7 @@
   
     {% with total_questions=submission.quiz.question_set.count %}
   {% if completed_quizzes %}
-    <a href="{% url 'courses:list' %}" class="text-blue-500 hover:underline">Back to Courses</a>
+    {% comment %} <a href="{% url 'courses:list' %}" class="text-blue-500 hover:underline">Back to Courses</a> {% endcomment %}
   {% else %}
     <p class="text-red-500">
       {% comment %} Your score is below 75%. You can't go back to courses yet. {% endcomment %}
@@ -36,7 +36,7 @@
           </li>
         {% elif message.tags == 'info' %}
           <li class="{{ message.tags }} text-blue-500">
-            <span>{{ message }}</span>
+            {% comment %} <span>{{ message }}</span> {% endcomment %}
             {% comment %} <a class="hover:cursor-pointer" href="">Retake Quiz</a> {% endcomment %}
           </li>
         {% endif %}
