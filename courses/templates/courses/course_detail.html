@@ -53,14 +53,6 @@
         {% endif %} {% endcomment %}
 
         <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
-          {% if user.user_type == 1 %}
-          <!-- Radio Button -->
-          {% if lesson.is_read %}
-          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}" checked>
-          {% else %}
-          <input type="checkbox" name="lesson{{ forloop.counter }}" class="lessonRadio" id="lessonRadio{{ lesson.id }}">
-          {% endif %} 
-          {% endif %}
             <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
             <div class="mt-2 text-xl font-sans text-cyan-950">
                 {{ lesson.lesson_content|convert_markdown|safe }}
