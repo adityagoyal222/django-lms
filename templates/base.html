@@ -1,6 +1,8 @@
 {% load static tailwind_tags %}
 {% load static %}
 {% load static tailwind_tags %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +50,7 @@
             <span class="sidemenu side-element text-gray-50"><i class="fa fa-user-circle-o fa-5x text-gray-50" aria-hidden="true" id="profile"></i></span>
         </div>
         <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row flex">
-            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
+            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu text-gray-100 uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 text-gray-50 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
                             fill="none"
@@ -136,7 +138,7 @@
         <div class="bg-gray-100 shadow-md h-auto w-full rounded-lg m-2 ">
             <p class="font-semibold text-2xl m-2 p-2 text-cyan-950">{{ course }}</p>
             <div class="bg-white w-[90%] mx-auto h-2 rounded-md progress">
-                <div class="bg-yellow-500 progress-bar" role="progressbar" style="width: {{ completion_percentage }}%; height: 8px" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="bg-yellow-500" role="progressbar" style="width: {{ completion_percentage }}%; height: auto" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <p class="font-semibold text-sm m-2 p-2 text-cyan-950">{{ completion_percentage }}% complete</p>
             {% if completion_percentage >= 100 %}
@@ -155,7 +157,11 @@
                     {% if user in course.students.all %}
                         <li class="course-item pb-4 border-b text-cyan-950">
                             <div class="flex flex-row space-x-2">
-                                <input type="checkbox" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" />
+                                <input type="checkbox" data-course-id="{{ course.id }}" id="item1" name="items" class="text-custom-color items-start w-6 h-6 my-auto p-0 appearance-none bg-custom-color border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" 
+                                {% if completion_status and course in completed_courses %}
+                                    checked
+                                {% endif %}
+                                />
                                 <a href="{% url 'courses:detail' pk=course.pk %}" class="text-gray-900 font-bold items-center hover:text-yellow-400 hover:no-underline text-lg">{{ course }}</a>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                 class="h-6 w-6 text-cyan-950 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer items-end"
@@ -175,10 +181,18 @@
                             {% if chapter.course == course %}
                             {% comment %} <ul class="ml-2 hidden" id="chapters-{{ course.pk }}"> {% endcomment %}
                                 <li class="chapter-item pb-3 border-b text-cyan-950 hover:shadow-md p-2">
-                                    <div class="flex flex-row space-x-2">
-                                        {% comment %} <a href="#" class="text-gray-900 item-start">{{ chapter.chapter_name }}</a> {% endcomment %}
-                                        <input type="checkbox" data-chapter-id="{{ chapter.id }}" id="item1" name="items" class="chapterCheckbox text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" 
-                                        />
+                                    <div class="flex flex-row space-x-2">                                     
+                                    <input type="checkbox" data-chapter-id="{{ chapter_info.chapter.id }}" id="item1" name="items" class="chapterCheckbox text-custom-color items-start h-4 w-4 my-auto p-0 appearance-none border-2 border-cyan-950 checked:bg-yellow-500 checked:border-0 rounded-full" 
+                                    {% for chapter_info in chapters_with_completion %}
+                                        {% if chapter_info.chapter_id == chapter.id %}
+                                            checked
+                                        {% endif %}
+                                    {% endfor %}
+                                    />
+
+
+
+
                                             <button class="items-center ml-2 text-sm w-[80%] font-sans text-cyan-950 font-normal hover:text-yellow-400 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
                                                 {{ chapter.chapter_name }}
                                             </button>
@@ -348,19 +362,18 @@
             </div>
         </div>
         {% endif %}
-
-        {% comment %} <div id="popup" class="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-40 overflow-auto">
+        <div id="popup" class="fixed z-50 inset-0 items-center justify-center bg-black bg-opacity-40 overflow-auto hidden">
             <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
                 <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
                 <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
                 <p>Click the "Generate Certificate" button to access your Certificate.</p>
                 <div class="flex mx-auto space-x-2 mt-[120px]">
-                    <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Generate Certificate</button>
+                    <a id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400" href="">Claim Certificate</a>
                     <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
                 </div>
             </div>
         </div>
-                 {% endcomment %}
+                 
     
         
     <div class="content">
@@ -466,22 +479,31 @@
         });
     }
 
-    // Check if the user has completed the course and hasn't seen the pop-up
-{% comment %} if (completion_percentage >= 100 && !userHasSeenPopup) { {% endcomment %}
-{% comment %} function togglePopup() {
-    const popup = document.getElementById('popup');
-    const isOpen = popup.style.display === 'block';
 
-    if (isOpen) {
-        popup.style.display = 'none'; // Close the popup
-    } else {
-        popup.style.display = 'block'; // Open the popup
-    }
-} {% endcomment %}
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check completion status and percentage
+        var completionStatus = {% if completion_status %}true{% else %}false{% endif %};
+        var completionPercentage = {{ completion_percentage }};
 
-// Call togglePopup to toggle the popup when needed
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popup").style.display = "flex";
+        }
 
+        // Show the popup if completion status is true or completion percentage is 100
+        if (completionStatus || completionPercentage === 100) {
+            showPopup();
+        }
 
-    
+        // Close the popup when clicking the "Close" button
+        document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("popup").style.display = "none";
+        });
+
+        // Add logic for "Generate Certificate" button if needed
+        document.getElementById("generateCertificate").addEventListener("click", function () {
+            // Add your logic to handle generating the certificate
+        });
+    });
 </script>
 </html>

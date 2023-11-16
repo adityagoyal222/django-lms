@@ -8,19 +8,29 @@ from django.contrib import messages
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from users.models import User
-from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse
+from courses.models import Course, Enrollment, Lesson, Chapter, CompletedCourse, Certificate
 from assignments.models import Assignment, Quiz
-from resources.models import Resource
+from resources.models import Resource, VideoLesson, VideoProgress
 from .models import CompletedLesson
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from .models import Lesson
+import datetime
+import calendar
+from .cert_request import send_certificate_request, verify_certificate
 import json
 from django.views import View
 from django.http import JsonResponse
 from .models import CompletedLesson, Course
 from .forms import CreateChapterForm, CreateLessonForm, UpdateChapterForm, UpdateLessonForm, UpdateCourseForm
+import mammoth
+from django.views.decorators.csrf import csrf_protect
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
+import io
+from django.db import IntegrityError
+from django.http import Http404
+from assignments import models
 
 # Create your views here.
 class CreateCourse(LoginRequiredMixin, generic.CreateView):
@@ -59,7 +69,7 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
 class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     form_class = CreateLessonForm
     template_name = 'courses/create_lesson.html'
-    success_url = '/all/'
+  
     
     def get_from_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -68,13 +78,35 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         user_object = get_object_or_404(User, username=self.request.user.username)
         form.instance.teacher = user_object
+        word_file = form.cleaned_data['word_file']
+
+        if word_file:
+            if hasattr(word_file, 'read'):
+                # File is in memory, read its content
+                content = word_file.read()
+                # Perform the Word to Markdown conversion
+                result = mammoth.convert_to_markdown(io.BytesIO(content))
+                form.instance.lesson_content = result.value
+            else:
+                # File is on disk, perform conversion as before
+                with open(word_file.path, 'rb') as docx_file:
+                    result = mammoth.convert_to_markdown(docx_file)
+                    form.instance.lesson_content = result.value
+
         return super().form_valid(form)
+    def get_success_url(self) -> str:
+        return reverse('courses:list')
     
 class CourseDetail(generic.DetailView):
     model = Course
     
     def get_context_data(self, **kwargs):
-        course = Course.objects.get(pk=self.kwargs['pk']) 
+        try:
+            course = get_object_or_404(Course, pk=self.kwargs['pk'])
+        except Http404:
+            # Handle the case where the course does not exist
+            messages.error(self.request, 'Course not found.')
+            return HttpResponseRedirect(reverse('courses:list')) 
         
         # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
@@ -88,13 +120,18 @@ class CourseDetail(generic.DetailView):
         for chapter in chapters:
             # Get lessons related to the chapter
             lessons = Lesson.objects.filter(chapter=chapter)
+            # get the count of lessons that exist in each chapter
+            lesson_count = lessons.count()
             chapters_with_lessons.append((chapter, lessons))
             
             quizzes = Quiz.objects.filter(chapter=chapter)
             chapters_with_lessons_and_quizzes[chapter] = {
                 'lessons': lessons,
                 'quizzes': quizzes,
+                'lesson_count': lesson_count,
             }
+
+            print("Lesson Count: ", lesson_count)
             
 
             
@@ -104,27 +141,92 @@ class CourseDetail(generic.DetailView):
         # Get the total number of lessons for the course
         total_lessons = Lesson.objects.filter(chapter__course=course).count()
         total_quizzes = course.total_quizzes()
+        # Handle the case where total_lessons is zero
+        if total_lessons > 0:
+            # Get the total number of completed lessons for the user in that course
+            if self.request.user.is_authenticated:
+                completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
 
-        # Get the total number of completed lessons for the user in that course
-        if self.request.user.is_authenticated:
-            completed_lessons = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course).count()
-            completion_percentage = round((completed_lessons / total_lessons) * 100)
-            print("Completed Lessons:", completed_lessons)
+                completion_percentage = round((completed_lessons / total_lessons) * 100)
+                print("Completed Lessons:", completed_lessons)
 
-            # Access and print the lesson IDs directly
-            completed_lessons1 = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course)
-            completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
-            print("Lesson IDs completed:", completed_lesson_ids)
+                # Access and print the lesson IDs directly
+                completed_lessons1 = CompletedLesson.objects.filter(user=self.request.user, lesson__chapter__course=course)
+                completed_lesson_ids = [completed_lesson.lesson.id for completed_lesson in completed_lessons1]
+                print("Lesson IDs completed:", completed_lesson_ids)
 
-            # can i get the chapter ids
-            completed_chapter_ids = [completed_lesson.lesson.chapter.id for completed_lesson in completed_lessons1]
-            print("Chapter IDs completed:", completed_chapter_ids)
+                # can i get the chapter ids
+                completed_chapter_ids = [completed_lesson.lesson.chapter.id for completed_lesson in completed_lessons1]
+                print("Chapter IDs completed:", completed_chapter_ids)
 
+                # Create a list to store chapter information including completion status
+                chapters_with_completion = []
+
+            # create a list of completed courses
+            completed_courses = []
+            
+
+            # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
+            for chapter in chapters:
+                lessons = Lesson.objects.filter(chapter=chapter)
+                lesson_count = lessons.count()
+
+                is_completed = chapter.id in completed_chapter_ids and completed_chapter_ids.count(chapter.id) == lesson_count
+
+                chapter_info = {
+                        'chapter_id': chapter.id,
+                        'lessons': lessons,
+                        'is_completed': is_completed,
+                    }
+
+                if is_completed:
+                    chapters_with_completion.append(chapter_info)
+
+            # Check if the total number of chapters equals the number of completed chapters for each course
+            total_chapters = Chapter.objects.filter(course=course).count()
+
+            completed_chapters_count = sum(1 for chapter_info in chapters_with_completion if chapter_info['is_completed'])
+            print(f"Course: {course}, Total Chapters: {total_chapters}, Completed Chapters: {completed_chapters_count}")
+
+            if total_chapters == completed_chapters_count:
+                completed_courses.append(course)
+
+            print("Completed Courses:", completed_courses)
+                   
+
+            print("Chapters with completion:", chapters_with_completion)
                 
-            completed_quizzes = self.request.user.completed_quizzes(course)
-          
+            # create a completed quiz ids list where once a quiz is completed its appended
+            completed_quizzes = []
+ 
+            # get the total number of quizzes for the course
+            total_quizzes = course.total_quizzes()
+            print("Total Quizzes:", total_quizzes)
+            # get the total number of completed quizzes for the user
+            completed_quizzes_count = len(completed_quizzes)
+            print("Completed Quizzes_count:", completed_quizzes_count)
+            # calculate the completion percentage
+            # completed_quizzes = self.request.user.completed_quizzes(course)
+
+            if total_quizzes == completed_quizzes_count:
+                pass
+            else:
+                 # Append Quiz instances or Quiz IDs to completed_quizzes
+                quizzes_not_completed = Quiz.objects.exclude(id__in=completed_quizzes)
+                completed_quizzes.extend(quizzes_not_completed.values_list('id', flat=True))
+            print("Completed Quizzes:", completed_quizzes)
+
+            completed_quizzes_count = len(completed_quizzes)
+
+            # calculate if a course is complete or not if the total_lessons + total_quizes == the sum of completed lessons + completed quizes          
+            if total_lessons + total_quizzes == completed_lessons + completed_quizzes_count:
+                completion_status = True
+            else:
+                completion_status = False
+            print("Completion Status:", completion_status)
              
-            completion_percentage = round(((completed_lessons + completed_quizzes) / (total_lessons + total_quizzes)) * 100)
+            completion_percentage = round(((completed_lessons + completed_quizzes_count) / (total_lessons + total_quizzes)) * 100)
+            print("Completed Quizees Count:", completed_quizzes_count)
             print("Completion Percentage:", completion_percentage)
         else:
             completed_lessons = 0
@@ -137,8 +239,12 @@ class CourseDetail(generic.DetailView):
             # Check if the user has already completed the course
             if not CompletedCourse.objects.filter(user=self.request.user, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
-                completedcourse = CompletedCourse(user=self.request.user, course=course)
-                completedcourse.save()
+                try:
+                    completedcourse = CompletedCourse(user=self.request.user, course=course)
+                    completedcourse.save()
+                except IntegrityError:
+                    # Handle the case where the user has already completed the course
+                    messages.warning(self.request, 'You have already completed this course.')
             
 
         context = super(CourseDetail, self).get_context_data(**kwargs)
@@ -150,17 +256,36 @@ class CourseDetail(generic.DetailView):
         context['total_lessons'] = total_lessons
         context['completed_lessons'] = completed_lessons
         context['course.pk'] = course
+        context['course_id'] = course.pk
         # context['course_id'] = course.pk
-        context['completed_lesson_ids'] = completed_lesson_ids
-        context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
-        context['completed_quizzes'] = completed_quizzes
-        context['completion_percentage'] = completion_percentage
-        context['completed_chapter_ids'] = completed_chapter_ids
+        if total_lessons > 0:
+            context['completed_lesson_ids'] = completed_lesson_ids
+            context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
+            context['completed_quizzes'] = completed_quizzes
+            context['completed_quizzes_count'] = completed_quizzes_count
+            context['completion_percentage'] = completion_percentage
+            context['completed_chapter_ids'] = completed_chapter_ids
+            # lesson_count
+            context['lesson_count'] = lesson_count
+            context['chapters_with_completion'] = chapters_with_completion
+            context['completion_status'] = completion_status
+            context['completed_courses'] = completed_courses
         return context
 
 
 class ListCourse(generic.ListView):
     model = Course
+    template_name = 'courses/course_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course_list = Course.objects.all()
+
+        if not course_list:
+            messages.info(self.request, 'No courses available at the moment.')
+
+        return context
+
 
 class EnrollCourse(LoginRequiredMixin, generic.RedirectView):
 
@@ -254,8 +379,60 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
         else:
             form.add_error(None, "You don't have permission to edit this lesson.")
             return self.form_invalid(form)
+        
+def certificate_view(request, course_id):
+    user = request.user
+    course = get_object_or_404(Course, pk=course_id)
 
+    try:
+        existing_certificate = Certificate.objects.get(user=user, course=course)
+        name = existing_certificate.name
+        issuer_date = existing_certificate.issued_at
+        issuer = existing_certificate.issuer
+        certificate_id = existing_certificate.certificate_id
+        context = {
+            "name": name,
+            "issuer_date": issuer_date,
+            "course": course,
+            "issuer": issuer,
+            "certificate_id": certificate_id
+        }
+        return render(request, 'courses/certificate.html', {'context': context})
+    except ObjectDoesNotExist:
+        first_name = user.first_name
+        last_name = user.last_name
+        full_name = first_name + ' ' + last_name
+        course_name = course.course_name
+        issuer = "ABYA Africa"
+        now = datetime.datetime.now()
+        unixtime = calendar.timegm(now.utctimetuple())
+        certificate_response = {
+            "name": full_name,
+            "course": course_name,
+            "issuer": issuer,
+            "issuer_date": unixtime
+        }
 
+        if all(value is not None for value in certificate_response.values()):
+            certificate_data = send_certificate_request(certificate_response["name"], certificate_response["issuer"], certificate_response["issuer_date"])
+
+            # Store the certificate in the database
+            new_certificate = Certificate(user=user, course=course, name=certificate_data['name'], issuer=certificate_data["issuer"], issued_at=certificate_data["issue_date"], certificate_id=certificate_data["certificate_id"])
+            new_certificate.save()
+            
+            return render(request, 'courses/certificate.html', {'context': certificate_data})
+        else:
+            return render(request, 'courses/certificate.html')
+
+def verify_certificate(request):
+    certificate_id = request.POST.get('certificate_id')
+
+    if certificate_id:
+        certificate_response = verify_certificate(certificate_id)
+        return certificate_response
+    else:
+        return JsonResponse({"error": "Invalid request. Certificate ID is missing."}, status=400)
+    
 def get_completed_lessons_count(request, course_id):
     if request.user.is_authenticated:
         course = get_object_or_404(Course, pk=course_id)
@@ -332,3 +509,20 @@ def mark_lesson_as_complete(request):
 
     return JsonResponse({'message': 'Lesson marked as complete successfully.', 'completed_lessons_count': completed_lessons, 'completion_percentage': completion_percentage}, status=200)
 
+
+@csrf_protect
+def update_video_progress(request):
+    if request.method == 'POST':
+        video_id = request.POST.get('video_id')
+        progress = request.POST.get('progress')
+        video_lesson = VideoLesson.objects.get(video_lesson_id=video_id)    
+        # Find the VideoProgress object for the specified video_id and update the progress
+        video_progress, created = VideoProgress.objects.get_or_create(video_lesson=video_lesson, user=request.user)
+        video_progress.progress = progress
+        if float(progress) == 75:
+            video_progress.status = True
+        video_progress.save()
+        
+        return JsonResponse({'message': 'Video progress updated successfully.'})
+
+    return JsonResponse({'message': 'Invalid request method.'}, status=400)
