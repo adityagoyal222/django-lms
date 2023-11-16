@@ -114,8 +114,8 @@ WSGI_APPLICATION = 'django_lms.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_lms',
-        'USER': 'toor',
+        'NAME': 'django_lms1',
+        'USER': 'new_user',
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
