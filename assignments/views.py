@@ -25,6 +25,9 @@ from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.urls import resolve
 from .models import QuizSubmission, UserProfile
+from django.urls import reverse
+from django.contrib.sessions.models import Session
+import requests
 
 # Create your views here.    
 class CreateAssignment(LoginRequiredMixin, generic.CreateView):
@@ -322,15 +325,18 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
 
         else:
             messages.warning(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has failed this quiz.")
-
+        
         # Check if user has 3 or more attempts
         remaining_attempts = 3 - quiz.quizsubmission_set.filter(student=self.request.user).count()
+        
         if remaining_attempts <= 0:
             messages.warning(self.request, "You have used all your attempts for this quiz.")
         else:
             messages.info(self.request, f"You have {remaining_attempts} attempt(s) remaining for this quiz.")
 
         self.kwargs['submission_id'] = submission.id
+        # remaining attempts context
+        print("Remaining attempts:", remaining_attempts)
         # Include quiz_id in the context when calling get_context_data
     # return super().form_valid(form, quiz_id=self.kwargs['quiz_id'])
         quiz_id = self.kwargs.get('quiz_id')
@@ -338,14 +344,17 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id']])
+        # return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id'], 'quiz_id', self.kwargs['quiz_id']])
+        return reverse('assignments:quiz_results', args=[self.kwargs['submission_id']])
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Access quiz_id from the request object
-        quiz_id = resolve(self.request.path_info).kwargs.get('quiz_id')
+        # Access quiz_id directly from self.kwargs
+        quiz_id = self.kwargs.get('quiz_id')
         context["quiz_id"] = quiz_id
         return context
+
     
    
     

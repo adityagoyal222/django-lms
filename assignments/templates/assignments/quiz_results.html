@@ -9,49 +9,54 @@
   <div class="p-4 text-cyan-950 bg-white rounded-lg shadow-md mt-[145px] ml-3 w-[70%]">
     <h1 class="text-2xl font-semibold mb-4">Quiz Results</h1>
     <p class="mb-2"><span class="font-semibold">Username:</span> {{ submission.student.username }}</p>
-    <p class="mb-2"><span class="font-semibold">Quiz Title:</span> {{ submission.quiz}}</p>
+    <p class="mb-2"><span class="font-semibold">Quiz Title:</span> {{ submission.quiz }}</p>
     <p class="mb-4"><span class="font-semibold">Score:</span> {{ submission.score }}</p>
-  
-    {% with total_questions=submission.quiz.question_set.count %}
-  {% if completed_quizzes %}
-    {% comment %} <a href="{% url 'courses:list' %}" class="text-blue-500 hover:underline">Back to Courses</a> {% endcomment %}
-  {% else %}
-    <p class="text-red-500">
-      {% comment %} Your score is below 75%. You can't go back to courses yet. {% endcomment %}
-      
-    </p>
-    {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      {% if message.tags %}
-        {% if message.tags == 'success' %}
-          <li class="{{ message.tags }} text-green-500">
-            <span>{{ message }}</span>
-            <a class="hover:cursor-pointer underline" href="{% url 'courses:list' %}">Back to Courses</a>
-          </li>
-        {% elif message.tags == 'warning' %}
-          <li class="{{ message.tags }} text-red-500">
-            <span>{{ message }}</span>
-            <a class="hover:cursor-pointer underline" href="">Retake Quiz</a>
-          </li>
-        {% elif message.tags == 'info' %}
-          <li class="{{ message.tags }} text-blue-500">
-            {% comment %} <span>{{ message }}</span> {% endcomment %}
-            {% comment %} <a class="hover:cursor-pointer" href="">Retake Quiz</a> {% endcomment %}
-          </li>
-        {% endif %}
-      {% else %}
-        <li class="text-green-500">
-          <span>{{ message }}</span>
-          <a class="hover:cursor-pointer" href="{% url 'courses:list' %}">Back to Courses</a>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-{% endif %}
 
-  {% endif %}
-{% endwith %}
+    {% with total_questions=submission.quiz.question_set.count %}
+      {% if completed_quizzes %}
+        {# User has completed quizzes, redirect to courses list #}
+        <a href="{% url 'courses:list' %}" class="text-blue-500 hover:underline">Back to Courses</a>
+      {% else %}
+        {# User hasn't completed quizzes #}
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              {% if message.tags %}
+                {% if message.tags == 'success' %}
+                  <li class="{{ message.tags }} text-green-500">
+                    <span>{{ message }}</span>
+                    <a class="hover:cursor-pointer underline" href="{% url 'courses:list' %}">Back to Courses</a>
+                  </li>
+                {% elif message.tags == 'warning' %}
+                  <li class="{{ message.tags }} text-red-500">
+                    <span>{{ message }}</span>
+                    <a class="hover:cursor-pointer underline" href="">Retake Quiz</a>
+                    {% comment %} Link to retake quiz if attempts remaining {% endcomment %}
+                    {% comment %} {% if remaining_attempts > 0 %} {% endcomment %}
+                      {% comment %} <a class="hover:cursor-pointer underline" href="{% url 'submit_quiz' quiz_id=quiz_id %}">Retake Quiz</a> {% endcomment %}
+                    {% comment %} {% else %} {% endcomment %}
+                      {% comment %} No attempts remaining {% endcomment %}
+                      {% comment %} No attempts remaining. {% endcomment %}
+                    {% comment %} {% endif %} {% endcomment %}
+                  </li>
+                {% elif message.tags == 'info' %}
+                  <li class="{{ message.tags }} text-blue-500">
+                    <span>{{ message }}</span>
+                    {# Additional info or link if needed #}
+                  </li>
+                {% endif %}
+              {% else %}
+                {# Default success message #}
+                <li class="text-green-500">
+                  <span>{{ message }}</span>
+                  <a class="hover:cursor-pointer" href="{% url 'courses:list' %}">Back to Courses</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endif %}
+    {% endwith %}
 
   </div>
 {% endblock %}
