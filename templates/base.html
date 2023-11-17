@@ -362,18 +362,25 @@
             </div>
         </div>
         {% endif %}
+       
         <div id="popup" class="fixed z-50 inset-0 items-center justify-center bg-black bg-opacity-40 overflow-auto hidden">
             <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
                 <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
                 <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
                 <p>Click the "Generate Certificate" button to access your Certificate.</p>
                 <div class="flex mx-auto space-x-2 mt-[120px]">
-                    <a id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400" href="">Claim Certificate</a>
+                    
+                     <a href="{% url 'courses:certificate' course_id=course.id %}">
+                        <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">
+                            Claim Certificate
+                        </button>
+                    </a> 
                     <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
                 </div>
             </div>
         </div>
                  
+      
     
         
     <div class="content">
@@ -480,30 +487,5 @@
     }
 
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Check completion status and percentage
-        var completionStatus = {% if completion_status %}true{% else %}false{% endif %};
-        var completionPercentage = {{ completion_percentage }};
-
-        // Function to show the popup
-        function showPopup() {
-            document.getElementById("popup").style.display = "flex";
-        }
-
-        // Show the popup if completion status is true or completion percentage is 100
-        if (completionStatus || completionPercentage === 100) {
-            showPopup();
-        }
-
-        // Close the popup when clicking the "Close" button
-        document.getElementById("closePopup").addEventListener("click", function () {
-            document.getElementById("popup").style.display = "none";
-        });
-
-        // Add logic for "Generate Certificate" button if needed
-        document.getElementById("generateCertificate").addEventListener("click", function () {
-            // Add your logic to handle generating the certificate
-        });
-    });
 </script>
 </html>
