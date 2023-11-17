@@ -24,6 +24,10 @@ from courses.models import Course
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.urls import resolve
+from .models import QuizSubmission, UserProfile
+from django.urls import reverse
+from django.contrib.sessions.models import Session
+import requests
 
 # Create your views here.    
 class CreateAssignment(LoginRequiredMixin, generic.CreateView):
@@ -303,27 +307,36 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
             submission.score = score
             submission.save()
 
+        # Retrieve the UserProfile or create a new one if it doesn't exist
+        user_profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+
         # Check if the score is >= 75%
         total_questions = quiz.question_set.count()
         if (score / total_questions) * 100 >= 75:
             # If score is >= 75%, add the quiz ID to completed quizzes
-            completed_quizzes = self.request.session.get('completed_quizzes', [])
-            messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has passed this quiz.")
-            if quiz.id not in completed_quizzes:
-                completed_quizzes.append(quiz.id)
-                self.request.session['completed_quizzes'] = completed_quizzes
-                print("Completed Quizees:", completed_quizzes)
+            # messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has passed this quiz.")
+            if quiz.id not in user_profile.completed_quizzes.all():
+                # If not, add the quiz ID to completed quizzes
+                quiz_id = self.kwargs.get('quiz_id')
+                user_profile.completed_quizzes.add(quiz.id)
+                messages.success(self.request, f"Your score is {round((score / total_questions) * 100)}%. You have passed this quiz.")
+                print("Completed Quizzeeees:", user_profile.completed_quizzes.all())
+                # get the quiz_ids in the completed_quizes field
+
         else:
             messages.warning(self.request, f"Your score is {round((score / total_questions) * 100)}%. You has failed this quiz.")
-
+        
         # Check if user has 3 or more attempts
         remaining_attempts = 3 - quiz.quizsubmission_set.filter(student=self.request.user).count()
+        
         if remaining_attempts <= 0:
             messages.warning(self.request, "You have used all your attempts for this quiz.")
         else:
             messages.info(self.request, f"You have {remaining_attempts} attempt(s) remaining for this quiz.")
 
         self.kwargs['submission_id'] = submission.id
+        # remaining attempts context
+        print("Remaining attempts:", remaining_attempts)
         # Include quiz_id in the context when calling get_context_data
     # return super().form_valid(form, quiz_id=self.kwargs['quiz_id'])
         quiz_id = self.kwargs.get('quiz_id')
@@ -331,14 +344,17 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id']])
+        # return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id'], 'quiz_id', self.kwargs['quiz_id']])
+        return reverse('assignments:quiz_results', args=[self.kwargs['submission_id']])
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Access quiz_id from the request object
-        quiz_id = resolve(self.request.path_info).kwargs.get('quiz_id')
+        # Access quiz_id directly from self.kwargs
+        quiz_id = self.kwargs.get('quiz_id')
         context["quiz_id"] = quiz_id
         return context
+
     
    
     
