@@ -49,7 +49,7 @@
                 {# Default success message #}
                 <li class="text-green-500">
                   <span>{{ message }}</span>
-                  <a class="hover:cursor-pointer" href="{% url 'courses:list' %}">Back to Courses</a>
+                  <a class="hover:cursor-pointer" href="{% url 'courses:detail' ccourse_id=course_id %}">Back to Course</a>
                 </li>
               {% endif %}
             {% endfor %}
