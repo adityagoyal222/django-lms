@@ -274,9 +274,22 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         kwargs = super().get_form_kwargs()
         kwargs['quiz_id'] = self.kwargs['quiz_id']
         return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["quiz_id"] = self.kwargs.get('quiz_id')
+        context["course_id"] = self.get_course_id()
+        
+        return context
+    
 
     def get_quiz(self):
         return get_object_or_404(Quiz, pk=self.kwargs['quiz_id'])
+    def get_course_id(self):
+        quiz = self.get_quiz()
+        chapter = quiz.chapter  
+        course = chapter.course  
+        return course.pk
 
     def calculate_score(self, form):
         score = 0
@@ -338,14 +351,19 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         # remaining attempts context
         print("Remaining attempts:", remaining_attempts)
         # Include quiz_id in the context when calling get_context_data
-    # return super().form_valid(form, quiz_id=self.kwargs['quiz_id'])
+        # return super().form_valid(form, quiz_id=self.kwargs['quiz_id'])
         quiz_id = self.kwargs.get('quiz_id')
         print("Quiz ID:", quiz_id)
+        print("course ID:", self.get_course_id())
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse_lazy('assignments:quiz_results', args=[self.kwargs['submission_id'], 'quiz_id', self.kwargs['quiz_id']])
-        return reverse('assignments:quiz_results', args=[self.kwargs['submission_id']])
+        # Access submission_id and quiz_id from self.kwargs
+        submission_id = self.kwargs.get('submission_id')
+        quiz_id = self.kwargs.get('quiz_id')
+
+        # Use reverse to generate the URL
+        return reverse('assignments:quiz_results', args=[submission_id, quiz_id])
 
     
     def get_context_data(self, **kwargs):

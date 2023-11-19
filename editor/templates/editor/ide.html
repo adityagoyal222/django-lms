@@ -20,7 +20,7 @@
     </nav>
 
     <!-- Editor and Output Section -->
-    <div class="flex-grow flex">
+    <div class="flex-col ">
       <!-- Code Editor -->
       <div class="w-1/2 p-4">
         <form method="post" class="mt-4">
@@ -30,20 +30,34 @@
             {{ code }}
           {% endif %}
         </textarea> 
-          <div class="grid grid-cols-3 gap-2">
-            {% for language, label in form.fields.language.choices %}
-              <label class="flex items-center space-x-2">
-                <input type="radio" name="{{ form.language.name }}" value="{{ language }}" class="form-radio text-indigo-600">
-                <span class="text-gray-700">{{ label }}</span>
-              </label>
-            {% endfor %}
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-3 md:col-span-1 flex items-center space-x-2">
+            <label for="{{ form.language.id_for_label }}" class="text-cyan-950 ">Language:</label>
           </div>
-          <button type="submit" class="mt-4 px-4 py-2 bg-gray-800 text-white rounded font-semibold hover:bg-gray-600">Run Code</button>
+          
+          <div class="col-span-3 md:col-span-2 flex items-center space-x-2">
+            <div class="relative inline-block text-left">
+              <select name="{{ form.language.name }}" id="{{ form.language.id_for_label }}" class="form-select text-white bg-gray-700  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:focus:ring-blue-800">
+                {% for language, label in form.fields.language.choices %}
+                  <option class="text-center inline-flex items-center" value="{{ language }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg class="h-4 w-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M7 7l3-3 3 3m0 6l-3 3-3-3"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+          </div>
+          <button type="submit" class=" flex-col mt-4 px-4 py-2 bg-gray-800 text-white rounded font-semibold hover:bg-gray-600">Run Code</button>
         </form>
       </div>
 
       <!-- Output Panel -->
-      <div class="w-1/2 p-4 bg-gray-200">
+      <div class="flex-col w-1/2 p-4 bg-gray-200">
         <h2 class="text-lg font-bold mb-2">Output:</h2>
         <div id="output" class="bg-white p-4 h-32 border border-gray-300 rounded shadow-md overflow-auto">
           <!-- Output will be displayed here -->
