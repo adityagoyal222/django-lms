@@ -115,8 +115,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_lms',
-        'USER': 'toor',
-        'PASSWORD': 'password',
+        'USER': 'root',
+        'PASSWORD': 'lms123',
         'HOST': 'localhost',
         'PORT': '3306',
     }

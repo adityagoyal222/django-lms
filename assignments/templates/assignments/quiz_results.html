@@ -30,14 +30,14 @@
                 {% elif message.tags == 'warning' %}
                   <li class="{{ message.tags }} text-red-500">
                     <span>{{ message }}</span>
-                    <a class="hover:cursor-pointer underline" href="">Retake Quiz</a>
-                    {% comment %} Link to retake quiz if attempts remaining {% endcomment %}
+                    {% comment %} <a class="hover:cursor-pointer underline" href="">Retake Quiz</a> {% endcomment %}
+                    Link to retake quiz if attempts remaining
                     {% comment %} {% if remaining_attempts > 0 %} {% endcomment %}
-                      {% comment %} <a class="hover:cursor-pointer underline" href="{% url 'submit_quiz' quiz_id=quiz_id %}">Retake Quiz</a> {% endcomment %}
-                    {% comment %} {% else %} {% endcomment %}
-                      {% comment %} No attempts remaining {% endcomment %}
-                      {% comment %} No attempts remaining. {% endcomment %}
-                    {% comment %} {% endif %} {% endcomment %}
+                      <a class="hover:cursor-pointer underline" href="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}">Retake Quiz</a>
+                    {% comment %} {% else %}
+                      No attempts remaining
+                      No attempts remaining.
+                    {% endif %} {% endcomment %}
                   </li>
                 {% elif message.tags == 'info' %}
                   <li class="{{ message.tags }} text-blue-500">
