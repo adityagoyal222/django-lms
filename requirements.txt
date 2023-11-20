@@ -98,5 +98,9 @@ virtualenv==20.24.2
 Werkzeug==2.2.3
 yarl==1.9.2
 djangorestframework
+django-admin-interface
+django-widget-tweaks 
+django-debug-toolbar
+mammoth
 
 
