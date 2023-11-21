@@ -262,6 +262,10 @@
             </div>
         {% endif %}
         {% if user.is_authenticated %}
+        <a class="flex" href={% url 'editor:ide'%}>
+            <img src={%static 'django_lms/images/open_arrow.svg'%} alt="Open Sidebar" alt="ide"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
+            <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Code IDE</p>
+        </a>
         {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
         <div class="flex" onclick="toggleChatbot()">
             <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
