@@ -22,8 +22,12 @@ FROM python:3.9-alpine
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
-RUN apk update && \
-    apk add --no-cache mariadb-connector-c-dev build-base
+RUN apk update \
+    && apk add --no-cache mariadb-dev build-base \
+    && apk add --no-cache --virtual .build-deps \
+        gcc \
+        musl-dev \
+        mariadb-connector-c-dev
 
 # Set environment variables
 ENV MYSQLCLIENT_CFLAGS="-I/usr/include/mysql"
@@ -33,7 +37,7 @@ WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
@@ -42,4 +46,5 @@ RUN chmod +x /app/run.sh
 EXPOSE 8000
 
 CMD ["./run.sh"]
+
 
