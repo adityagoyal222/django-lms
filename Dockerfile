@@ -19,6 +19,14 @@
 
 FROM python:3.9-alpine
 ENV PYTHONUNBUFFERED 1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y libmysqlclient-dev
+
+# Set environment variables
+ENV MYSQLCLIENT_CFLAGS="-I/usr/include/mysql"
+ENV MYSQLCLIENT_LDFLAGS="-L/usr/lib/x86_64-linux-gnu -lmysqlclient -lpthread -lz -lm -ldl"
+
 WORKDIR /app
 
 RUN apk update && \
