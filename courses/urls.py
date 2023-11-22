@@ -23,6 +23,7 @@ urlpatterns = [
     path('mark_lesson_as_complete/', views.mark_lesson_as_complete, name='mark_lesson_as_complete'),
     path('certificate/<int:course_id>/', views.certificate_view, name='certificate'),
     path('update_video_progress/', views.update_video_progress, name='update_video_progress'),
+    path('verify_certificate/', views.verify_certificate, name='verify_certificate'),
 ]
 
 if settings.DEBUG:
