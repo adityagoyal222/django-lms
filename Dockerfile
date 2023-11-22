@@ -27,7 +27,8 @@ RUN apk update \
     && apk add --no-cache --virtual .build-deps \
         gcc \
         musl-dev \
-        mariadb-connector-c-dev
+        mariadb-connector-c-dev \
+        pkgconfig
 
 # Set environment variables
 ENV MYSQLCLIENT_CFLAGS="-I/usr/include/mysql"
@@ -46,5 +47,6 @@ RUN chmod +x /app/run.sh
 EXPOSE 8000
 
 CMD ["./run.sh"]
+
 
 
