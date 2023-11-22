@@ -65,7 +65,7 @@ mock==2.0.0
 morphys==1.0
 multidict==6.0.4
 mysqlclient
-openai==0.27.8
+openai
 packaging==23.1
 pbr==5.11.1
 Pillow==10.0.0
@@ -104,7 +104,6 @@ virtualenv==20.24.2
 Werkzeug==2.2.3
 yarl==1.9.2
 djangorestframework
-openai==0.11.2
 python-dotenv==0.19.0
 
 
