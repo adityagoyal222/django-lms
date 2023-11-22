@@ -64,7 +64,7 @@ merkletools==1.0.3
 mock==2.0.0
 morphys==1.0
 multidict==6.0.4
-mysqlclient
+mysqlclient==2.0.3
 openai
 packaging==23.1
 pbr==5.11.1
