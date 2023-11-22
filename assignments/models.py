@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 import os
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # Create your models here.
 class Assignment(models.Model):
@@ -29,6 +32,10 @@ class Quiz(models.Model):
 
     def __str__(self):
         return self.quiz_title
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    completed_quizzes = models.ManyToManyField(Quiz, related_name='completed_by_users', blank=True)
 
 class Question(models.Model):
     quiz_title = models.ForeignKey(Quiz, on_delete=models.CASCADE)
@@ -46,7 +53,7 @@ class Choice(models.Model):
         return self.text
 
 class QuizSubmission(models.Model):
-    student = models.ForeignKey(User, related_name='quiz', on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quiz', on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.PositiveIntegerField()
     submitted_on = models.DateTimeField(auto_now_add=True)
@@ -57,7 +64,7 @@ class QuizSubmission(models.Model):
         unique_together = ('student', 'quiz')
     
 class SubmitAssignment(models.Model):
-    author = models.ForeignKey(User, related_name='assignment', on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='assignment', on_delete=models.CASCADE)
     topic = models.CharField(max_length=200, blank=False)
     description = models.TextField(blank=False)
     assignment_file = models.FileField(blank=False, upload_to='assignments')

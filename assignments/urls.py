@@ -18,7 +18,7 @@ urlpatterns = [
     path('create_question/', views.CreateQuestionViewWithoutId.as_view(), name='create_question_without_id'),
     # path('submit_quiz/<int:quiz_id>', views.QuizAnswerView.as_view(), name='submit_quiz'),
     re_path(r'^submit_quiz/(?P<quiz_id>\d+)/$', views.QuizAnswerView.as_view(), name='submit_quiz'),
-    path('quiz/results/<int:submission_id>/', views.QuizResultsView.as_view(), name='quiz_results'),
+    path('quiz/results/<int:submission_id>/<int:quiz_id>/', views.QuizResultsView.as_view(), name='quiz_results'),
 ]
 
 if settings.DEBUG:
