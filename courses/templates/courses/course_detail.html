@@ -157,6 +157,23 @@
 {% endif %}
 </div>
 
+<div id="popup" class="fixed z-50 inset-0 items-center justify-center bg-black bg-opacity-40 overflow-auto hidden">
+    <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
+        <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
+        <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
+        <p>Click the "Generate Certificate" button to access your Certificate.</p>
+        <div class="flex mx-auto space-x-2 mt-[120px]">
+            
+              <a href="{% url 'courses:certificate' course_id=course.id %}">
+                <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">
+                    Claim Certificate
+                </button>
+            </a>  
+            <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
   function getCookie(name) {
     var cookieValue = null;
@@ -337,6 +354,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check completion status and percentage
+        var completionStatus = {% if completion_status %}true{% else %}false{% endif %};
+        var completionPercentage = {{ completion_percentage }};
+
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        // Show the popup if completion status is true or completion percentage is 100
+        if (completionStatus || completionPercentage === 100) {
+            showPopup();
+        }
+
+        // Close the popup when clicking the "Close" button
+        document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("popup").style.display = "none";
+        });
+
+        // Add logic for "Generate Certificate" button if needed
+        document.getElementById("generateCertificate").addEventListener("click", function () {
+            // Add your logic to handle generating the certificate
+        });
+    });
+
     
     
 </script>
@@ -350,6 +393,109 @@ function onYouTubeIframeAPIReady() {
     console.log("Youtube API Ready");
     console.log(players);
 }
-</script> 
+{% comment %} <script src="https://www.youtube.com/iframe_api"></script> {% endcomment %}
+<script>
+  console.log("Before loading YouTube API");
+
+  // Load YouTube API
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  function onYouTubeIframeAPIReady() {
+      console.log("YouTube API Ready");
+
+      // Define lessonData as a JavaScript variable and populate it with data from Django template
+      var lessonData = [
+          {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+          {% for lesson in content.lessons %}
+          {
+              id: '{{ lesson.id }}',
+              height: '360', // Set the desired video height
+              width: '640',  // Set the desired video width
+              videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+          },
+          {% endfor %}
+          {% endfor %}
+      ];
+
+      console.log("Lesson Data:", lessonData);
+
+        var players = {}; // This object will store all of the YouTube players
+        var progressInterval; // This variable will be used to store the interval for updating progress
+      // Function to initialize YouTube players
+      function initializeYouTubePlayers() {
+        for (var i = 0; i < lessonData.length; i++) {
+            var lesson = lessonData[i];
+            players[lesson.id] = new YT.Player('player' + lesson.id, {
+                height: lesson.height,
+                width: lesson.width,
+                videoId: lesson.videoId,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+    }
+   
+    initializeYouTubePlayers();
+    console.log("After initializeYouTubePlayers");
+    console.log("Players object:", players);
+    
+}
+
+function updateLessonProgress(lessonId) {
+    const player = players[lessonId];
+    if (player) {
+        const currentTime = player.getCurrentTime();
+        const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+        // Send an AJAX POST request to update the progress
+        fetch('/courses/update_video_progress/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+            },
+            body: `lesson_id=${lessonId}&current_time=${currentTime}`,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.message); // Log the response message
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+
+function onPlayerReady(event) {
+    const lessonId = event.target.getVideoData().video_id;
+
+    // Check if the player state is PLAYING before starting progress tracking
+    if (event.target.getPlayerState() === YT.PlayerState.PLAYING) {
+        startProgressTracking(lessonId);
+    }
+}
+function startProgressTracking(lessonId) {
+    // Remove the 'var' keyword to update the global progressInterval variable
+    progressInterval = setInterval(() => {
+        updateLessonProgress(lessonId);
+    }, 10000); // Update progress every 10 seconds (adjust as needed)
+    console.log("Progress Interval:", progressInterval);
+  }
+
+function onPlayerStateChange(event) {
+    const lessonId = event.target.getVideoData().video_id;
+
+    if (event.data === YT.PlayerState.ENDED || event.data === YT.PlayerState.PAUSED) {
+        clearInterval(progressInterval); // Stop progress tracking when the video ends or is paused
+        updateLessonProgress(lessonId);
+    }
+}    
+  </script>
   
 {% endblock main_content %}

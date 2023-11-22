@@ -13,20 +13,9 @@
   <h2 class="font-semibold">Answer the Quiz below:{{ quiz.quiz_title}}</h2>
 
 
-<form method="post" class="p-4 bg-gray-100 rounded-lg font-sans">
+<form method="post" class="p-4 bg-gray-100 rounded-lg font-sans" action="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}">
     {% csrf_token %}
     {{ form }} 
-    {% comment %} {% for question in quiz.questions.all %}
-    <div class="p-2 bg-gray-100 rounded-lg">
-        <h3 class="font-semibold">{{ question.question_text }}</h3>
-        {% for choice in question.choices.all %}
-        <div class="p-2 bg-gray-100 rounded-lg">
-            <input type="radio" id="{{ question.id }}_{{ forloop.counter }}" name="{{ question.id }}" value="{{ choice.id }}">
-            <label for="{{ question.id }}_{{ forloop.counter }}">{{ choice.choice_text }}</label>
-        </div>
-        {% endfor %}
-    </div>
-    {% endfor %} {% endcomment %}
     <button class="m-2 p-2 text-lg font-sans font-semibold bg-cyan-950 text-gray-100 hover:outline-none hover:bg-yellow-500 rounded-lg" type="submit">Submit Answers</button>
 </form>
 </div>
