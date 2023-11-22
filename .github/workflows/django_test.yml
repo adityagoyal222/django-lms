@@ -24,10 +24,10 @@ jobs:
 #     - name: Run Tests
 #       run: |
 #         python manage.py test
-    # - name: Build docker image & push to dockerhub
-    #   uses: mr-smithers-excellent/docker-build-push@v4
-    #   with:
-    #     image: kyalepeter/django_lms
-    #     registry: docker.io
-    #     username: ${{ secrets.DOCKER_USERNAME}}
-    #     password: ${{ secrets.DOCKER_PASSWORD}}
+    - name: Build docker image & push to docker hub
+      uses: mr-smithers-excellent/docker-build-push@v4
+      with:
+        image: kyalepeter/django_lms
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME}}
+        password: ${{ secrets.DOCKER_PASSWORD}}
