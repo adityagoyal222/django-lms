@@ -18,19 +18,18 @@
 # CMD ["./run.sh"]
 
 FROM python:3.9-alpine
+
 ENV PYTHONUNBUFFERED 1
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y libmysqlclient-dev
+RUN apk update && \
+    apk add --no-cache mariadb-connector-c-dev build-base
 
 # Set environment variables
 ENV MYSQLCLIENT_CFLAGS="-I/usr/include/mysql"
 ENV MYSQLCLIENT_LDFLAGS="-L/usr/lib/x86_64-linux-gnu -lmysqlclient -lpthread -lz -lm -ldl"
 
 WORKDIR /app
-
-RUN apk update && \
-    apk add --no-cache mariadb-connector-c-dev build-base
 
 COPY requirements.txt /app/requirements.txt
 
@@ -43,3 +42,4 @@ RUN chmod +x /app/run.sh
 EXPOSE 8000
 
 CMD ["./run.sh"]
+
