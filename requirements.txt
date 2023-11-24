@@ -1,5 +1,6 @@
 aiohttp==3.8.5
 aiosignal==1.3.1
+mysqlclient==2.0.3
 aniso8601==9.0.1
 arrow==1.2.3
 asgiref==3.7.2
@@ -103,3 +104,10 @@ validators==0.20.0
 virtualenv==20.24.2
 Werkzeug==2.2.3
 yarl==1.9.2
+djangorestframework
+openai==0.11.2
+python-dotenv==0.19.0
+
+
+#pymysql==1.0.2
+

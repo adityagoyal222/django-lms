@@ -3,6 +3,7 @@ from django.urls import reverse
 from users.models import User
 import mammoth
 
+
 # Create your models here.
 class Course(models.Model):
     course_name = models.CharField(max_length=200)
@@ -76,6 +77,7 @@ class CompletedLesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(auto_now_add=True)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('user', 'lesson')
