@@ -49,8 +49,8 @@
                 {% endfor %}
             <span class="sidemenu side-element text-gray-50"><i class="fa fa-user-circle-o fa-5x text-gray-50" aria-hidden="true" id="profile"></i></span>
         </div>
-        <div class="my-auto m-3 text-white font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row flex">
-            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu text-gray-100 uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
+        <div class="my-auto m-3 text-white  font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row flex">
+            <a href="{% url 'profile' pk=user.pk %}" class="sidemenu text-white uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 text-gray-50 hover:text-yellow-400 m-2 my-auto hover:cursor-pointer"
                             fill="none"
@@ -79,7 +79,7 @@
     <div class="bg-black bg-opacity-80 w-full top-0 relative mt-0">
         <div class="items-start p-1 left-2 ml-0 my-auto absolute">
             {% comment %} <img src="{% static 'django_lms/images/abya2.jpg' %}" class="rounded-full bg-cover"/> {% endcomment %}
-            <img width="300" height="300" src="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png" class="attachment-large size-large wp-image-821" alt="" loading="lazy" srcset="https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1024x396.png 1024w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-300x116.png 300w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-768x297.png 768w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-1536x594.png 1536w, https://abya.africa/wp-content/uploads/2022/08/3D-transparent-e1660989382844-2048x792.png 2048w" sizes="(max-width: 800px) 100vw, 800px">
+            <img width="300" height="300" src="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png" class="attachment-large size-large wp-image-3255" alt="" loading="lazy" srcset="https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized.png 592w, https://abyauniversity.com/wp-content/uploads/2022/08/abya-university-resized-300x129.png 300w" sizes="(max-width: 592px) 100vw, 592px">
         </div>
         <div class="items-end mx-auto justify-end flex flex-row m-2">
         <div class="flex flex-row p-2 space-x-4 font-bold">
@@ -251,6 +251,15 @@
                         
                 {% endfor %}                 
             {% endif %}
+            <a class="flex hover:no-underline" href={% url 'editor:ide'%}>
+                <img src={%static 'django_lms/images/open_arrow.svg'%} alt="Open Sidebar" alt="ide"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
+                <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Code IDE</p>
+            </a>
+            {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
+            <div class="flex" onclick="toggleChatbot()">
+                <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
+                <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Chatbot</p>
+            </div>
             <a href="{% url 'users:logout' %}" class="text-cyan-950 hover:text-yellow-500 hover:no-underline font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
             <div class="flex flex-col space-y-4 text-2xl font-extrabold m-3 p-2">
@@ -261,18 +270,18 @@
             <a href="{% url 'courses:list' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
             </div>
         {% endif %}
-        {% if user.is_authenticated %}
-        <a class="flex" href={% url 'editor:ide'%}>
+        {% comment %} {% if user.is_authenticated %} {% endcomment %}
+        {% comment %} <a class="flex" href={% url 'editor:ide'%}>
             <img src={%static 'django_lms/images/open_arrow.svg'%} alt="Open Sidebar" alt="ide"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
             <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Code IDE</p>
         </a>
         {% comment %} {% if user.user_type == 1 || user.user_type == 2%} {% endcomment %}
-        <div class="flex" onclick="toggleChatbot()">
-            <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
-            <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Chatbot</p>
-        </div>
+        {% comment %} <div class="flex" onclick="toggleChatbot()"> {% endcomment %}
+            {% comment %} <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/> {% endcomment %}
+            {% comment %} <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Chatbot</p> {% endcomment %}
+        {% comment %} </div> {% endcomment %}
         {% comment %} {% endif %} {% endcomment %}
-        {% endif %}
+        {% comment %} {% endif %} {% endcomment %} 
         </div>                
     </div>
     {% if user.is_authenticated %}
