@@ -1,5 +1,5 @@
 {% extends 'courses/course_base.html' %} 
-
+{% load static %}
 {% block title_name %}
   LMS - Courses
 {% endblock title_name %}
@@ -24,6 +24,13 @@
       {% comment %} <div class="card bg-gradient-to-r from-cyan-900 to-gray-300 shadow-lg h-[400px] m-2" style="width: 18rem"> {% endcomment %}
         <div class="card bg-black bg-opacity-40 shadow-lg h-auto m-2" style="width: 18rem">
         <div class="card-body  hover:shadow-2xl">
+        {% if course_item.picture %}
+        <p>Picture URL: {{ course_item.picture.url }}</p>
+          <img src="{{ course_item.picture.url }}" alt="{{ course_item.course_name }}" class="card-img-top">
+        {% else %}
+          <!-- Default image or placeholder if no picture is available -->
+          <img src="{% static 'django_lms/images/web4.jpg' %}" alt="Default Image" class="card-img-top">
+        {% endif %}
           <h5 class="card-title text-cyan-950 font-serif font-extrabold">{{course_item.course_name}}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
           <p class="card-text font-semibold">
