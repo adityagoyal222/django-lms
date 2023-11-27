@@ -103,9 +103,15 @@ class CourseDetail(generic.DetailView):
     model = Course
     
     def get_context_data(self, **kwargs):
+         # Initialize user_profile
+        user_profile = None
         try:
+            # Attempt to get user_profile
+            user_profile = UserProfile.objects.get(user=self.request.user)
             course = get_object_or_404(Course, pk=self.kwargs['pk'])
         except Http404:
+            # Handle the case where UserProfile does not exist
+            pass
             # Handle the case where the course does not exist
             messages.error(self.request, 'Course not found.')
             return HttpResponseRedirect(reverse('courses:list')) 
@@ -183,15 +189,32 @@ class CourseDetail(generic.DetailView):
             # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
             for chapter in chapters:
                 lessons = Lesson.objects.filter(chapter=chapter)
+                # Get quizzes related to the chapter
+                quizzes = Quiz.objects.filter(chapter=chapter)
+                # get the count of lessons and quizzes that exist in each chapter
                 lesson_count = lessons.count()
+                quiz_count = quizzes.count()
+                # Get the completed quiz IDs from the UserProfile
+                completed_quizzes = user_profile.completed_quizzes.values_list('id', flat=True)
+                completed_quizzes_ids = set(completed_quizzes)
 
-                is_completed = chapter.id in completed_chapter_ids and completed_chapter_ids.count(chapter.id) == lesson_count
+                # Check if all lessons and quizzes in the chapter are completed
+                is_completed = all(
+                    ((chapter.id in completed_chapter_ids and completed_chapter_ids.count(chapter.id) == lesson_count) and
+                    (quiz.id in completed_quizzes_ids and len(completed_quizzes_ids.intersection([quiz.id])) == 1))
+                    for quiz in quizzes
+                )
+
+
+
+
 
                 chapter_info = {
-                        'chapter_id': chapter.id,
-                        'lessons': lessons,
-                        'is_completed': is_completed,
-                    }
+                    'chapter_id': chapter.id,
+                    'lessons': lessons,
+                    'quizzes': quizzes,
+                    'is_completed': is_completed,
+                }
 
                 if is_completed:
                     chapters_with_completion.append(chapter_info)
@@ -268,7 +291,7 @@ class CourseDetail(generic.DetailView):
         context['course.pk'] = course
         context['course_id'] = course.pk
         # context['course_id'] = course.pk
-        # context['completed_lesson_ids'] = completed_lesson_ids
+        context['completed_lesson_ids'] = completed_lesson_ids
         # context['completed_lesson_ids_json'] = json.dumps(completed_lesson_ids)
         context['completed_quizzes'] = completed_quizzes
         context['completed_quizzes_count'] = completed_quizzes_count
@@ -279,6 +302,7 @@ class CourseDetail(generic.DetailView):
         context['chapters_with_completion'] = chapters_with_completion
         context['completion_status'] = completion_status
         context['completed_courses'] = completed_courses
+        context['user_profile'] = user_profile
         return context
 
 
