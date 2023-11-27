@@ -10,6 +10,7 @@ class Course(models.Model):
     course_description = models.TextField()
     teacher = models.ForeignKey(User, related_name="course", on_delete=models.CASCADE)
     students = models.ManyToManyField(User, through='Enrollment', related_name="student_course")
+    picture = models.ImageField(upload_to="course_pictures", null=True, blank=True)
 
     def total_quizzes(self):
         return self.chapters.aggregate(total_quizzes=models.Count('chapter_quizzes'))['total_quizzes']

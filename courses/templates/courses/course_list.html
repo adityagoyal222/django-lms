@@ -1,5 +1,5 @@
 {% extends 'courses/course_base.html' %}
-
+{% load static %}
 {% block title_name %}
   LMS - Courses
 {% endblock title_name %}
@@ -15,6 +15,40 @@
       </a>
     {% endif %}
   </div>
+    <div class="card-deck">
+      {% for course_item in object_list %}
+      <div class="">
+      {% comment %} <div class="card bg-gradient-to-r from-cyan-900 to-gray-300 shadow-lg h-[400px] m-2" style="width: 18rem"> {% endcomment %}
+        <div class="card bg-black bg-opacity-40 shadow-lg h-auto m-2" style="width: 18rem">
+        <div class="card-body  hover:shadow-2xl">
+        {% if course_item.picture %}
+        <p>Picture URL: {{ course_item.picture.url }}</p>
+          <img src="{{ course_item.picture.url }}" alt="{{ course_item.course_name }}" class="card-img-top">
+        {% else %}
+          <!-- Default image or placeholder if no picture is available -->
+          <img src="{% static 'django_lms/images/web4.jpg' %}" alt="Default Image" class="card-img-top">
+        {% endif %}
+          <h5 class="card-title text-cyan-950 font-serif font-extrabold">{{course_item.course_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
+          <p class="card-text font-semibold">
+            {{course_item.course_description}}
+          </p>
+          <!-- Progress Bar -->
+{% comment %} <div class="progress">
+  <div class="progress-bar relative m-2" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+</div> {% endcomment %}
+          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-cyan-950 text-white m-2 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold card-link">More Info</a>
+          {% if user.user_type == 2 %}
+          
+          {% endif %}
+  
+          {% if user.user_type == 1 %}
+            {%if user in course_item.students.all%}
+                <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold card-link">Unenroll</a>
+            {% else %}
+                <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold card-link">Enroll</a>
+            {% endif %}
+          {% endif %}
 
   <div class="lg:card-deck lg:space-x-6 flex flex-wrap">
     {% for course_item in object_list %}
