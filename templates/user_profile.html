@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static tailwind_tags %}
+{% load static %}
+
 
 
 
@@ -12,7 +14,12 @@
 {% block body_content %}
     <div class="mt-[150px] ml-3 w-[72%] text-cyan-950 font-serif bg-transparent overflow-auto h-[850px]">
         {% if user.is_authenticated %}
+        {% if user.profile.picture %}
+        <img src="{{ user.profile.picture.url }}" alt="User Picture" class="rounded-full h-[100px] mb-4">
+        
+        {% else %}
             <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
+        {% endif %}
             {% comment %} <p>{{ user.}}</p> {% endcomment %}
             <h1 class="text-3xl font-semibold">Username: {{user.username}}</h1>
             <h4 class="text-xl">First Name: {{user.first_name}}</h4>

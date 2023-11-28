@@ -49,7 +49,13 @@
                     {% endif %}
                         
                 {% endfor %}
-            <span class="sidemenu right-2 side-element text-gray-50"><i class="fa fa-user-circle-o fa-5x text-gray-50" aria-hidden="true" id="profile"></i></span>
+        {% if user.profile.picture %}
+        <img src="{{ user.profile.picture.url }}" alt="User Picture" class="rounded-full h-[100px] w-[100px] border-white border-4 mb-4">
+        
+        {% else %}
+        <span class="sidemenu side-element text-gray-50"><i class="fa fa-user-circle-o fa-5x text-gray-50" aria-hidden="true" id="profile"></i></span>
+        {% endif %}
+            
         </div>
         <div class="my-auto m-3 text-white  font-sans text-xl hover:no-underline hover:text-yellow-500 flex-row lg:flex hidden">
             <a href="{% url 'profile' pk=user.pk %}" class="sidemenu text-white uppercase side-element font-bold hover:no-underline hover:text-yellow-500 transition delay-200 ease-in-out">{{user}}</a>
