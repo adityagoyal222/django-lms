@@ -2,6 +2,7 @@ from django.urls import re_path, path
 from assignments import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.decorators.cache import cache_page
 
 app_name = 'assignments'
 urlpatterns = [
@@ -18,7 +19,7 @@ urlpatterns = [
     path('create_question/', views.CreateQuestionViewWithoutId.as_view(), name='create_question_without_id'),
     # path('submit_quiz/<int:quiz_id>', views.QuizAnswerView.as_view(), name='submit_quiz'),
     re_path(r'^submit_quiz/(?P<quiz_id>\d+)/$', views.QuizAnswerView.as_view(), name='submit_quiz'),
-    path('quiz/results/<int:submission_id>/<int:quiz_id>/', views.QuizResultsView.as_view(), name='quiz_results'),
+    path('quiz/results/<int:submission_id>/<int:quiz_id>/', cache_page(60*60)(views.QuizResultsView.as_view()), name='quiz_results'),
 ]
 
 if settings.DEBUG:

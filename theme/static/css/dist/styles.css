@@ -988,6 +988,14 @@ video {
   margin-top: auto;
 }
 
+.mt-\[170px\] {
+  margin-top: 170px;
+}
+
+.mt-\[200px\] {
+  margin-top: 200px;
+}
+
 .block {
   display: block;
 }
@@ -1224,8 +1232,8 @@ video {
   width: 100%;
 }
 
-.w-\[50px\] {
-  width: 50px;
+.w-\[400px\] {
+  width: 400px;
 }
 
 .max-w-2xl {

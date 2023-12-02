@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect,HttpResponseRedirect
 import datetime
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.urls import reverse
 from django.contrib import messages
 from django.views import generic
@@ -53,6 +55,7 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
     model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
+    @method_decorator(cache_page(60 * 60 * 2))
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -98,7 +101,7 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
     def get_success_url(self) -> str:
         return reverse('courses:list')
-    
+
 class CourseDetail(generic.DetailView):
     model = Course
     
@@ -423,7 +426,8 @@ class UpdateLessonView(LoginRequiredMixin, generic.UpdateView):
         else:
             form.add_error(None, "You don't have permission to edit this lesson.")
             return self.form_invalid(form)
-        
+
+   
 def certificate_view(request, course_id):
     user = request.user
     course = get_object_or_404(Course, pk=course_id)
@@ -557,16 +561,40 @@ def mark_lesson_as_complete(request):
 @csrf_protect
 def update_video_progress(request):
     if request.method == 'POST':
-        video_id = request.POST.get('video_id')
-        progress = request.POST.get('progress')
-        video_lesson = VideoLesson.objects.get(video_lesson_id=video_id)    
-        # Find the VideoProgress object for the specified video_id and update the progress
-        video_progress, created = VideoProgress.objects.get_or_create(video_lesson=video_lesson, user=request.user)
-        video_progress.progress = progress
-        if float(progress) == 75:
-            video_progress.status = True
-        video_progress.save()
-        
-        return JsonResponse({'message': 'Video progress updated successfully.'})
+        # Get JSON data from the request body
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            video_id = data.get('video_id')
+            progress = data.get('progress')
+            
+            # Now you can use video_id and progress in your logic
+            print("VidId:", video_id)
+            print("Progress:", progress)
 
+            # Find the VideoLesson object for the specified video_id
+            video_lesson = VideoLesson.objects.get(video_lesson_id=video_id)
+
+            # Find the VideoProgress object for the specified video_lesson and user
+            video_progress, created = VideoProgress.objects.get_or_create(video_lesson=video_lesson, user=request.user)
+            
+            # Update the progress
+            video_progress.progress = progress
+
+            # Check if the progress is 75% and update the status
+            # if progress is greaer or equal to 75% then set status to True
+
+            if float(progress) > 75:
+                video_progress.status = True
+            
+            video_progress.save()
+
+           # Include the status in the response
+            response_data = {
+                'message': 'Video progress updated successfully.',
+                'status': video_progress.status,
+            }
+
+            return JsonResponse(response_data)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
     return JsonResponse({'message': 'Invalid request method.'}, status=400)

@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
 from django.views.generic.edit import FormMixin
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+
 from django.utils import timezone
 import os
 from django.conf import settings
@@ -162,6 +163,39 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
         kwargs['user'] = self.request.user
         return kwargs
     
+# class SubmitQuizView(LoginRequiredMixin, generic.CreateView):
+#     form_class = SubmitQuizForm
+#     template_name = 'assignments/submitquiz_form.html'
+#     select_related = ('student', 'quiz')
+    
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         kwargs['user'] = self.request.user
+#         kwargs['quiz'] = Quiz.objects.get(id=self.kwargs['quiz_id'])
+#         return kwargs
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['quiz'] = Quiz.objects.get(id=self.kwargs['quiz_id'])
+#         return context
+    
+#     def form_valid(self, form):
+#         quiz = Quiz.objects.get(id=self.kwargs['quiz_id'])
+#         self.object = form.save(commit=False)
+#         self.object.quiz = quiz
+#         self.object.student = self.request.user
+        
+#         score = 0
+#         for question in quiz.question_set.all():
+#             selected_choices = form.cleaned_data[f'question_{question.id}']
+#             correct_choices = question.choice_set.filter(is_correct=True)
+#             if set(selected_choices) == set(correct_choices):
+#                 score += 1
+#         self.object.score = score
+#         self.object.save()
+        
+#         return redirect('quiz_results', submission_id=self.object.id)
+
 class QuizResultsView(LoginRequiredMixin, generic.TemplateView):
     model = QuizSubmission
     form_class = None  # i'm not using a form for this view
@@ -202,6 +236,7 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
+
 class QuizAnswerView(LoginRequiredMixin, FormView):
     template_name = 'assignments/quiz_answer.html'
     form_class = QuizAnswerForm

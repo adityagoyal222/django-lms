@@ -6,6 +6,7 @@ from users.models import User, Profile
 # from django.views.decorators.csrf import csrf_protect
 # from .models import CompletedLesson
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
 # from courses.models import Lesson
 
 # Create your views here.

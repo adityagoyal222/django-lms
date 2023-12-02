@@ -21,6 +21,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from googleapiclient.errors import HttpError
+from django.views.decorators.cache import cache_page
+
 
 class UserProfile(LoginRequiredMixin, generic.ListView):
     model = Course
