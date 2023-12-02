@@ -10,6 +10,8 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.http import HttpResponseServerError
 import os
 from dotenv import load_dotenv
+from django.views.decorators.cache import cache_page
+
 
 class UserProfile(LoginRequiredMixin, generic.ListView):
     model = Course

@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
 from django.views.generic.edit import FormMixin
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+
 from django.utils import timezone
 import os
 from django.conf import settings
@@ -225,7 +226,7 @@ class SubmitAssignmentView(LoginRequiredMixin, generic.CreateView):
 #         self.object.save()
         
 #         return redirect('quiz_results', submission_id=self.object.id)
-    
+
 class QuizResultsView(LoginRequiredMixin, generic.TemplateView):
     model = QuizSubmission
     form_class = None  # i'm not using a form for this view
@@ -266,6 +267,7 @@ class AssignmentDetail(LoginRequiredMixin, generic.DetailView):
         self.request.session['assignment'] = self.kwargs['pk']
         # print(self.request.session['assignment'])
         return context
+
 class QuizAnswerView(LoginRequiredMixin, FormView):
     template_name = 'assignments/quiz_answer.html'
     form_class = QuizAnswerForm

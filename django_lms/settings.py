@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'users',
     'courses',
+    
     'assignments',
     'bootstrap4',
     'resources',
@@ -82,8 +83,25 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    # 'django.middleware.cache.UpdateCacheMiddleware',  #new   
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware', #new
     
 ]
+
+# CACHE_MIDDLEWARE_ALIAS = 'default'  # The cache alias to use for storage and 'default' is **local-memory cache**.
+# CACHE_MIDDLEWARE_SECONDS = '600'    # number of seconds before each page is cached
+# CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+}
+}
 
 ROOT_URLCONF = 'django_lms.urls'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -167,7 +185,8 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+CSRF_COOKIE_SECURE = True  # Set to True if using HTTPS
+CSRF_COOKIE_HTTPONLY = True
 AUTH_USER_MODEL = "users.User"
 
 LOGIN_REDIRECT_URL = '/courses/all/'

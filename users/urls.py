@@ -1,5 +1,6 @@
 from django.urls import re_path
 from django.contrib.auth import views as auth_views
+
 from users import views
 
 app_name = 'users'
