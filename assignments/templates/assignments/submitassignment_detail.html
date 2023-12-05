@@ -9,15 +9,15 @@
 
 
 {% block main_content %}
-    <div class="container">
+    <div class="text-cyan-950 mt-[150px] p-4 w-[70%] ml-2">
         {% if submissions.assignment_ques.course.teacher.id == user.id or submissions.author.id == user.id %}
-            <h1>{{submissions.topic}}</h1>
-            <h4>Submitted by: {{submissions.author}}</h4>
-            <h6>Submitted On: {{submissions.submitted_date}}</h6>
-            <p>Description: {{submissions.description}}</p>
-            <p>Submission: {{submissions.assignment_file.name}}</p>
+            <h1 class="font-sans font-semibold text-3xl m-2 uppercase">{{submissions.topic}}</h1>
+            <h4 class="m-2 text-xl">Submitted by: {{submissions.author}}</h4>
+            <h6 class="m-2 text-xl">Submitted On: {{submissions.submitted_date}}</h6>
+            <p class="m-2 text-xl font-extralight">Description: {{submissions.description}}</p>
+            <p class="m-2 text-xl">Submission: {{submissions.assignment_file.name}}</p>
              
-            <a href="{{submissions.assignment_file.url}}" class="btn btn-lg btn-primary" download>Download</a>
+            <a href="{{submissions.assignment_file.url}}" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 hover:outline-none p-2 rounded-md text-md font-extrabold hover:no-underline" download>Download</a>
             <div class="grade">
                 {% if submissions.graded == False %}
                     <p>This assignment has not been graded yet.</p>
@@ -34,7 +34,7 @@
                     <form method="POST">
                         {% csrf_token %}
                         <a href="{% url 'assignments:submit_delete' pk=submissions.pk %}" 
-                        class="btn btn-danger btn-lg">Delete</a>
+                        class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a>
                     </form>
                     
                 </div>

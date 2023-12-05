@@ -34,6 +34,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 'admin_material.apps.AdminMaterialDashboardConfig',
+    "admin_interface",
+    "colorfield",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,30 +46,65 @@ INSTALLED_APPS = [
 
     'users',
     'courses',
+    
     'assignments',
     'bootstrap4',
     'resources',
+    'editor',
     'graphene_django',
     'crispy_forms',
     'django_forms_bootstrap',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
+    'rest_framework',
+    'markdown',
+    'widget_tweaks',
+    "debug_toolbar",
+   
+    
+    'markdownx',
 ]
-
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 GRAPHENE = {
     'SCHEMA': 'django_lms.schema.schema'
 }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+    # 'django.middleware.cache.UpdateCacheMiddleware',  #new   
+    # 'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware', #new
+    
 ]
 
-ROOT_URLCONF = 'django_lms.urls'
+# CACHE_MIDDLEWARE_ALIAS = 'default'  # The cache alias to use for storage and 'default' is **local-memory cache**.
+# CACHE_MIDDLEWARE_SECONDS = '600'    # number of seconds before each page is cached
+# CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+}
+}
+
+ROOT_URLCONF = 'django_lms.urls'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -96,7 +134,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_lms',
         'USER': 'root',
-        'PASSWORD': 'password',
+        'PASSWORD': 'lms123',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -127,7 +165,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -135,17 +173,20 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
+X_FRAME_OPTIONS = "SAMEORIGIN" 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
-
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CSRF_COOKIE_SECURE = True  # Set to True if using HTTPS
+CSRF_COOKIE_HTTPONLY = True
 AUTH_USER_MODEL = "users.User"
 
 LOGIN_REDIRECT_URL = '/courses/all/'

@@ -1,0 +1,34 @@
+{% extends 'assignments/assignment_base.html' %}
+{% load bootstrap4 %}
+
+{% block title_name %}
+    LMS - Create Quiz
+{% endblock title_name %}
+
+
+{% block main_content %}
+<div class="w-[72%] mt-[150px] pl-5">
+    <h1 class="font-sans font-semibold text-3xl m-2">Create Quiz</h1>
+
+    {% if user.user_type == 2 %}
+      <form method="POST" action="" class="shadow-lg p-4 rounded-xl font-sans font-semibold m-2">
+        {% csrf_token %}
+        {% comment %} {% bootstrap_field form.course %}  {% endcomment %}
+        {% bootstrap_field quiz_form.course %}
+        {% bootstrap_field quiz_form.chapter %}
+        {% bootstrap_field quiz_form.quiz_title %}
+        {% bootstrap_field quiz_form.quiz_description %}
+        {{ form.name.errors }}
+        <input type="submit" value="Submit" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 p-2 rounded-md text-md font-extrabold hover:no-underline"/>
+      </form>
+
+
+      {% else %}
+          <div class="jumbotron">
+              <h2>You cannot set a quiz</h2>
+          </div>
+      {% endif %}
+
+  </div>
+
+{% endblock main_content %}

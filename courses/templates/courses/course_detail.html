@@ -1,85 +1,516 @@
-{% extends 'courses/course_base.html' %} 
+{% extends 'courses/course_base.html' %}
+{% load bootstrap4 %}
+{% load courses_extras %}
+{% load static %}
+{% load cache %}
 
 {% block title_name %}
-  LMS - {{course.course_name}}
+  LMS - {{ course.course_name }}
 {% endblock title_name %}
-  
+
 {% block main_content %}
-<h1>{{course.course_name}}</h1>
-<h4>Teacher: {{course.teacher}}</h4>
-<p>Description: {{course.course_description}}</p>
 
-{% if user.user_type == 1 %} {%if user in course.students.all%}
-<a
-  href="{% url 'courses:unenroll' pk=course.pk %}"
-  class="btn btn-danger btn-lg"
-  >Unenroll</a
->
-{% else %}
-<a href="{% url 'courses:enroll' pk=course.pk %}" class="btn btn-success btn-lg"
-  >Enroll</a
->
-{% endif %} 
-{% endif %}
+{% cache 1000 chapters_with_lessons_and_quizzes  %}
+{% cache 500 course %}
 
-{% if course.teacher.id == user.id or user in course.students.all%}
-  {% if user.user_type == 2 %}
-    <a
-      href="{% url 'assignments:create' %}"
-      class="btn btn-lg btn-fill btn-warning button-stretch"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
-    </a>
-    <a
-      href="{% url 'resources:create' %}"
-      class="btn btn-lg btn-fill btn-info button-stretch"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
-    </a>
-  {% endif %}
-    
-  <div class="assignments">
-    <h3>Assignments</h3>
-    <ul class="list-group">
-      {% for assignment in assignments %}
-      <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{assignment.assignment_name}}</h5>
-        </div>
-        <p class="mb-1">
-          {{assignment.assignment_description}}
-        </p>
-        <small>Start Date: {{assignment.start_date}}</small><br>
-        <small>Due Date: {{assignment.due_date}} {{assignment.due_time}}</small>
-      </a>
-      {% empty %}
-      <h6>No Assignments</h6>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="resources">
-    <h3>Resources</h3>
-    <!-- {% include 'assignments/assignment_list.html' %} -->
-    <ul class="list-group">
-      {% for resource in resources %}
-      <div  class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{resource.resource_name}}</h5>
-        </div>
-        <p class="mb-1">
-          Submission: {{resource.resource_file.name}}
-          <a href="{{resource.resource_file.url}}" class="btn btn-sm btn-primary" download>Download</a>
-        </p>
-        
-        {% if user.id == course.teacher.id %}
-          <small><a href="{% url 'resources:delete' pk=resource.pk %}" class="btn btn-sm btn-danger">Delete</a></small>
+<div class="ml-[50px] max-w-[72%] text-cyan-950 h-[830px] overflow-y-auto relative">
+    <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }}</h1>
+    <!-- Display the total number of lessons -->
+<p class="font-sans text-xl m-2">Total Lessons: <span class="font-semibold">{{ total_lessons }}</span></p>
+<!-- Display the total number of completed lessons for the user -->
+<p class="font-sans text-xl m-2">Completed Lessons: <span class="font-semibold">{{ completed_lessons }}</span></p>
+<p class="font-sans text-xl m-2">Total Quizzes in Course: <span class="font-semibold">{{ course.total_quizzes }}</span></p>
+<p class="font-sans text-xl m-2">Completed Quizzes: <span class="font-semibold">{{ completed_quizzes_count }}<span></p>
+{% comment %} <div id="lessonIds" class="text-cyan-950 font-semibold m-2 p-2" data-lesson-ids="{{ completed_lesson_ids_json|safe }}"><p>Completer Lesson IDs: {{completed_lesson_ids}}</p></div> {% endcomment %}
+
+
+
+{% if user.is_authenticated %}
+{% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+<div class="bg-gray-50 p-4 m-1 shadow-md rounded-lg mb-3">
+    <button class="text-xl font-sans font-bold hover:text-yellow-500 focus:outline-none" onclick="toggleChapter('{{ chapter.id }}')">
+        {{ chapter.chapter_name }}
+    </button>
+    {% if content.quizzes %}
+    {% with quiz_id=content.quizzes.0.id %}
+        {% if quiz_id in completed_quizzes %}
+            <p class="text-gray-400">Quiz Completed</p>
+        {% else %}
+        <a href="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}" class="text-blue-600 hover:underline">Take Quiz</a>
         {% endif %}
-      </div>
-      {% empty %}
-        <h6>No Resources</h6>
-      {% endfor %}
-    </ul>
-  </div>
+    {% endwith %}
+{% else %}
+    <p class="text-red-600">No Quiz</p>
 {% endif %}
+
+    
+    <div id="{{ chapter.id }}" class="mt-2 hidden">
+        {% for lesson in content.lessons %}
+        
+        {% comment %} {% if lesson.video %}
+        <p class="text-gray-700 text-xl">Watch this</p>
+        <div class="m-4">
+            <div class="lesson-video-container">
+                <div id="text-red-700 p-2"> {{ lesson.video }}</div>
+                <div id="player{{ lesson.id }}"></div>
+            </div>   
+        </div>
+        {% endif %} {% endcomment %}
+
+        <div class="bg-white p-3 m-2 rounded-lg shadow-md mb-2">
+            <p class="text-xl font-sans font-semibold underline">{{ lesson.lesson_name }}</p>
+            <div class="mt-2 text-xl font-sans text-cyan-950">
+                {{ lesson.lesson_content|convert_markdown|safe }}
+                {% if lesson.video %}
+            <p class="text-cyan-950 text-md">Watch this:</p>
+            <div class="m-4">
+                <div class="lesson-video-container">
+                    <div id="text-red-700" class="mb-2"> {{ lesson.video }}</div>
+
+                    <div id="player{{ lesson.id }}" class="rounded-xl"></div>
+                    {% if video_completion_status %}
+                    <!-- Display completion indicator or text -->
+                    <p class="text-green-500">Video Completed</p>
+                {% endif %}
+                </div>   
+            </div>
+            {% endif %}
+                {% if user.user_type == 1 %}
+                <button id="markAsReadButton_{{ lesson.id }}" class="mark-lesson-button bg-cyan-950 hover:outline-none hover:bg-yellow-500 text-white font-sans text-md font-bold p-2 m-2 rounded-md hover:cursor-pointer {% if lesson.id in completed_lesson_ids %}cursor-not-allowed opacity-20 hover:cursor-not-allowed hover:bg-gray-500{% endif %}"
+                onclick="updatechecked(this)" data-lesson-id="{{ lesson.id }}" {% if lesson.id in completed_lesson_ids %}disabled{% endif %}>
+                Mark as Read
+                </button>
+                {% endif %}
+                <input type="hidden" id="lessonIdField" name="lesson_id" value="{{ lesson.id }}">
+                {% csrf_token %}
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+    <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
+{% endif %}
+
+   
+{% comment %} </div> {% endcomment %}
+
+{% if not user %}
+    <p class="text-danger font-weight-bold m-2">Please login to view more information.</p>
+{% else %}
+    {% if user.user_type == 1 %}
+        {% if user in course.students.all %}
+            <a href="{% url 'courses:unenroll' pk=course.pk %}"
+                class="bg-red-600 mt-[30px] text-white hover:bg-red-500 p-2 relative rounded-md text-md font-extrabold hover:no-underline">Unenroll</a>
+        {% else %}
+            <a href="{% url 'courses:enroll' pk=course.pk %}"
+                class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 hover:outline-none p-2 rounded-md text-md font-extrabold hover:no-underline">Enroll</a>
+        {% endif %}
+    {% endif %}
+    {% if course.teacher.id == user.id or user in course.students.all %}
+        {% if user.user_type == 2 %}
+            <a href="{% url 'assignments:create' %}"
+                class="bg-yellow-500 rounded-md font-semibold text-black hover:text-white hover:bg-black p-2 m-2 shadow-lg text-2xl">
+                <i class="fa fa-plus-circle" aria-hidden="true"> Create New Assignment</i>
+            </a>
+            <a href="{% url 'resources:create' %}"
+                class="bg-blue-900 rounded-md font-semibold text-white hover:text-black hover:shadow-xl hover:bg-gray-400 p-2 m-2 shadow-lg text-2xl">
+                <i class="fa fa-plus-circle" aria-hidden="true"> Create New Resource</i>
+            </a>
+        {% endif %}
+        <div class="assignments w-[90%]">
+            <h3 class="font-sans font-semibold text-3xl">Assignments</h3>
+            <ul class="list-group" class="bg-slate-300 outline-none ml-3">
+                {% for assignment in assignments %}
+                <a href="{% url 'assignments:detail' pk=assignment.pk %}"
+                    class="list-group-item list-group-item-action text-cyan-950 m-2 p-4">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 font-semibold font-serif">{{ assignment.assignment_name }}</h5>
+                    </div>
+                    <p class="mb-1 font-semibold">
+                        {{ assignment.assignment_description }}
+                    </p>
+                    <small>Start Date: {{ assignment.start_date }}</small><br>
+                    <small>Due Date: {{ assignment.due_date }} {{ assignment.due_time }}</small>
+                </a>
+                {% empty %}
+                <h6>No Assignments</h6>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="resources w-[90%]">
+            <h3 class="font-sans font-2xl font-semibold m-2">Resources</h3>
+            <ul class="list-group">
+                {% for resource in resources %}
+                <div class="list-group-item list-group-item-action p-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ resource.resource_name }}</h5>
+                    </div>
+                    <p class="mb-1">
+                        Submission: {{ resource.resource_file.name }}
+                        <a href="{{ resource.resource_file.url }}"
+                            class="m-2 bg-cyan-950 hover:text-gray-100 hover:bg-yellow-500 p-2 rounded-lg text-gray-100 text-md font-extrabold hover:no-underline">Download</a>
+                    </p>
+                    {% if user.id == course.teacher.id %}
+                        <small><a href="{% url 'resources:delete' pk=resource.pk %}"
+                                class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a></small>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <h6 class="font-extralight font-serif text-gray-400">No Resources</h6>
+                {% endfor %}
+            </ul>
+        </div>
+        
+    {% endif %}
+{% endif %}
+</div>
+
+<div id="popup" class="fixed z-50 inset-0 items-center justify-center bg-black bg-opacity-40 overflow-auto hidden">
+    <div class="relative bg-cyan-950 text-white w-[30%] h-[40%] mt-[40%] rounded-lg p-4 mx-auto my-auto flex items-center justify-center flex-col" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({% static 'django_lms/images/congratulations.jpg' %});">
+        <h2 class="text-2xl font-bold mb-4">Congratulations!</h2>
+        <p>You have successfully completed the <span class="text-yellow-400">{{ course }}</span> course.</p>
+        <p>Click the "Generate Certificate" button to access your Certificate.</p>
+        <div class="flex mx-auto space-x-2 mt-[120px]">
+            
+              <a href="{% url 'courses:certificate' course_id=course.id %}">
+                <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">
+                    Claim Certificate
+                </button>
+            </a>  
+            <button id="closePopup" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
   
+  function toggleChapter(id) {
+      const chapter = document.getElementById(id);
+      chapter.classList.toggle('hidden');
+  }
+     // Initialize the progress based on the number of lessons
+     const totalLessons = {{ total_lessons }};
+     console.log("Total Lessons:", totalLessons)
+     const progressBar = document.getElementById('progressBar');
+     const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+  
+ function updatechecked(button){
+   
+    // Fetch the completed lessons count via AJAX
+    const courseId = parseInt('{{ course.pk }}');
+    console.log('Course ID:', courseId);
+    const lessonIdsDiv = document.getElementById('lessonIds');
+    const completedLessonIds = JSON.parse(lessonIdsDiv.getAttribute('data-lesson-id'));
+    console.log(lessonIds)
+    console.log(completedLessonIds)
+
+
+    console.log('Completed Lesson IDs:', completedLessonIds);
+    //check the respective lessonradiobuttons if that lesson is marked as read/completed
+    const lessonId = button.getAttribute('data-lesson-id'); // Get the lesson ID from the data attribute
+    const lessonCheckbox = document.querySelector(`#lessonRadio${lessonId}`);
+    if (lessonCheckbox) {
+        lessonCheckbox.checked = true; // Check the corresponding checkbox
+    }
+ fetch("{% url 'courses:completed_lesson_count' course.pk %}", {
+   method: "GET",
+   headers: {
+     "Content-Type": "application/json",
+     "X-CSRFToken": getCookie("csrftoken"),
+   },
+ })
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`Network response was not ok, status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+    if (data.completed_lessons_count !== undefined) {
+      const completedLessons = data.completed_lessons_count;
+      console.log("completed_lesson_counttt: ", completedLessons)
+      updateProgress(completedLessons);
+      //console.log("JSON Response:", data);
+    }
+   })
+   .catch(error => {
+     console.error('Fetch error:', error);
+   });
+ 
+ function updateProgress(completedLessons) {
+    //how do i reference the progressbar if it exists in the courses/course_base.html
+
+    
+     const progressBar = document.getElementById('progressBar');
+     const lessonRadioButtons = document.querySelectorAll('.lessonRadio');
+     const totalLessons = {{ total_lessons }};
+
+     //how do i check the respective lessonradiobuttons if that lesson is marked as read/completed
+     for (let index = 0; index < lessonRadioButtons.length; index++) {
+        const lessonRadioButton = lessonRadioButtons[index];
+        if (lessonRadioButton.checked) {
+          completedLessons += 1;
+        }
+      }
+
+ 
+         // Disable the corresponding "Mark as Read" button
+         const lessonButton = document.querySelector(`#markAsReadButton_${lessonId}`);
+         if (lessonButton) {
+           lessonButton.disabled = true;
+         }
+       }
+ 
+ 
+ }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const markLessonButtons = document.querySelectorAll('.mark-lesson-button');
+
+    markLessonButtons.forEach((markLessonButton) => {
+        markLessonButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default button click behavior
+
+            // Check if the button is disabled (already clicked)
+            if (markLessonButton.disabled) {
+                return; // Don't process if already disabled
+            }
+
+            const lessonId = markLessonButton.getAttribute('data-lesson-id');
+            const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+            // Send an AJAX request to mark the lesson as complete
+            fetch("{% url 'courses:mark_lesson_as_complete' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Change content type to JSON
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({ lesson_id: lessonId }), // Convert to JSON format
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.message); // Log the response message
+                // disable the button
+                markLessonButton.disabled = true;
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+
+
+    // Define lessonData as a JavaScript variable and populate it with data from Django template
+    var lessonData = [
+        {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+        {% for lesson in content.lessons %}
+        {
+            id: '{{ lesson.id }}',
+            height: '360', // Set the desired video height
+            width: '640',  // Set the desired video width
+            videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+        },
+        {% endfor %}
+        {% endfor %}
+    ];
+
+    function updateChapterCheckbox(chapterId) {
+        // Get all the lesson checkboxes for the specified chapter
+        const lessonCheckboxes = document.querySelectorAll(`input[data-lesson-chapter-id="${chapterId}"]`);
+    
+        // Attach an event listener to each lesson checkbox
+        lessonCheckboxes.forEach(lessonCheckbox => {
+            lessonCheckbox.addEventListener('change', function () {
+                // Check or uncheck the chapter checkbox based on the state of lesson checkboxes
+                const allLessonCheckboxesChecked = [...lessonCheckboxesInChapter].every(checkbox => checkbox.checked);
+    
+                // Get the chapter checkbox
+                const chapterCheckbox = document.querySelector(`input[data-chapter-id="${chapter.id}"]`);
+    
+                // Set the state of the chapter checkbox
+                chapterCheckbox.checked = allLessonCheckboxesChecked;
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Get a list of chapter IDs (you can retrieve these from your template)
+        const chapterIds = [{{ completed_chapter_ids|join:', ' }}]; // Replace with actual chapter IDs
+        console.log("Chapter IDs: ",chapterIds)
+    
+        // Initialize chapter checkboxes for each chapter
+        chapterIds.forEach(chapterId => {
+            updateChapterCheckbox(chapterId);
+        });
+    });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check completion status and percentage
+        var completionStatus = {% if completion_status %}true{% else %}false{% endif %};
+        var completionPercentage = {{ completion_percentage }};
+
+        // Function to show the popup
+        function showPopup() {
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        // Show the popup if completion status is true or completion percentage is 100
+        if (completionStatus || completionPercentage === 100) {
+            showPopup();
+        }
+
+        // Close the popup when clicking the "Close" button
+        document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("popup").style.display = "none";
+        });
+
+        // Add logic for "Generate Certificate" button if needed
+        document.getElementById("generateCertificate").addEventListener("click", function () {
+            // Add your logic to handle generating the certificate
+        });
+    });
+
+    
+    
+</script>
+
+<!-- Include your JavaScript file that uses lessonData -->
+<script src="https://www.youtube.com/iframe_api"></script>
+ <script>
+function onYouTubeIframeAPIReady() {
+    initializeYouTubePlayers();
+    console.log("Youtube API Ready");
+    console.log(players);
+}
+
+    console.log("Before loading YouTube API");
+
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function onYouTubeIframeAPIReady() {
+        console.log("YouTube API Ready");
+
+      // Define lessonData as a JavaScript variable and populate it with data from Django template
+      var lessonData = [
+          {% for chapter, content in chapters_with_lessons_and_quizzes.items %}
+          {% for lesson in content.lessons %}
+          {
+              id: '{{ lesson.id }}',
+              height: '360', // Set the desired video height
+              width: '640',  // Set the desired video width
+              videoId: '{{ lesson.video.video_lesson_id }}', // Replace with the actual video ID for the lesson
+          },
+          {% endfor %}
+          {% endfor %}
+      ];
+
+      console.log("Lesson Data:", lessonData);
+        var players = {}; // This object will store all of the YouTube players
+      // Function to initialize YouTube players
+      function initializeYouTubePlayers() {
+        for (var i = 0; i < lessonData.length; i++) {
+            var lesson = lessonData[i];
+            players[lesson.id] = new YT.Player('player' + lesson.id, {
+                height: lesson.height,
+                width: lesson.width,
+                videoId: lesson.videoId,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+    }
+   
+    initializeYouTubePlayers();
+    console.log("After initializeYouTubePlayers");
+    console.log("Players object:", players);
+    
+}
+
+ function onPlayerReady(event) {
+    const lessonId = event.target.getVideoData().video_id;
+} 
+function onPlayerStateChange(event) {
+    const videoId = event.target.getVideoData().video_id;  // Use "videoId" instead of "VideoId"
+    const playerState = event.data;
+
+    // Assuming that a user should be considered to have completed the lesson
+    // if they have watched at least 75% of the video
+    if (playerState === YT.PlayerState.ENDED || playerState === YT.PlayerState.PAUSED) {
+        const currentTime = event.target.getCurrentTime();
+        const totalDuration = event.target.getDuration();
+        const progressPercentage = (currentTime / totalDuration) * 100;
+        
+        // Send an AJAX POST request to update the progress
+        const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+        // Now you can send the progress information to your backend or handle it as needed
+        console.log(`Video ID: ${videoId}, Progress: ${progressPercentage}%`);
+
+        fetch('/courses/update_video_progress/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({
+                video_id: videoId,  // Use "video_id" instead of "VideoId"
+                progress: progressPercentage, 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response if needed
+            console.log('Progress update successful:', data);
+        })
+        .catch(error => {
+            console.error('Error updating progress:', error);
+        });
+    }
+}
+  </script>
+  {% endcache %}
+  {% endcache %}
 {% endblock main_content %}

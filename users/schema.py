@@ -29,6 +29,7 @@ class UserInput(graphene.InputObjectType):
     email = graphene.String()
     password = graphene.String()
     user_type = graphene.Int()
+    profile_image = graphene.Field()
 
 class CreateUser(graphene.Mutation):
     class Arguments:
@@ -46,7 +47,8 @@ class CreateUser(graphene.Mutation):
             last_name=input.last_name,
             email=input.email,
             password=input.password,
-            user_type=input.user_type
+            user_type=input.user_type,
+            profile_image=input.profile_image
         )
         user_instance.save()
         return CreateUser(ok=ok, user=user_instance)
@@ -71,6 +73,7 @@ class UpdateUser(graphene.Mutation):
             user_instance.email = input.email
             user_instance.password = input.password
             user_instance.user_type = input.user_type
+            user_instance.profile_image = input.profile_image
             user_instance.save()
             return UpdateUser(ok=ok, user=user_instance)
         return UpdateUser(ok=ok, actor=None)
