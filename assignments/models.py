@@ -33,9 +33,16 @@ class Quiz(models.Model):
     def __str__(self):
         return self.quiz_title
     
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    completed_quizzes = models.ManyToManyField(Quiz, related_name='completed_by_users', blank=True)
+class CompletedQuiz(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'quiz')
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     completed_quizzes = models.ManyToManyField(Quiz, related_name='completed_by_users', blank=True)
 
 class Question(models.Model):
     quiz_title = models.ForeignKey(Quiz, on_delete=models.CASCADE)
