@@ -31,7 +31,7 @@ import io
 from django.db import IntegrityError
 from django.http import Http404
 from assignments import models
-from assignments.models import QuizSubmission, UserProfile
+from assignments.models import QuizSubmission, CompletedQuiz
 from django.db.models import Count
 
 # Create your views here.
@@ -102,12 +102,14 @@ class CreateLessonView(LoginRequiredMixin, generic.CreateView):
 class CourseDetail(generic.DetailView):
     model = Course
     
+    
     def get_context_data(self, **kwargs):
          # Initialize user_profile
         user_profile = None
         try:
+            user_id = self.request.user.id
             # Attempt to get user_profile
-            user_profile = UserProfile.objects.get(user=self.request.user)
+            # user_profile = UserProfile.objects.get(user=self.request.user)
             course = get_object_or_404(Course, pk=self.kwargs['pk'])
         except Http404:
             # Handle the case where UserProfile does not exist
@@ -115,6 +117,8 @@ class CourseDetail(generic.DetailView):
             # Handle the case where the course does not exist
             messages.error(self.request, 'Course not found.')
             return HttpResponseRedirect(reverse('courses:list')) 
+        
+        completed_lesson_ids = []
         
         # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course)
@@ -156,6 +160,10 @@ class CourseDetail(generic.DetailView):
         # Get the total number of lessons for the course
         total_lessons = Lesson.objects.filter(chapter__course=course).count()
         total_quizzes = course.total_quizzes()
+        completed_quizzes_count = 0
+        lesson_count = 0
+        completion_status = False
+        completed_courses = 0
         # Handle the case where total_lessons is zero
         if total_lessons > 0:
             # Get the total number of completed lessons for the user in that course
@@ -184,6 +192,8 @@ class CourseDetail(generic.DetailView):
 
             # create a list of completed courses
             completed_courses = []
+
+            completed_quizzes = []
             
 
             # Check if the chapter ID occurs in completed chapter IDs and the count matches the lesson count
@@ -194,8 +204,9 @@ class CourseDetail(generic.DetailView):
                 # get the count of lessons and quizzes that exist in each chapter
                 lesson_count = lessons.count()
                 quiz_count = quizzes.count()
-                # Get the completed quiz IDs from the UserProfile
-                completed_quizzes = user_profile.completed_quizzes.values_list('id', flat=True)
+                # Get the completed quiz IDs from the completedquiz model
+                completed_quizzes = CompletedQuiz.objects.filter(user=user_id, quiz__chapter__course=course).values_list('quiz_id', flat=True)
+                
                 completed_quizzes_ids = set(completed_quizzes)
 
                 # Check if all lessons and quizzes in the chapter are completed
@@ -239,16 +250,15 @@ class CourseDetail(generic.DetailView):
             total_quizzes = course.total_quizzes()
             print("Total Quizzes:", total_quizzes)
 
-            user_id = self.request.user.id
-            # Retrieve the UserProfile or create a new one if it doesn't exist
-            user_profile, created = UserProfile.objects.get_or_create(user_id=user_id)
+            # get the completed quizzes
+            completed_quizzes = CompletedQuiz.objects.filter(user=user_id, quiz__chapter__course=course)
 
             # Get the completed quiz IDs from the UserProfile
-            completed_quizzes = user_profile.completed_quizzes.values_list('id', flat=True)
-            completed_quizzes_ids = list(completed_quizzes)
-            print("Completed Quizzeddds:", completed_quizzes_ids)
+            # completed_quizzes = user_profile.completed_quizzes.values_list('id', flat=True)
+            # completed_quizzes_ids = list(completed_quizzes)
+            # print("Completed Quizzeddds:", completed_quizzes_ids)
 
-            completed_quizzes_count = len(completed_quizzes)
+            completed_quizzes_count = len(completed_quizzes) if completed_quizzes else 0
             completed_lessons = CompletedLesson.objects.filter(user=user_id, lesson__chapter__course=course).count()
 
             # calculate if a course is complete or not if the total_lessons + total_quizes == the sum of completed lessons + completed quizes          
@@ -270,7 +280,8 @@ class CourseDetail(generic.DetailView):
             #this is how i choose to update to the db that a user has completed a course
             # popup a congratulations window with instructions to generate/get your certificate
             # Check if the user has already completed the course
-            if not CompletedCourse.objects.filter(user_id, course=course).exists():
+            print(user_id, course)
+            if not CompletedCourse.objects.filter(user_id=user_id, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
                 try:
                     completedcourse = CompletedCourse(user_id, course=course)

@@ -24,7 +24,7 @@ from courses.models import Course
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.urls import resolve
-from .models import QuizSubmission, UserProfile
+from .models import QuizSubmission, CompletedQuiz
 from django.urls import reverse
 from django.contrib.sessions.models import Session
 import requests
@@ -298,8 +298,13 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         self.request.session['quiz_last_attempt'] = timezone.now().timestamp()
 
 
-        # Retrieve the UserProfile or create a new one if it doesn't exist
-        user_profile, created = UserProfile.objects.get_or_create(user=self.request.user)
+        quiz_id = self.kwargs.get('quiz_id')
+
+        # Get the completed quiz for the current user and quiz, if it exists
+        completed_quiz_instance = CompletedQuiz.objects.filter(user=self.request.user, quiz_id=quiz_id).first()
+
+
+
 
         # Calculate the percentage score
         total_questions = quiz.question_set.count()
@@ -309,13 +314,13 @@ class QuizAnswerView(LoginRequiredMixin, FormView):
         total_questions = quiz.question_set.count()
         if percentage_score >= 75:
             # If score is >= 75%, add the quiz ID to completed quizzes
-            if quiz.id not in user_profile.completed_quizzes.all():
-                # If not, add the quiz ID to completed quizzes
-                quiz_id = self.kwargs.get('quiz_id')
-                user_profile.completed_quizzes.add(quiz.id)
+            # If the user has not completed this quiz, add it to completed quizzes
+            if completed_quiz_instance is None:
+                CompletedQuiz.objects.create(user=self.request.user, quiz_id=quiz_id)
                 messages.success(self.request, f"Your score is {percentage_score}%. You have passed this quiz.")
-                print("Completed Quizzeeees:", user_profile.completed_quizzes.all())
-            # get the quiz_ids in the completed_quizes field
+                print("Completed Quizzes:", CompletedQuiz.objects.filter(user=self.request.user).values_list('quiz_id', flat=True))
+            else:
+                messages.warning(self.request, "You have already completed this quiz.")
         else:
             messages.warning(self.request, f"Your score is {percentage_score}%. You have failed this quiz.")
 
