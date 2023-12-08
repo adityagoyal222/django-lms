@@ -38,7 +38,7 @@
             <a href="{% url 'courses:list' %}" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Dashboard</a>
             <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Enrolled Courses</a>
             <a href="" class="text-xl text-gray-50 my-auto hover:text-yellow-500 transition delay-200 ease-in-out hover:no-underline">Library</a>
-            <img src="{% static 'django_lms/images/bell.png' %}" onclick="notificationbell()" id="bell" class="w-[35px] ml-3 hover:cursor-pointer h-[35px] text-gray-50 m-2 my-auto transition duration-300 ease-in-out"/>
+            <img src="{% static 'django_lms/images/bell.png' %}" class="w-[35px] ml-3 hover:cursor-pointer h-[35px] text-gray-50 m-2 my-auto transition duration-300 ease-in-out" onclick="notificationbell()" id="bell"/>
             {% comment %} <a href="#" class="hover:text-yellow-500 hover:no-underline w-[150px] h-[150px] text-gray-50 m-2 my-auto font-extrabold"><i class="fa fa-list courses-icon" aria-hidden="true"></i></a> {% endcomment %}
             {% for course in list_courses %}
                     
@@ -286,7 +286,7 @@
     </div>
     {% if user.is_authenticated %}
         <div id="calendar" class="w-[20%] right-0 top-[195px] h-auto my-auto mx-auto fixed bg-transparent text-cyan-950 border-l-cyan-950 p-4 rounded hidden transform scale-0 transition-transform ease-in-out duration-500  origin-top-left">
-            <div class="text-2xl font-bold mb-4">November 2023</div>
+            <div class="text-2xl font-bold mb-4">December 2023</div>
             <table class="w-full border">
                 <thead>
                     <tr>
@@ -365,13 +365,8 @@
                 @endif
             </div>
             <div id="reminders-section" class="w-full max-w-screen-lg mx-auto mt-8 p-4">
-                <h2 class="text-2xl font-sans font-semibold bg-gray-300 p-2 rounded-lg">Reminders</h2>
-                <div class="bg-white p-4 rounded shadow-lg">
-                    <!-- Your reminders content goes here -->
-                    <p>Reminder 1: Complete project by Friday.</p>
-                    <p>Reminder 2: Meeting at 3 PM on Monday.</p>
-                    <!-- Add more reminders as needed -->
-                </div>
+                <h2 class="text-2xl font-sans font-semibold bg-gray-300 p-2 rounded-lg items-center mx-auto justify-center flex">ABYA Upcoming Events</h2>
+                <div id="calendar-events"></div>
             </div>
         </div>
         {% endif %}
@@ -462,7 +457,7 @@
     function notificationbell() {
         const notification = document.getElementById("bell");
         const calendar = document.getElementById("calendar");
-       
+    
         notification.addEventListener("click", function (e) {
             e.preventDefault();
     
@@ -479,6 +474,28 @@
             } else {
                 // If visible, remove the class to stop the animation
                 calendar.classList.add("transition-transform");
+    
+                // Fetch the calendar events from the server
+                fetch('/calendar/')
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+                })
+                .then(data => {
+                  // Update the calendar with the events from the server
+                  var calendarEventsDiv = document.getElementById('calendar-events');
+                  calendarEventsDiv.innerHTML = '';
+                  for (var i = 0; i < data.events.length; i++) {
+                    var event = data.events[i];
+                    calendarEventsDiv.innerHTML += '<p>' + event[0] + ': ' + event[1] + '</p>';
+                  }
+                })
+                .catch(error => {
+                  console.error('Error during fetch:', error);
+                });
+              
             }
         });
     }

@@ -1,0 +1,37 @@
+{% extends "bootstrap/base.html" %}
+
+{% load i18n %}
+
+{% block page_header %}
+    <h1>{{ model_verbose_name_plural }}</h1>
+{% endblock %}
+
+{% block button_bar %}
+    <a href="{{ add_object_url }}" class="btn primary">{% blocktrans with model_verbose_name|lower as object_name %}Add {{ object_name }}{% endblocktrans %}</a>
+{% endblock %}
+
+{% block content %}
+    <table class="common-table zebra-striped"> 
+        <thead> 
+            {% block thead %}
+            <tr>
+                <th>{{ model_verbose_name }}</th>
+            </tr>
+            {% endblock %}
+        </thead> 
+        <tbody> 
+            {% for object in object_list %}
+            <tr>
+                {% block each_tr %}
+                <td><a href="{{ object.get_absolute_url }}">{{ object }}</a></td>
+                {% endblock %}
+            </tr>
+            {% endfor %}
+        </tbody> 
+    </table>
+    {% comment %}
+    <div style="padding:4px;text-align:center">
+        <a href="" class="btn">Exibir tarefas finalizadas</a>
+    </div>
+    {% endcomment %}
+{% endblock %}

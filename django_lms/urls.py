@@ -8,6 +8,8 @@ from django_lms import views as views_project
 from django_lms import views as project_views
 from graphene_django.views import GraphQLView
 from graphene_file_upload.django import FileUploadGraphQLView
+from .views import get_calendar_events
+
 
 urlpatterns = [
     re_path(r'^$', project_views.index, name="home"),
@@ -24,6 +26,8 @@ urlpatterns = [
     path('send-chatbot-response/', views_project.send_chatbot_response, name='chattext'),
     path('markdownx/', include('markdownx.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('calendar/', get_calendar_events, name='calendar'),
+
     # path('', include('admin_material.urls')),
     # path('api-auth/', include('rest_framework.urls')),
 
