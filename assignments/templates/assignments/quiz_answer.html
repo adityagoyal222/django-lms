@@ -10,10 +10,13 @@
 {% block main_content %}
 
 <div class="mt-[150px] text-cyan-950 w-[70%] ml-3 p-4">
-  <h2 class="font-semibold">Answer the Quiz below:{{ quiz.quiz_title}}</h2>
-
-
-<form method="post" class="p-4 bg-gray-100 rounded-lg font-sans" action="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}">
+  <h2 class="font-semibold">Quiz Title:
+    {% if quiz_title %}
+        <span class="underline ml-2">{{ quiz_title }}</span>
+    {% else %}
+        Error: quiz.quiz_title is None
+    {% endif %}
+    </h2><form method="post" class="p-4 bg-gray-100 rounded-lg font-sans" action="{% url 'assignments:submit_quiz' quiz_id=quiz_id %}">
     {% csrf_token %}
     {{ form }} 
     <button class="m-2 p-2 text-lg font-sans font-semibold bg-cyan-950 text-gray-100 hover:outline-none hover:bg-yellow-500 rounded-lg" type="submit">Submit Answers</button>
