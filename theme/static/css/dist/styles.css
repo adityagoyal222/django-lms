@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -837,11 +837,47 @@ video {
 
 .mt-\[580px\] {
   margin-top: 580px;
+
 }
 
 .mt-auto {
   margin-top: auto;
 }
+
+
+.mt-\[155px\] {
+  margin-top: 155px;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mt-\[90\%\] {
+  margin-top: 90%;
+}
+
+.mt-\[98\%\] {
+  margin-top: 98%;
+}
+
+.mt-\[100\%\] {
+  margin-top: 100%;
+}
+
+.mt-\[50px\] {
+  margin-top: 50px;
+}
+
+.mt-\[45px\] {
+  margin-top: 45px;
+}
+
+.mt-\[20px\] {
+  margin-top: 20px;
+
+}
+
 
 .block {
   display: block;
@@ -939,6 +975,11 @@ video {
   height: 80px;
 }
 
+.h-\[80px\] {
+  height: 80px;
+}
+
+
 .h-\[82\%\] {
   height: 82%;
 }
@@ -973,6 +1014,25 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+
+
+.h-\[500px\] {
+  height: 500px;
+}
+
+.h-\[60vh\] {
+  height: 60vh;
+}
+
+.h-\[80vh\] {
+  height: 80vh;
+}
+
+.h-\[95vh\] {
+  height: 95vh;
+
 }
 
 .w-0 {
@@ -1090,6 +1150,12 @@ video {
 .max-w-screen-lg {
   max-width: 1024px;
 }
+
+
+.flex-grow {
+  flex-grow: 1;
+}
+
 
 .border-collapse {
   border-collapse: collapse;
@@ -1948,6 +2014,14 @@ video {
 .hover\:bg-gray-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+
+}
+
+.hover\:bg-gray-600:hover {
+
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+
 }
 
 .hover\:bg-green-800:hover {
