@@ -1,0 +1,31 @@
+<!-- templates/courses/course_info.html -->
+{% extends 'courses/course_base.html' %}
+{% block title_name %}
+   LMS - {{ course.course_name }} Info
+{% endblock title_name %}
+
+{% block main_content %}
+   <div class="ml-[50px] max-w-[72%] text-cyan-800 h-[830px] overflow-y-auto relative">
+      <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }} - Course Overview</h1>
+      <p class="font-sans text-lg m-2">{{ course.course_description }}</p>
+
+      <h2 class="font-sans font-semibold text-2xl mt-4 mb-2">Modules:</h2>
+
+      {% for chapter in chapters %}
+         <h4 class="font-sans text-xl mb-2">{{ chapter.chapter_number }}. {{ chapter.chapter_name }}</h4>
+         <div class="space-y-4">
+            {% for lesson in chapter.lessons.all %}
+               <div class="border p-4 rounded-md border-solid box-border ">
+                  <i class="fa fa-icon-stm_icon_teacher"></i>
+                  <h5 class="font-semibold text-lg"> {{ lesson.lesson_name }}</h5>
+               
+                
+                  <div id="lesson{{ lesson.id }}" class="collapse mt-3">
+                     <!-- Additional details or nested content for the lesson -->
+                  </div>
+               </div>
+            {% endfor %}
+         </div>
+      {% endfor %}
+   </div>
+{% endblock main_content %}

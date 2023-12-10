@@ -283,7 +283,6 @@ class CourseDetail(generic.DetailView):
             #this is how i choose to update to the db that a user has completed a course
             # popup a congratulations window with instructions to generate/get your certificate
             # Check if the user has already completed the course
-            print(user_id, course)
             if not CompletedCourse.objects.filter(user_id=user_id, course=course).exists():
                 # Create a new CompletedCourse instance only if it doesn't exist
                 try:
@@ -331,6 +330,25 @@ class ListCourse(generic.ListView):
         if not course_list:
             messages.info(self.request, 'No courses available at the moment.')
 
+        return context
+class CourseInfoView(generic.DetailView):
+    model = Course
+    template_name = 'courses/course_info.html'
+    context_object_name = 'course'
+
+    def get_context_data(self, **kwargs):
+        try:
+            course = get_object_or_404(Course, pk=self.kwargs['pk'])
+        except Http404:
+            # Handle the case where the course does not exist
+            messages.error(self.request, 'Course not found.')
+            return HttpResponseRedirect(reverse('courses:list'))
+        context = super().get_context_data(**kwargs)
+        chapter = Chapter.objects.filter(course=course)
+       
+
+        context['chapters'] = self.object.chapters.all()
+        context['course'] = course
         return context
 
 
@@ -561,40 +579,51 @@ def mark_lesson_as_complete(request):
 @csrf_protect
 def update_video_progress(request):
     if request.method == 'POST':
-        # Get JSON data from the request body
         try:
             data = json.loads(request.body.decode('utf-8'))
             video_id = data.get('video_id')
             progress = data.get('progress')
-            
-            # Now you can use video_id and progress in your logic
-            print("VidId:", video_id)
-            print("Progress:", progress)
 
             # Find the VideoLesson object for the specified video_id
             video_lesson = VideoLesson.objects.get(video_lesson_id=video_id)
 
             # Find the VideoProgress object for the specified video_lesson and user
             video_progress, created = VideoProgress.objects.get_or_create(video_lesson=video_lesson, user=request.user)
-            
-            # Update the progress
-            video_progress.progress = progress
 
-            # Check if the progress is 75% and update the status
-            # if progress is greaer or equal to 75% then set status to True
-
-            if float(progress) > 75:
+            # Check if the progress is 75% and update the status only if it's not already True
+            if float(progress) > 75 and not video_progress.status:
                 video_progress.status = True
-            
-            video_progress.save()
 
-           # Include the status in the response
-            response_data = {
-                'message': 'Video progress updated successfully.',
-                'status': video_progress.status,
-            }
+                # Update the progress only if the status was not already True
+                video_progress.progress = progress
 
-            return JsonResponse(response_data)
+                # Save the VideoProgress object
+                video_progress.save()
+
+                # Include the status in the response
+                response_data = {
+                    'message': 'Video progress updated successfully.',
+                    'status': video_progress.status,
+                }
+
+                return JsonResponse(response_data)
+            else:
+                # Progress is less than 75% or status is already True, no update needed
+                response_data = {
+                    'message': 'Video progress not updated.',
+                    'status': video_progress.status,
+                }
+
+                return JsonResponse(response_data)
+
         except json.JSONDecodeError:
             return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except VideoLesson.DoesNotExist:
+            return JsonResponse({'message': 'Video lesson not found.'}, status=404)
+
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
+
+def achievements(request):
+    completed_courses = CompletedCourse.objects.filter(user=request.user)
+    print(completed_courses)
+    return render(request, 'courses/achievements.html', {'completed_courses': completed_courses})

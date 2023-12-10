@@ -28,7 +28,7 @@ SECRET_KEY = 'x#d7_3ws7!%((d$pbm8l^=oghi%-^y&eo-9h@^^yx1#s826z0x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ ]
 
 
 # Application definition
@@ -93,15 +93,15 @@ MIDDLEWARE = [
 # CACHE_MIDDLEWARE_SECONDS = '600'    # number of seconds before each page is cached
 # CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-}
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://localhost:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+# }
+# }
 
 ROOT_URLCONF = 'django_lms.urls'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

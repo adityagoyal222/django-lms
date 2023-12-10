@@ -10,8 +10,8 @@
 
 {% block main_content %}
 
-{% cache 1000 chapters_with_lessons_and_quizzes  %}
-{% cache 500 course %}
+{% comment %} {% cache 1000 chapters_with_lessons_and_quizzes  %}
+{% cache 500 course %} {% endcomment %}
 
 <div class="ml-[50px] max-w-[72%] text-cyan-950 h-[830px] overflow-y-auto relative">
     <h1 class="font-sans font-semibold text-3xl m-2">{{ course.course_name }}</h1>
@@ -511,6 +511,6 @@ function onPlayerStateChange(event) {
     }
 }
   </script>
-  {% endcache %}
-  {% endcache %}
+  {% comment %} {% endcache %}
+  {% endcache %} {% endcomment %}
 {% endblock main_content %}
