@@ -57,7 +57,7 @@
             {% comment %} <div class="mx-auto my-auto">
                 <h1 class="text-3xl font-bold font-serif">ABYA</h1>
             </div> {% endcomment %}
-            <div class="my-auto text-white font-bold items-end mx-auto">
+            <div class="lg:my-auto text-white font-bold lg:items-end lg:mx-auto hidden">
                 <a href="{% url 'home' %}" class="text-black bg-yellow-500 p-1 rounded-2xl hover:text-white hover:bg-yellow-400 hover:shadow-md transition duration-300 ease-in-out font-bold py-2 px-4">Home</a>
                 <a href="{% url 'users:login' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Login</a>
                 <a href="{% url 'users:signup' %}" class="text-white hover:text-yellow-400 hover:bg-yellow-400 hover:border-yellow-400 hover:p-1 hover:rounded-2xl hover:shadow-md hover:transition-transform hover:scale-105 transition duration-300 ease-in-out font-bold py-2 px-4">Register</a>
@@ -146,7 +146,7 @@
             </div>
             </div>
         </div>
-        <div class="flex flex-col sm:flex-row md:flex-row mt-5 relative w-[70%] container p-2 mx-auto items-center justify-center h-[400px] sm:h-auto md:h-auto">
+        <div class="lg:flex lg:flex-col flex-row md:flex-row mt-5 lg:relative lg:w-[70%] container p-2 lg:mx-auto lg:items-center lg:justify-center lg:h-[400px] md:h-auto hidden">
             <div class="items-start bg-gray-200 text-cyan-950 p-5 sm:h-[400px]">
                 <p class="mx-auto items-center justify-center flex font-bold text-xl">Our Values</p>
                 <div class="mx-auto m-2 flex items-center justify-center max-w-[500px] h-auto flex-row flex-wrap ">

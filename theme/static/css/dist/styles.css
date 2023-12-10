@@ -2135,12 +2135,12 @@ video {
     display: flex;
   }
 
-  .sm\:h-\[400px\] {
-    height: 400px;
+  .sm\:hidden {
+    display: none;
   }
 
-  .sm\:h-auto {
-    height: auto;
+  .sm\:h-\[400px\] {
+    height: 400px;
   }
 
   .sm\:w-1\/2 {
@@ -2204,5 +2204,49 @@ video {
 
   .md\:flex-row {
     flex-direction: row;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:relative {
+    position: relative;
+  }
+
+  .lg\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .lg\:my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .lg\:flex {
+    display: flex;
+  }
+
+  .lg\:h-\[400px\] {
+    height: 400px;
+  }
+
+  .lg\:w-\[70\%\] {
+    width: 70%;
+  }
+
+  .lg\:flex-col {
+    flex-direction: column;
+  }
+
+  .lg\:items-end {
+    align-items: flex-end;
+  }
+
+  .lg\:items-center {
+    align-items: center;
+  }
+
+  .lg\:justify-center {
+    justify-content: center;
   }
 }
