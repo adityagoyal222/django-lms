@@ -1,6 +1,5 @@
 aiohttp==3.8.5
 aiosignal==1.3.1
-
 aniso8601==9.0.1
 arrow==1.2.3
 asgiref==3.7.2
@@ -65,8 +64,8 @@ merkletools==1.0.3
 mock==2.0.0
 morphys==1.0
 multidict==6.0.4
-mysqlclient==2.2.0
-openai==0.27.8
+mysqlclient==2.0.3
+openai
 packaging==23.1
 pbr==5.11.1
 Pillow==10.0.0
@@ -82,7 +81,7 @@ pysha3==1.0.2
 python-baseconv==1.2.2
 python-bitcoinlib==0.12.2
 python-dateutil==2.8.2
-python-dotenv==1.0.0
+python-dotenv
 python-slugify==8.0.1
 pytz==2023.3
 PyYAML==6.0.1
@@ -105,10 +104,14 @@ virtualenv==20.24.2
 Werkzeug==2.2.3
 yarl==1.9.2
 djangorestframework
+
 google-api-python-client==2.24.0
 
+django-admin-interface
+django-widget-tweaks 
+django-debug-toolbar
+mammoth
 
 
 
-#pymysql==1.0.2
 

@@ -30,5 +30,6 @@
             "password": "lms123",
             "name": "test123"
         }
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }
