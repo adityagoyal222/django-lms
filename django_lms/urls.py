@@ -14,6 +14,7 @@ from graphene_file_upload.django import FileUploadGraphQLView
 from .views import get_calendar_events
 
 
+
 urlpatterns = [
     re_path(r'^$', project_views.index, name="home"),
     path('admin/', admin.site.urls),
@@ -30,6 +31,8 @@ urlpatterns = [
     path('markdownx/', include('markdownx.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('calendar/', get_calendar_events, name='calendar'),
+    path('accounts/', include('allauth.urls')),
+
 
     # path('', include('admin_material.urls')),
     # path('api-auth/', include('rest_framework.urls')),

@@ -69,8 +69,7 @@
         margin-right: 15px;
     }
 
-    [dir="rtl"] .aligned ul,
-    [dir="rtl"] form .aligned ul.errorlist {
+    [dir="rtl"] .aligned ul {
         margin-right: 0;
     }
 

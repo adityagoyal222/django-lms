@@ -55,11 +55,10 @@ class CreateChapterView(LoginRequiredMixin, generic.CreateView):
     model = Chapter
     form_class = CreateChapterForm
     template_name = 'courses/create_chapter.html'
-    @method_decorator(cache_page(60 * 60 * 2))
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs.update({'user': self.request.user})
         return kwargs
     
     

@@ -1,5 +1,6 @@
 {% load static tailwind_tags %}
 {% load static %}
+{% load socialaccount %}
 
 {% load static tailwind_tags %}
 
@@ -78,7 +79,10 @@
                 <a href="{% url 'courses:list' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Dashboard</a>
                 <a href="#" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
                 <a href="{% url 'courses:achievements' %}" class="block px-4 py-2 text-black font-extrabold hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">Settings</a>
-                <a href="{% url 'users:logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline" class="sidemenu">Logout</a>
+                <form method="post" action="{% url 'account_logout' %}" class="text-black font-extrabold block px-4 py-2 hover:bg-cyan-950 hover:text-yellow-400 hover:no-underline">
+                    {% csrf_token %}
+                    <input type="submit" value="Logout">
+                </form>
             </div>
                                             
         </div>
@@ -260,7 +264,7 @@
                         
                 {% endfor %}                 
             {% endif %}
-            <a class="flex hover:no-underline" href={% url 'editor:ide'%}>
+            <a class="flex hover:no-underline" href={% url 'editor:jdoodle_api_ide'%}>
                 <img src={%static 'django_lms/images/open_arrow.svg'%} alt="Open Sidebar" alt="ide"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
                 <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Code IDE</p>
             </a>
@@ -269,13 +273,13 @@
                 <img src={%static 'django_lms/images/chat4.gif'%} alt="Open Sidebar" alt="Chatbot"  class="text-white w-8 left-0 hover:cursor-pointer flex items-start justify-start h-10"/>
                 <p class="text-cyan-950 font-bold my-auto hover:text-yellow-500 hover:no-underline hover:cursor-pointer text-2xl">Chatbot</p>
             </div>
-            <a href="{% url 'users:logout' %}" class="text-cyan-950 hover:text-yellow-500 hover:no-underline font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+            <a href="{% url 'account_logout' %}" class="text-cyan-950 hover:text-yellow-500 hover:no-underline font-extrabold" class="sidemenu"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
         {% else %}
             <div class="lg:flex lg:flex-col lg:space-y-4 text-2xl font-extrabold m-3 p-2 hidden">
             <a class="sidemenu side-element text-cyan-950 hover:text-yellow-500 hover:no-underline">Guest</a>
             <a href="{% url 'home' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-home" aria-hidden="true"></i>Home</a>
-            <a href="{% url 'users:login' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
-            <a href="{% url 'users:signup' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
+            <a href="{% url 'account_login' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-sign-in" aria-hidden="true"></i>Login</a>
+            <a href="{% url 'account_signup' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-user-plus" aria-hidden="true"></i>Signup</a>
             <a href="{% url 'courses:list' %}" class="text-cyan-950 mt-2 mb-2 hover:text-yellow-500 hover:no-underline font-semibold"><i class="fa fa-list-ul" aria-hidden="true"></i>All Courses</a>
             </div>
         {% endif %}

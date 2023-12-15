@@ -16,7 +16,7 @@ class User(AbstractUser):
 
     user_type = models.PositiveIntegerField(choices=USER_TYPE_CHOICES, default=1)
     # completed_lessons = models.ManyToManyField('courses.Lesson', through='CompletedLesson', related_name='completed_by', blank=True)
-    completed_lessons = models.ManyToManyField('courses.CompletedLesson', related_name='completed_by', blank=True)
+    completed_lessons = models.ManyToManyField('courses.CompletedLesson', related_name='completed_by', blank=True, null=True)
 
 
     def completed_quizzes(self, course=None):

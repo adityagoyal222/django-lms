@@ -1,4 +1,5 @@
 /*global gettext*/
+/* copied from django 4.0.7 */
 'use strict';
 {
     window.addEventListener('load', function() {
@@ -7,13 +8,18 @@
         for (const [i, elem] of fieldsets.entries()) {
             // Don't hide if fields in this fieldset have errors
             if (elem.querySelectorAll('div.errors, ul.errorlist').length === 0) {
-                elem.classList.add('collapsed');
                 const h2 = elem.querySelector('h2');
                 const link = document.createElement('a');
                 link.id = 'fieldsetcollapser' + i;
                 link.className = 'collapse-toggle';
                 link.href = '#';
-                link.textContent = gettext('Show');
+                // changed: can opt into starting visible
+                if (elem.classList.contains('expanded')) {
+                  link.textContent = gettext('Hide');
+                } else {
+                  link.textContent = gettext('Show');
+                  elem.classList.add('collapsed');
+                }
                 h2.appendChild(document.createTextNode(' ('));
                 h2.appendChild(link);
                 h2.appendChild(document.createTextNode(')'));

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load socialaccount %}
+
+{% load static %}
+
+{% block title %}
+    LMS - Signup
+{% endblock title %}  
+
+{% block body_content %}
+    <div class="lg:mt-[20px] absolute lg:relative w-[95%] left-2 mx-auto items-center justify-center lg:items-start lg:justify-start lg:w-[72%] shadow-lg p-5 rounded-xl font-serif">
+        <h1 class="mx-auto font-serif font-extrabold items-center justify-center flex text-2xl uppercase">Sign Up</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            
+            <input type="submit" class="bg-gray-100 rounded-md font-semibold text-black hover:shadow-lg p-2 m-2 shadow-md" value="Sign Up">
+            
+            <div class="flex justify-center mt-4">
+                <a href="{% provider_login_url 'google' process='connect' %}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Sign Up with Google
+                </a>
+                <a href="{% provider_login_url 'github' process='connect' %}" class="bg-red-600 hover:bg-red-00 text-white font-bold py-2 px-4 rounded ml-2">
+                    Sign Up with GitHub
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock body_content %}
+            

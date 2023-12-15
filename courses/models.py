@@ -78,7 +78,7 @@ class CompletedLesson(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(auto_now_add=True)
-    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, null=True, blank=True)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, blank=True)
 
     class Meta:
         unique_together = ('user', 'lesson')

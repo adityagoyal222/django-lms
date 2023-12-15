@@ -29,6 +29,20 @@
             "username": "root",
             "password": "lms123",
             "name": "test123"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "testlms",
+            "database": "django_lms3",
+            "username": "root",
+            "password": "lms123"
         }
     ],
     "git.ignoreLimitWarning": true

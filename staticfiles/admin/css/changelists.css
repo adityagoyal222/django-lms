@@ -90,7 +90,7 @@
 }
 
 #toolbar #searchbar {
-    height: 1.1875rem;
+    height: 19px;
     border: 1px solid var(--border-color);
     padding: 2px 5px;
     margin: 0;
@@ -223,24 +223,27 @@
 
 /* DATE DRILLDOWN */
 
-.change-list .toplinks {
-    display: flex;
-    padding-bottom: 5px;
-    flex-wrap: wrap;
-    gap: 3px 17px;
+.change-list ul.toplinks {
+    display: block;
+    float: left;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.change-list ul.toplinks li {
+    padding: 3px 6px;
     font-weight: bold;
+    list-style-type: none;
+    display: inline-block;
 }
 
-.change-list .toplinks a {
-    font-size: 0.8125rem;
-}
-
-.change-list .toplinks .date-back {
+.change-list ul.toplinks .date-back a {
     color: var(--body-quiet-color);
 }
 
-.change-list .toplinks .date-back:focus,
-.change-list .toplinks .date-back:hover {
+.change-list ul.toplinks .date-back a:focus,
+.change-list ul.toplinks .date-back a:hover {
     color: var(--link-hover-color);
 }
 
@@ -255,13 +258,7 @@
     vertical-align: baseline;
 }
 
-/* Once the :has() pseudo-class is supported by all browsers, the tr.selected
-   selector and the JS adding the class can be removed. */
-#changelist tbody tr.selected {
-    background-color: var(--selected-row);
-}
-
-#changelist tbody tr:has(.action-select:checked) {
+#changelist table tbody tr.selected {
     background-color: var(--selected-row);
 }
 
@@ -270,7 +267,7 @@
     background: var(--body-bg);
     border-top: none;
     border-bottom: none;
-    line-height: 1.5rem;
+    line-height: 24px;
     color: var(--body-quiet-color);
     width: 100%;
 }
@@ -289,7 +286,7 @@
 
 #changelist .actions select {
     vertical-align: top;
-    height: 1.5rem;
+    height: 24px;
     color: var(--body-fg);
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -316,7 +313,7 @@
     background: var(--body-bg);
     box-shadow: 0 -15px 20px -10px rgba(0, 0, 0, 0.15) inset;
     cursor: pointer;
-    height: 1.5rem;
+    height: 24px;
     line-height: 1;
     padding: 4px 8px;
     margin: 0;

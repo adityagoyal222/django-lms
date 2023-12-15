@@ -1,23 +1,8 @@
-import json
-import requests
 from django.shortcuts import render
-from .scripts import codex_api, jdoodle_api_call
-from django.http import JsonResponse
+from .scripts import  jdoodle_api_call
+
 from django.shortcuts import render
 from . forms import LanguageForm, languages
-
-# def ide(request):
-    
-#     inputr = int(input("Enter your value: "))
-#     output = codex_api('val = ' + str(inputr) + ' + 5\nprint(val)', 'py', 5)
-#     # output = codex_api('val = int(input("Enter your value: ")) + 5\nprint(val)', 'py', 5)
-#     print(output)
-#     output_obj = json.loads(output)
-#     # print(output_obj["output"])
-#     context = {
-#         'output': output_obj["output"]
-#     }
-#     return render(request, 'editor/ide.html', context)
 
 
 

@@ -1,10 +1,14 @@
 import graphene
 from graphene_django.types import DjangoObjectType, ObjectType
-from users.models import User
+from users.models import User, Profile
 
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+
+class ProfileType(DjangoObjectType):
+    class Meta:
+        model = Profile
 
 class Query(ObjectType):
     user = graphene.Field(UserType, id=graphene.Int())
@@ -22,14 +26,12 @@ class Query(ObjectType):
         return User.objects.all()
 
 class UserInput(graphene.InputObjectType):
-    id = graphene.ID()
     username = graphene.String()
     first_name = graphene.String()
     last_name = graphene.String()
     email = graphene.String()
     password = graphene.String()
     user_type = graphene.Int()
-    profile_image = graphene.Field()
 
 class CreateUser(graphene.Mutation):
     class Arguments:
@@ -46,10 +48,9 @@ class CreateUser(graphene.Mutation):
             first_name=input.first_name,
             last_name=input.last_name,
             email=input.email,
-            password=input.password,
-            user_type=input.user_type,
-            profile_image=input.profile_image
+            user_type=input.user_type
         )
+        user_instance.set_password(input.password)  # Securely set the password
         user_instance.save()
         return CreateUser(ok=ok, user=user_instance)
 
@@ -71,16 +72,15 @@ class UpdateUser(graphene.Mutation):
             user_instance.first_name = input.first_name
             user_instance.last_name = input.last_name
             user_instance.email = input.email
-            user_instance.password = input.password
             user_instance.user_type = input.user_type
-            user_instance.profile_image = input.profile_image
+            if input.password:
+                user_instance.set_password(input.password)  # Securely set the password
             user_instance.save()
             return UpdateUser(ok=ok, user=user_instance)
-        return UpdateUser(ok=ok, actor=None)
+        return UpdateUser(ok=ok, user=None)
 
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     update_user = UpdateUser.Field()
-
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

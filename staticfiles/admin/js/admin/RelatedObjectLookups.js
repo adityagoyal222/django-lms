@@ -26,11 +26,13 @@
     }
 
     function addPopupIndex(name) {
-        return name + "__" + (popupIndex + 1);
+        name = name + "__" + (popupIndex + 1);
+        return name;
     }
 
     function removePopupIndex(name) {
-        return name.replace(new RegExp("__" + (popupIndex + 1) + "$"), '');
+        name = name.replace(new RegExp("__" + (popupIndex + 1) + "$"), '');
+        return name;
     }
 
     function showAdminPopup(triggeringLink, name_regexp, add_popup) {
