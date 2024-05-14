@@ -5,6 +5,7 @@ from assignments.models import Assignment, SubmitAssignment
 from courses.models import Course
 from courses import schema as course_schema
 from users import schema as user_schema
+from users.models import User
 
 
 class AssignmentType(DjangoObjectType):

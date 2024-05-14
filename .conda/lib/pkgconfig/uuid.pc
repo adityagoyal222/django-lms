@@ -1,0 +1,11 @@
+prefix=/home/machar/lms_project/django-lms/.conda
+exec_prefix=/home/machar/lms_project/django-lms/.conda
+libdir=/home/machar/lms_project/django-lms/.conda/lib
+includedir=/home/machar/lms_project/django-lms/.conda/include
+
+Name: uuid
+Description: Universally unique id library
+Version: 2.32.1
+Requires:
+Cflags: -I${includedir}/uuid
+Libs: -L${libdir} -luuid

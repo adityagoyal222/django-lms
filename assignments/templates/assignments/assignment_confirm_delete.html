@@ -7,13 +7,13 @@
 
 {% block main_content %}
     {% if user.user_type == 2 %}
-        <div class="container">
+        <div  class="bg-white w-[70%] m-2 shadow-lg">
             <div class="jumbotron">
-                <h2>Are you sure you want to delete this assignment?</h2>
+                <h2 class="font-sans text-2xl">Are you sure you want to delete this assignment?</h2>
                 <form method="post">
                     {% csrf_token %}
-                    <input type="submit" value="Confirm Delete" class="btn btn-danger btn-large">
-                    <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="btn btn-primary btn-large">Cancel</a>
+                    <input type="submit" value="Confirm Delete"  class="bg-red-600 m-2 text-white hover:bg-ted-800 p-2 rounded-md text-md font-extrabold hover:no-underline">
+                    <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="bg-green-600 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold hover:no-underline">Cancel</a>
                 </form>
             </div>
         </div>

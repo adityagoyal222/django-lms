@@ -1,51 +1,53 @@
-{% extends 'courses/course_base.html' %} 
-
+{% extends 'courses/course_base.html' %}
+{% load static %}
+{% load cache %}
 {% block title_name %}
   LMS - Courses
 {% endblock title_name %}
-  
+
 {% block main_content %}
-<div class="container">
-  <div>
-    <h1>All Courses</h1>
+<div class="max-w-[75%] mx-auto mt-0 lg:max-w-[95%] lg:relative lg:top-0 absolute top-[150px]  left-[50px]">
+  <div class="lg:flex lg:flex-row lg:justify-between">
+    <h1 class="font-semibold font-sans m-1 text-cyan-950">All Courses</h1>
 
     {% if user.user_type == 2 %}
-    <a
-      href="{% url 'courses:create' %}"
-      class="btn btn-lg btn-fill btn-success button-stretch"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
-    </a>
+      <a href="{% url 'courses:create' %}" class="bg-cyan-950 m-3 mb-2 lg:flex no-underline lg:flex-col text-white hover:bg-yellow-500 p-2 rounded-md text-md font-extrabold">
+        <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
+      </a>
     {% endif %}
   </div>
-    <div class="card-deck">
-      {% for course_item in object_list %}
-      <div>
-      <div class="card" style="width: 18rem">
-        <div class="card-body">
-          <h5 class="card-title">{{course_item.course_name}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
-          <p class="card-text">
-            {{course_item.course_description}}
-          </p>
-          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="btn btn-primary card-link">More Info</a>
-          {% if user.user_type == 1 %}
-            {%if user in course_item.students.all%}
-                <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="btn btn-danger card-link">Unenroll</a>
-            {% else %}
-                <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="btn btn-success card-link">Enroll</a>
-            {% endif %}
-          {% endif %}
 
-          <p>{{course_item.students.count}}
-                member{{course_item.students.count|pluralize}}</p>
-          
-              
+  <div class="lg:card-deck lg:space-x-9 lg:w-[72%] flex flex-wrap">
+    {% cache 600 "course_list" %}
+      {% for course_item in object_list %}
+        <div class="w-full lg:w-[48%] xl:w-[30%] mb-4">
+          <div class="bg-white rounded-md bg-opacity-40 lg:w-[350px] relative shadow-lg h-auto m-2">
+            <div class="card-body hover:shadow-2xl">
+              <h5 class="card-title text-cyan-950 font-serif font-extrabold">{{course_item.course_name}}</h5>
+              {% if course_item.picture %}
+                <img src="{{ course_item.picture.url }}" alt="{{ course_item.course_name }}" class=" mb-3 card-img-top">
+              {% else %}
+                <!-- Default image or placeholder if no picture is available -->
+                <img src="{% static 'django_lms/images/web4.jpg' %}" alt="Default Image" class="card-img-top">
+              {% endif %}
+              <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
+              <p class="card-text font-semibold">{{course_item.course_description}}</p>
+              <a href="{% url 'courses:detail' pk=course_item.pk %}" class="bg-cyan-950 text-white m-5 p-2 hover:bg-yellow-400 rounded-md text-md font-extrabold ">More Info</a>
+
+              {% if user.user_type == 1 %}
+                {% if user in course_item.students.all %}
+                  <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="bg-red-600 m-2 text-white hover:bg-red-800 p-2 rounded-md text-md font-extrabold card-link">Unenroll</a>
+                {% else %}
+                  <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="bg-green-500 m-2 text-white hover:bg-green-800 p-2 rounded-md text-md font-extrabold card-link">Enroll</a>
+                {% endif %}
+              {% endif %}
+
+              <p class="text-lg m-2">{{course_item.students.count}} member{{course_item.students.count|pluralize}}</p>
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
       {% endfor %}
-    </div>
+    {% endcache %}
   </div>
-  {% endblock main_content %}
 </div>
+{% endblock main_content %}

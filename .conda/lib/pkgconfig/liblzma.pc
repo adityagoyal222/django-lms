@@ -1,0 +1,19 @@
+#
+# Author: Lasse Collin
+#
+# This file has been put into the public domain.
+# You can do whatever you want with this file.
+#
+
+prefix=/home/machar/lms_project/django-lms/.conda
+exec_prefix=/home/machar/lms_project/django-lms/.conda
+libdir=/home/machar/lms_project/django-lms/.conda/lib
+includedir=/home/machar/lms_project/django-lms/.conda/include
+
+Name: liblzma
+Description: General purpose data compression library
+URL: https://tukaani.org/xz/
+Version: 5.4.2
+Cflags: -I${includedir}
+Libs: -L${libdir} -llzma
+Libs.private: -pthread -lpthread

@@ -7,20 +7,19 @@
     
 
 {% block main_content %}
-    <div class="container">
-        <h1>{{assignment.assignment_name}}</h1>
-        <h4>Course: {{assignment.course}}</h4>
-        <h6>Start Date: {{assignment.start_date}}</h6>
-        <h6>Due Date: {{assignment.due_date}}</h6>
+    <div class="p-5 shadow-lg rounded-lg w-[70%] mt-[150px] text-cyan-950">
+        <h1  class="font-sans font-semibold text-4xl">{{assignment.assignment_name}}</h1>
+        <h4 class="font-serif font-semibold">Course: {{assignment.course}}</h4>
+        <h6 class="font-extralight">Start Date: {{assignment.start_date}}</h6>
+        <h6 class="font-extralight">Due Date: {{assignment.due_date}}</h6>
         
-        <p>Description: {{assignment.assignment_description}}</p>
+        <p class="font-extralight">Description: {{assignment.assignment_description}}</p>
         {% if user.user_type == 2 %}
-            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="btn btn-warning btn-lg">Update</a>
-            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="btn btn-danger btn-lg">Delete</a>
+            <a href="{% url 'assignments:update' pk=assignment.pk %}" class="bg-cyan-950 m-2 text-white hover:bg-yellow-500 p-2 rounded-md hover:no-underline text-md font-extrabold ">Update</a>
+            <a href="{% url 'assignments:delete' pk=assignment.pk %}" class="bg-red-700 m-2 text-white hover:bg-red-600 p-2 rounded-md text-md font-extrabold hover:no-underline">Delete</a>
 
             <div class="submissions">
-            <h3>Submissions</h3>
-            
+            <h3  class="font-sans font-semibold text-4xl">Submissions</h3>
             {% for submissions in submitted %}
                 <a href="{% url 'assignments:submit_detail' pk=submissions.pk %}" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
@@ -41,16 +40,17 @@
         {% else %}            
             {% if assignment.course in course %}
                 {% if duedate >= time %}
-                    <a href="{% url 'assignments:submit' %}" class="btn btn-success btn-lg">Submit Assignment</a>
+
+                    <a href="{% url 'assignments:submit' %}" class="bg-cyan-950 hover:text-white text-gray-100 hover:bg-yellow-500 hover:outline-none p-2 rounded-lg text-md font-extrabold hover:no-underline">Submit Assignment</a>
                 {% endif %}
                 <div class="submissions">
-                <h3>My Submissions:</h3>
+                <h3 class="font-sans font-semibold text-3xl m-2">My Submissions:</h3>
                 
                 {% for submissions in submitted %}
                     {% if submissions.author.id == user.id %}
-                        <a href="{% url 'assignments:submit_detail' pk=submissions.pk %}" class="list-group-item list-group-item-action">
+                        <a href="{% url 'assignments:submit_detail' pk=submissions.pk %}" class="list-group-item list-group-item-action rounded-lg bg-transparent shadow-sm outline-none border-none">
                             <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{submissions.topic}}</h5>
+                            <h5 class="mb-1 uppercase font-semibold">{{submissions.topic}}</h5>
                             <small>{{submissions.author}}</small>
                             </div>
                             <p class="mb-1">
@@ -60,7 +60,7 @@
                         </a>
                     {% endif %}
                 {% empty %}
-                    <h6>No Submissions</h6>
+                    <h6 class="m-2 font-extralight">No Submissions</h6>
                 {% endfor %}
                 </div>
             {% endif %}

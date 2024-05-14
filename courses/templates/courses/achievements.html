@@ -1,0 +1,31 @@
+{% extends 'courses/course_base.html' %}
+{% load static %}
+{% block title %}
+    {% block title_name %}
+        Achievements
+    {% endblock title_name %}
+{% endblock title %}
+{% block main_content %}
+        <div class="h-auto p-2 w-auto mt-[150px]">
+            <div class="container mx-auto mt-8">
+                <h2 class="text-2xl font-semibold mb-4">Completed Courses</h2>
+            
+                <!-- Loop through completed courses and display them as cards or a detailed list -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for completed_course in completed_courses %}
+                        <div class="bg-white rounded-lg drop-shadow-lg p-6 mb-4">
+                            <h3 class="text-lg font-semibold mb-2">{{ completed_course.course.course_name }}</h3>
+                            <p class="text-gray-600">{{ completed_course.course.course_description }}</p>
+                            <p class="text-sm text-gray-500 mt-2">Completed on {{ completed_course.completed_at|date }}</p>
+                            <a href="{% url 'courses:certificate' course_id=completed_course.course.id %}">
+                                <button id="generateCertificate" class="bg-yellow-500 text-white rounded-lg px-4 py-2 mt-4 hover:bg-yellow-400">
+                                    Claim Certificate
+                                </button>
+                            </a> 
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+{% endblock main_content %}

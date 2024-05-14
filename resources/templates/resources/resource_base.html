@@ -1,20 +1,81 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    
     {% block title_name %}
-        
+        Video Lesson
     {% endblock title_name %}
-        
 {% endblock title %}
-    
 
 {% block body_content %}
-    
     {% block main_content %}
-    
-    {% endblock main_content %}
-    
-{% endblock body_content %}
+        <div id="player"></div>
+        <p>video_id: {{ video_id }}</p>
 
-    
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script>
+            let player;
+            let progressInterval;
+
+            // Replace 'VIDEO_ID' with the actual YouTube video ID
+            const videoId = '{{ video_id }}'
+
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player('player', {
+                    height: '360', // Set the desired video height
+                    width: '640',  // Set the desired video width
+                    videoId: videoId,
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            }
+
+            function onPlayerReady(event) {
+                event.target.playVideo();
+                startProgressTracking();
+            }
+
+            function startProgressTracking() {
+                progressInterval = setInterval(updateProgress, 10000); // Update progress every second
+            }
+
+            function updateProgress() {
+                const currentTime = player.getCurrentTime();
+                const duration = player.getDuration();
+                const percentage = (currentTime / duration) * 100;
+
+                // Update your progress bar or other UI elements with the 'percentage' value
+                // For example, update a progress bar element with the calculated 'percentage'
+                // document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+                // Send an AJAX POST request to update the progress
+                const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+                fetch('/resources/update_video_progress/', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken,
+                  },
+                  body: `video_id=${videoId}&progress=${percentage}`,
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    console.log(data.message); // Log the response message
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                  });
+
+            }
+
+            function onPlayerStateChange(event) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    clearInterval(progressInterval);
+                    updateProgress(); // Ensure progress is 100% when the video ends
+                }
+            }
+        </script>
+    {% endblock main_content %}
+{% endblock body_content %}

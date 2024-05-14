@@ -1,11 +1,11 @@
 .sidenav {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 20%; /* Set the width of the sidebar */
+  height: ; /* Full-height: remove this if you want "auto" height */
+  width: %; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #111; /* Black */
+  background-color: #052635; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
 }
@@ -16,18 +16,63 @@ p, a {
   font-family: 'Raleway', 'sans-serif';
 }
 
+
+/* Dropdown menu styles */
+#dropdown-menu {
+    display: block;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Transition effect for the dropdown menu */
+#dropdown-menu.transition-transform {
+    transition-property: transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+
+/* Styling for dropdown items */
+#dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+}
+
+#dropdown-menu a:hover {
+    background-color: #f5f5f5;
+}
+
+
 /* The navigation menu links */
 .sidenav a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 20px;
-  color: #999999;
+  color: #ffff;
   display: block;
+}
+
+/* Custom CSS for growing underline */
+.grow-underline {
+    position: relative;
+    transition: transform 0.3s, width 0.3s;
+}
+
+.grow-underline::before {
+    content: '';
+    position: absolute;
+    bottom: -2px; /* Adjust as needed to control the underline's position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px; /* Adjust as needed to control the underline's thickness */
+    background-color: yellow; /* Set the underline color to yellow */
+    transition: width 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: #f6c020;
 }
 
 /* Style page content */
@@ -51,7 +96,8 @@ p, a {
 
 .sidemenu {
   display: block;
-  color: #f4f4f4;
+  color: #052635;
+  left: 0px;
 }
 
 .side-element {
